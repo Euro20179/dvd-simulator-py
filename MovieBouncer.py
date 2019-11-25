@@ -1,4 +1,4 @@
-import pygame
+import pygame; pygame.init(); pygame.font.init()
 import os as os
 from os import listdir
 from os.path import isfile, join
@@ -57,44 +57,45 @@ path = "./DVD_Logos"
 
 Run = True
 
+ADD = 1
+
 DVD_Logos = [pygame.image.load(str(path + "/" + x)) for x in listdir(path)]
 
 DVDSDict = {}
 
+addFont = pygame.font.SysFont("arial", 20)
+
 class DVDS:
     def __init__(self, squareX=False, squareY=False):
         if not squareX:
-            squareX = random.randint(0, round(winWidth - 100))
-            squareY = random.randint(0, round(winHeight - 100))
+            squareX = random.randint(0, round(winWidth - (.1 * winWidth)))
+            squareY = random.randint(0, round(winHeight - (.1 * winHeight)))
         self.squareX = squareX
         self.squareY = squareY
         self.squareH = 43
         self.squareW = 98
-        self.squareXGain = (winWidth + winHeight) / 2 / 1000; self.squareYGain = self.squareXGain
+        self.squareXGain = random.choice([(winWidth + winHeight) / 2 / 1000, -((winWidth + winHeight) / 2 / 1000)]); self.squareYGain = random.choice([self.squareXGain, -self.squareXGain])
         self.currentLogo = random.choice(DVD_Logos)
 
     def __call__(self):
         self.squareX += self.squareXGain
         self.squareY += self.squareYGain
         if self.squareX <= 0 or self.squareX + self.squareW >= winWidth:
-            while True:
-                tilt = random.uniform(-.1, .1)
-                if self.squareXGain * (-1 + tilt) == 0:
-                    continue
-                else:
-                    self.squareXGain *= (-1 + random.uniform(-.1, .1))
-                    self.currentLogo = random.choice(DVD_Logos)
-                    break
+            tilt = random.uniform(-.1, .1)
+            if self.squareXGain * (-1 + tilt) == 0:
+                self.squareXGain *= -1
+            else:
+                self.squareXGain *= (-1 + random.uniform(-.1, .1))
+                self.currentLogo = random.choice(DVD_Logos)
 
         if self.squareY <= 0 or self.squareY + self.squareH >= winHeight:
-            while True:
-                tilt = random.uniform(-.1, .1)
-                if self.squareYGain * (-1 + tilt) == 0:
-                    continue
-                else:
-                    self.squareYGain *= (-1 + random.uniform(-.1, .1))
-                    self.currentLogo = random.choice(DVD_Logos)
-                    break
+            tilt = random.uniform(-.1, .1)
+            if self.squareYGain * (-1 + tilt) == 0:
+                self.squareYGain *= -1
+            else:
+                self.squareYGain *= (-1 + random.uniform(-.1, .1))
+                self.currentLogo = random.choice(DVD_Logos)
+
 DVDSDict[1] = DVDS()
 win = pygame.display.set_mode((winWidth, winHeight))
 
@@ -106,21 +107,41 @@ while Run:
             pygame.quit()
             Run = False
             break
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 DVDSDict[len(DVDSDict) + 1] = DVDS()
+
             elif event.button == 3:
                 pos = pygame.mouse.get_pos()
                 DVDSDict[len(DVDSDict) + 1] = DVDS(squareX=pos[0], squareY=pos[1])
+
             elif event.button == 2:
                 delete = random.choice(list(DVDSDict.keys()))
                 del DVDSDict[delete]
     if Run:
 
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_UP]:
+            ADD += .1
+        if keys[pygame.K_DOWN]:
+            ADD -= .1
+        if keys[pygame.K_PAGEDOWN]:
+            ADD -= 1
+        if keys[pygame.K_PAGEUP]:
+            ADD += 1
+        if keys[pygame.K_END]:
+            ADD -= 5
+        if keys[pygame.K_HOME]:
+            ADD += 5
+
         for DVD in DVDSDict:
             DVDSDict[DVD]()
 
         win.fill((0, 0, 0))
+        add = addFont.render(f'ADD: {ADD}', False, (0, 255, 255))
+        win.blit(add, (0, 0))
+
         for DVD in DVDSDict:
             win.blit(DVDSDict[DVD].currentLogo, (DVDSDict[DVD].squareX, DVDSDict[DVD].squareY))
         pygame.display.flip()
