@@ -1,96 +1,46 @@
-import pygame; pygame.init(); pygame.font.init()
-import os
-import subprocess
-from os import listdir
-from os.path import isfile, join
+import pygame; pygame.init(); pygame.font.init(); pygame.mixer.init()
+import sys
+from os import listdir, environ
 import tkinter as tk
 from tkinter.messagebox import showinfo
 import random
+import Menus
 
 #MAIN MENU
-def controllsMenu():
-    with open("controlls.txt", "r") as CF:
-        string = CF.read()
-        CTRLSRoot = tk.Tk()
+DIMENSIONS = Menus.Menu()
+DIMENSIONS.mainMenu()
+winWidth = DIMENSIONS.winWidth
+winHeight = DIMENSIONS.winHeight
 
-        mainL = tk.Label(CTRLSRoot, text=string, font=("Consolas", 13))
-        mainL.pack()
+print(winWidth)
 
-        os.environ['SDL_VIDEO_CENTERED'] = "1"
-
-        CTRLSRoot.mainloop()
-
-def done(root):
-    global winHeight, winWidth
-    winHeight = winHeight.get()
-    winWidth = winWidth.get()
-    root.destroy()
-
-def setting(root, winHeightE, winWidthE, winHeight, winWidth):
-
-	winHeight.set(winHeightE.get())
-	winWidth.set(winWidthE.get())
-	root.after(500, setting, root, winHeightE, winWidthE, winHeight, winWidth)
-
-root = tk.Tk()
-
-showinfo("IMPORTANT", "make sure to press done when done and not close out of the window")
-
-os.environ['SDL_VIDEO_CENTERED'] = "1"
-
-winHeight = tk.IntVar()
-winHeight.set(1080)
-
-winWidth = tk.IntVar()
-winWidth.set(1920)
-
-tk.Label(text="Window height", font=("MS Reference Sans Serif", 23)).pack()
-
-winHeightE = tk.Entry()
-winHeightE.insert(0, winHeight.get())
-winHeightE.pack()
-
-tk.Label(text="Window width", font=("MS Reference Sans Serif", 23)).pack()
-
-winWidthE = tk.Entry()
-winWidthE.insert(0, winWidth.get())
-winWidthE.pack()
-
-doneB = tk.Button(root, command=lambda: done(root), text="done", font=("Valken", 20))
-doneB.pack()
-
-controllsB = tk.Button(text="OPEN CONTROLS TEXT FILE", font=("MS Reference Sans Serif", 15), command=lambda: controllsMenu())
-controllsB.pack()
-
-setting(root, winHeightE, winWidthE, winHeight, winWidth)
-
-root.mainloop()
 #/Main Menu
 
+#Center screen
+environ['SDL_VIDEO_CENTERED'] = "1"
 
-
-
-os.environ['SDL_VIDEO_CENTERED'] = "1"
-
+#FONTS
+CTRLSFontSize = 20
 addFont = pygame.font.SysFont("Alien Encounters", 20)
 countFont = pygame.font.SysFont("Alien Encounters", 17)
+controlsFont = pygame.font.SysFont("arial", CTRLSFontSize)
 
+#DVDLogos setup
 path = "./DVD_Logos"
 
-Run = True
-
-ADD = 1
-
-DVD_Logos = [pygame.image.load(str(path + "/" + x)) for x in listdir(path)]
-
+logos = [str(f'{path}/{x}') for x in listdir(path)]
+DVD_Logos = [pygame.image.load(x) for x in logos]
 DVDSDict = {}
 
-
-
+#RANDOM VARS
+Run = True
+ADD = 1
 
 if winWidth == 1920 and winHeight == 1080:
+    FULLSCRN = True
     win = pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN)
 else:
+    FULLSCRN = False
     win = pygame.display.set_mode((winWidth, winHeight))
 
 class DVDS:
@@ -100,29 +50,23 @@ class DVDS:
             SY = random.randint(0, round(winHeight - (.1 * winHeight)))
         self.SX = SX
         self.SY = SY
-        self.squareH = 43
-        self.squareW = 98
+        self.SH = 43
+        self.SW = 98
         self.SXGain = random.choice([(winWidth + winHeight) / 2 / 1000, -((winWidth + winHeight) / 2 / 1000)]); self.SYGain = random.choice([self.SXGain, -self.SXGain])
         self.currentLogo = random.choice(DVD_Logos)
 
     def __call__(self):
         self.SX += self.SXGain
         self.SY += self.SYGain
-        if self.SX <= 0 or self.SX + self.squareW >= winWidth:
-            tilt = random.uniform(-.1, .1)
-            if self.SXGain * (-1 + tilt) == 0:
-                self.SXGain *= -1
-            else:
-                self.SXGain *= (-1 + random.uniform(-.1, .1))
-                self.currentLogo = random.choice(DVD_Logos)
 
-        if self.SY <= 0 or self.SY + self.squareH >= winHeight:
-            tilt = random.uniform(-.1, .1)
-            if self.SYGain * (-1 + tilt) == 0:
-                self.SYGain *= -1
-            else:
-                self.SYGain *= (-1 + random.uniform(-.1, .1))
-                self.currentLogo = random.choice(DVD_Logos)
+        if self.SX <= 0 or self.SX + self.SW >= winWidth:
+            self.SXGain *= (-1 + random.uniform(-.1, .1))
+            self.currentLogo = random.choice(DVD_Logos)
+
+        if self.SY <= 0 or self.SY + self.SH >= winHeight:
+            self.SYGain *= (-1 + random.uniform(-.1, .1))
+            self.currentLogo = random.choice(DVD_Logos)
+
         if self.SXGain == 0:
             self.SX = winWidth / 2
             self.SY = winHeight / 2
@@ -131,11 +75,31 @@ class DVDS:
             self.SX = winWidth / 2
             self.SY = winWidth / 2
             self.SYGain = 1
-        if self.SX + self.squareW > winWidth + 10 or self.SX < -10 or self.SY + self.squareH > winHeight + 10 or self.SY < -10:
+        if self.SX + self.SW > winWidth + 10 or self.SX < -10 or self.SY + self.SH > winHeight + 10 or self.SY < -10:
             self.SX = 100
             self.SY = 100
 
 DVDSDict[1] = DVDS()
+
+ShowAdd = True
+ShowTotal = True
+
+def pygameMenus(screen):
+    if FULLSCRN:
+        with open(screen, "r") as CF:
+            win.fill((0, 0, 0))
+            string = CF.read()
+            string = string.split(chr(10))
+            y = 0
+            for line in string:
+                win.blit(controlsFont.render(f'{line}', False, (0, 255, 255)), ((winWidth / 2) - (len(line) * (CTRLSFontSize / 5)), y))
+                y += 17
+            pygame.display.flip()
+    else:
+        if screen == "controls.txt":
+            controlsMenu()
+        elif screen == "info.txt":
+            infoMenu()
 
 while Run:
     clock = pygame.time.Clock()
@@ -145,8 +109,9 @@ while Run:
             pygame.quit()
             Run = False
             break
-
+        print(event)
         if event.type == pygame.MOUSEBUTTONDOWN:
+            print(event)
             ADD = round(ADD)
             if event.button == 1:
                 for a in range(ADD):
@@ -163,6 +128,15 @@ while Run:
                         del DVDSDict[len(DVDSDict)]
                     except:
                         break
+            
+            elif event.button == 4 and keys[pygame.K_LSHIFT]:
+                ADD += 10
+            elif event.button == 5 and keys[pygame.K_LSHIFT] and ADD >= 10:
+                ADD -= 10
+            elif event.button == 4:
+                ADD += 1
+            elif event.button == 5 and ADD >= 1:
+                ADD -= 1
     if Run:
 
         keys = pygame.key.get_pressed()
@@ -178,25 +152,49 @@ while Run:
             ADD -= 5
         if keys[pygame.K_HOME]:
             ADD += 5
+        if keys[pygame.K_F5]:
+            DVDSDict.clear()
 
+        if keys[pygame.K_F1] and keys[pygame.K_c]:
+            pygameMenus("controls.txt")
+        elif keys[pygame.K_F1]:
+            pygameMenus("info.txt")
+
+
+        if keys[pygame.K_t]:
+            ShowTotal = False if ShowTotal else True
+
+        if keys[pygame.K_a]:
+            ShowAdd = False if ShowAdd else True
+
+        if keys[pygame.K_w] and keys[pygame.K_i] and keys[pygame.K_n]:
+            pygame.mixer.Sound("Assets\Sounds\WINXP_Startup.wav").play()
+        if keys[pygame.K_t] and keys[pygame.K_h] and keys[pygame.K_x]:
+            pygame.mixer.Sound("Assets\Sounds\THX_Sound.wav").play()
+
+
+        
         if keys[pygame.K_ESCAPE] or keys[pygame.K_PAUSE]:
             pygame.display.quit()
             pygame.quit()
             Run = False
             break
 
+
         for DVD in DVDSDict:
             DVDSDict[DVD]()
+        if not keys[pygame.K_F1]:
+            win.fill((0, 0, 0))
+            add = addFont.render(f'ADD: {ADD}', False, (0, 255, 255))
+            countTotal = countFont.render(f'TOTAL: {len(DVDSDict)}', False, (0, 255, 255))
+            if ShowAdd:
+                win.blit(add, (0, 0))
+            if ShowTotal:
+                win.blit(countTotal, (0, 40))
 
-        win.fill((0, 0, 0))
-        add = addFont.render(f'ADD: {ADD}', False, (0, 255, 255))
-        countTotal = countFont.render(f'TOTAL: {len(DVDSDict)}', False, (0, 255, 255))
-        win.blit(add, (0, 0))
-        win.blit(countTotal, (0, 40))
-
-        for DVD in DVDSDict:
-            win.blit(DVDSDict[DVD].currentLogo, (DVDSDict[DVD].SX, DVDSDict[DVD].SY))
-        pygame.display.flip()
+            for DVD in DVDSDict:
+                win.blit(DVDSDict[DVD].currentLogo, (DVDSDict[DVD].SX, DVDSDict[DVD].SY))
+            pygame.display.flip()
         
 
     else:
