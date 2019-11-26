@@ -1,0 +1,17 @@
+In the top right are ADD, and TOTAL
+TOTAL: total number of logos on the screen
+
+LEFT CLICK: add ADD # of logos randomly on the screen
+MIDDLE CLICK: remove ADD # of logos randomly on the screen
+RIGHT CLICK: add ADD # of logos at the cursors location
+
+all of the following are per frame:
+UP: add .1 to the ADD counter (yes .1 because 1 is VERY FAST)
+DOWN: remove .1 from the ADD counter
+PAGEUP: add 1 to the ADD counter
+PAGEDOWN: remove 1 from the ADD counter
+HOME: add 5 to the ADD counter
+END: remove 5 from the ADD counter
+
+ESC: close window
+PAUSEBREAK: close window
