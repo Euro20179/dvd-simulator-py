@@ -64,6 +64,8 @@ DVD_Logos = [pygame.image.load(str(path + "/" + x)) for x in listdir(path)]
 DVDSDict = {}
 
 addFont = pygame.font.SysFont("arial", 20)
+countFont = pygame.font.SysFont("arial", 17)
+
 
 class DVDS:
     def __init__(self, squareX=False, squareY=False):
@@ -95,9 +97,23 @@ class DVDS:
             else:
                 self.squareYGain *= (-1 + random.uniform(-.1, .1))
                 self.currentLogo = random.choice(DVD_Logos)
+        if self.squareXGain == 0:
+            self.squareX = winWidth / 2
+            self.squareY = winHeight / 2
+            self.squareXGain = 1
+        if self.squareYGain == 0:
+            self.squareX = winWidth / 2
+            self.squareY = winWidth / 2
+            self.squareYGain = 1
+        if self.squareX + self.squareW > winWidth + 10 or self.squareX < -10 or self.squareY + self.squareH > winHeight + 10 or self.squareY < -10:
+            self.squareX = 100
+            self.squareY = 100
 
 DVDSDict[1] = DVDS()
-win = pygame.display.set_mode((winWidth, winHeight))
+if winWidth == 1920 and winHeight == 1080:
+    win = pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN)
+else:
+    win = pygame.display.set_mode((winWidth, winHeight))
 
 while Run:
     clock = pygame.time.Clock()
@@ -109,28 +125,34 @@ while Run:
             break
 
         if event.type == pygame.MOUSEBUTTONDOWN:
+            ADD = round(ADD)
             if event.button == 1:
-                DVDSDict[len(DVDSDict) + 1] = DVDS()
+                for a in range(ADD):
+                    DVDSDict[len(DVDSDict) + 1] = DVDS()
 
             elif event.button == 3:
-                pos = pygame.mouse.get_pos()
-                DVDSDict[len(DVDSDict) + 1] = DVDS(squareX=pos[0], squareY=pos[1])
+                for a in range(ADD):
+                    pos = pygame.mouse.get_pos()
+                    DVDSDict[len(DVDSDict) + 1] = DVDS(squareX=pos[0], squareY=pos[1])
 
             elif event.button == 2:
-                delete = random.choice(list(DVDSDict.keys()))
-                del DVDSDict[delete]
+                for a in range(ADD):
+                    try:
+                        del DVDSDict[len(DVDSDict)]
+                    except:
+                        break
     if Run:
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP]:
             ADD += .1
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_DOWN] and ADD >= .1:
             ADD -= .1
-        if keys[pygame.K_PAGEDOWN]:
+        if keys[pygame.K_PAGEDOWN] and ADD >= 1:
             ADD -= 1
         if keys[pygame.K_PAGEUP]:
             ADD += 1
-        if keys[pygame.K_END]:
+        if keys[pygame.K_END] and ADD >= 5:
             ADD -= 5
         if keys[pygame.K_HOME]:
             ADD += 5
@@ -140,7 +162,9 @@ while Run:
 
         win.fill((0, 0, 0))
         add = addFont.render(f'ADD: {ADD}', False, (0, 255, 255))
+        countTotal = countFont.render(f'TOTAL: {len(DVDSDict)}', False, (0, 255, 255))
         win.blit(add, (0, 0))
+        win.blit(countTotal, (0, 40))
 
         for DVD in DVDSDict:
             win.blit(DVDSDict[DVD].currentLogo, (DVDSDict[DVD].squareX, DVDSDict[DVD].squareY))
