@@ -1,4 +1,5 @@
-This is the dvd screen, that's about it
+This is the dvd screen, that's about it.
+(make sure to take everything out of the zip folder)
 
 add any 94x43 px image in the DVD_Logos folder to add it to the list of images to show.
 
