@@ -1,4 +1,5 @@
 In the top right are ADD, and TOTAL
+ADD: tells you how many logos to add when left or right click, also removes that many when middle clicked
 TOTAL: total number of logos on the screen
 
 LEFT CLICK: add ADD # of logos randomly on the screen
