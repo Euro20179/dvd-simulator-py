@@ -3,6 +3,9 @@ from os import environ
 class Menu:
     def __init__(self):
         self.root = tk.Tk()
+        
+
+        
 
         self.winHeight = tk.IntVar()
         self.winHeight.set(1080)
@@ -97,6 +100,13 @@ class Menu:
         infoB = tk.Button(text="Info", font=("MS Reference Sans Serif", 10), command=lambda: self.infoMenu())
         infoB.grid(column=2, row=5)
 
+        self.root.update_idletasks()
+        w =self.root.winfo_screenwidth()
+        h = self.root.winfo_screenheight()
+        size = tuple(int(_) for _ in self.root.geometry().split("+")[0].split("x"))
+        x = w / 2 - size[0] / 2
+        y = h / 2 - size[1] / 2
+        self.root.geometry("%dx%d+%d+%d" %(size + (x, y)))
         self.setSetting()
 
         self.root.mainloop()

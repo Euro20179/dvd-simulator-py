@@ -9,12 +9,10 @@ ScrollDown (+ LSHIFT) (+ R/G/B) [+ LCTRL]: remove 1 from the ADD counter (remove
 
 KEYBOARD:
 all of the following are per frame:
-UP: add .1 to the ADD counter (yes .1 because 1 is VERY FAST)
-DOWN: remove .1 from the ADD counter
-PAGEUP: add 1 to the ADD counter
-PAGEDOWN: remove 1 from the ADD counter
-HOME: add 5 to the ADD counter
-END: remove 5 from the ADD counter
+PAGEUP: add 5 to the ADD counter
+PAGEDOWN: remove 5 from the ADD counter
+HOME: add 10 to the ADD counter
+END: remove 10 from the ADD counter
 F5: remove all.
 
 ESC: close window
