@@ -22,15 +22,6 @@ SW = int(DIMENSIONS.picWidth)
 #Center screen
 environ['SDL_VIDEO_CENTERED'] = "1"
 
-#FONTS
-CTRLSFontSize = 20
-addFont = pygame.font.SysFont("Alien Encounters", 20)
-countFont = pygame.font.SysFont("Alien Encounters", 17)
-controlsFont = pygame.font.SysFont("arial", CTRLSFontSize)
-DVDInfoFont = pygame.font.SysFont("arial", 20)
-leaderBoardFont = pygame.font.SysFont("Alien Encounters", 15)
-avgHitsFont = pygame.font.SysFont("arial", 15)
-
 #DVDLogos setup
 path = "./DVD_Logos"
 
@@ -45,22 +36,46 @@ ADD = 1
 
 leaders = 0
 
+
+
+#color settings
+
 WFILLColor = [0, 0, 0]
 
 baseColor = 255
 
+inverseRGBColor = (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2])
+
+#FONTS
+CTRLSFontSize = 20
+addFont = pygame.font.SysFont("Alien Encounters", 20)
+countFont = pygame.font.SysFont("Alien Encounters", 17)
+controlsFont = pygame.font.SysFont("arial", CTRLSFontSize)
+DVDInfoFont = pygame.font.SysFont("arial", 20)
+leaderBoardFont = pygame.font.SysFont("Alien Encounters", 15)
+avgHitsFont = pygame.font.SysFont("arial", 15)
+
 #options
-ShowLeader = False
-ShowAdd = False
-ShowTotal = False
-ShowAVG = False
-ShowRGB = False
-ShowSum = False
-CycleColors = False
+options = {
+    "ShowLeader": False,
+    "ShowAdd": False,
+    "ShowTotal": False,
+    "ShowAVG": False,
+    "ShowRGB": False,
+    "ShowSum": False,
+    "CycleColors": False
+    }
+
+#sounds
+sounds = {
+    "windows": ".\src\Sounds\WINXP_Startup.wav",
+    "THX": ".\src\Sounds\THX_Sound.wav"
+    }
+
 
 if winWidth == 1920 and winHeight == 1080:
     FULLSCRN = True
-    win = pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN, pygame.RESIZABLE)
+    win = pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN)
 else:
     FULLSCRN = False
     win = pygame.display.set_mode((winWidth, winHeight))
@@ -119,8 +134,8 @@ def pygameMenus(screen):
         elif screen == "src/txt_files/info.txt":
             infoMenu()
 
-def mainKeyChks():
-    global ShowLeader, ShowTotal, ShowAdd, ShowAVG, ShowRGB, ShowSum, CycleColors, ADD, win, keys
+def mainKeyChks(options, ADD, win):
+    
     if keys[pygame.K_UP]:
         ADD += .1
     if keys[pygame.K_DOWN] and ADD >= .1:
@@ -136,7 +151,7 @@ def mainKeyChks():
     if keys[pygame.K_F5]:
         DVDSDict.clear()
     if keys[pygame.K_F3]:
-        CycleColors = True if not CycleColors else False
+        options["CycleColors"] = True if not options["CycleColors"] else False
 
     if keys[pygame.K_F1] and keys[pygame.K_c]:
         pygameMenus("src/txt_files/controls.txt")
@@ -144,37 +159,35 @@ def mainKeyChks():
         pygameMenus("src/txt_files/info.txt")
 
     if keys[pygame.K_o] and keys[pygame.K_LSHIFT]:
-        ShowAdd = True
-        ShowAVG = True
-        ShowLeader = True
-        ShowRGB = True
-        ShowSum = True
-        ShowTotal = True
+        for option in options:
+            if option == "CycleColors":
+                continue
+            else:
+                options[option] = True
     if keys[pygame.K_o] and keys[pygame.K_LCTRL]:
-        ShowAdd = False
-        ShowAVG = False
-        ShowLeader = False
-        ShowRGB = False
-        ShowSum = False
-        ShowTotal = False
+         for option in options:
+            if option == "CycleColors":
+                continue
+            else:
+                options[option] = False
     if keys[pygame.K_h]:
-        ShowLeader = False if ShowLeader else True
+        options["ShowLeader"] = False if options["ShowLeader"] else True
     if keys[pygame.K_t]:
-        ShowTotal = False if ShowTotal else True
+        options["ShowTotal"] = False if options["ShowTotal"] else True
     if keys[pygame.K_a]:
-        ShowAdd = False if ShowAdd else True
+        options["ShowAdd"] = False if options["ShowAdd"] else True
     if keys[pygame.K_m]:
-        ShowAVG = False if ShowAVG else True
+        options["ShowAVG"] = False if options["ShowAVG"] else True
     if keys[pygame.K_F2]:
-        ShowRGB = False if ShowRGB else True
+        options["ShowRGB"] = False if options["ShowRGB"] else True
     if keys[pygame.K_s]:
-        ShowSum = False if ShowSum else True
+        options["ShowSum"] = False if options["ShowSum"] else True
 
 
     if keys[pygame.K_w] and keys[pygame.K_i] and keys[pygame.K_n]:
-        pygame.mixer.Sound(".\src\Sounds\WINXP_Startup.wav").play()
+        pygame.mixer.Sound(sounds["windows"]).play()
     if keys[pygame.K_t] and keys[pygame.K_h] and keys[pygame.K_x]:
-        pygame.mixer.Sound(".\src\Sounds\THX_Sound.wav").play()
+        pygame.mixer.Sound(sounds["THX"]).play()
 
 
         
@@ -184,6 +197,8 @@ def mainKeyChks():
         Run = False
     if keys[pygame.K_PAUSE]:
         pygame.image.save(win, f'SCREENSHOTS\{time.time()}.jpeg')
+
+    return options, ADD, win
 
 def cycleColors():
     R = WFILLColor[0]
@@ -255,64 +270,40 @@ while Run:
                             del DVDSDict[len(DVDSDict)]
                             break
             
-            elif event.button == 4 and keys[pygame.K_LSHIFT]:
+            elif event.button == 4:
+                plus = 10 if keys[pygame.K_LSHIFT] else 1
+
                 if keys[pygame.K_LCTRL] and baseColor <= 245:
-                    baseColor += 10
+                    baseColor += plus
 
                 elif keys[pygame.K_r] and WFILLColor[0] <= 245:
-                    WFILLColor[0] += 10
+                    WFILLColor[0] += plus
                 elif keys[pygame.K_g] and WFILLColor[1] <= 245:
-                    WFILLColor[1] += 10
+                    WFILLColor[1] += plus
                 elif keys[pygame.K_b] and WFILLColor[2] <= 245:
-                    WFILLColor[2] += 10
+                    WFILLColor[2] += plus
 
                 else:
-                    ADD += 10
-
-            elif event.button == 5 and keys[pygame.K_LSHIFT]:
-                if keys[pygame.K_LCTRL] and baseColor >= 10:
-                    baseColor -= 10
-
-                elif WFILLColor[0] >= 10 and keys[pygame.K_r]:
-                    WFILLColor[0] -= 10
-                elif WFILLColor[1] >= 10 and keys[pygame.K_g]:
-                    WFILLColor[1] -= 10
-                elif WFILLColor[2] >= 10 and keys[pygame.K_b]:
-                    WFILLColor[2] -= 10
-
-                elif ADD >= 10:
-                    ADD -= 10
-
-            elif event.button == 4:
-                if keys[pygame.K_LCTRL] and baseColor <= 254:
-                    baseColor += 1
-
-                elif keys[pygame.K_r] and WFILLColor[0] <= 254:
-                    WFILLColor[0] += 1
-                elif keys[pygame.K_g] and WFILLColor[1] <= 254:
-                    WFILLColor[1] += 1
-                elif keys[pygame.K_b] and WFILLColor[2] <= 254:
-                    WFILLColor[2] += 1
-
-                else:
-                    ADD += 1
+                    ADD += plus
 
             elif event.button == 5:
-                if keys[pygame.K_LCTRL] and baseColor >= 1:
-                    baseColor -= 1
+                plus = 10 if keys[pygame.K_LSHIFT] else 1
+                if keys[pygame.K_LCTRL] and baseColor >= 10:
+                    baseColor -= plus
 
-                elif WFILLColor[0] >= 1 and keys[pygame.K_r]:
-                    WFILLColor[0] -= 1
-                elif WFILLColor[1] >= 1 and keys[pygame.K_g]:
-                    WFILLColor[1] -= 1
-                elif WFILLColor[2] >= 1 and keys[pygame.K_b]:
-                    WFILLColor[2] -= 1
+                elif WFILLColor[0] >= 10 and keys[pygame.K_r]:
+                    WFILLColor[0] -= plus
+                elif WFILLColor[1] >= 10 and keys[pygame.K_g]:
+                    WFILLColor[1] -= plus
+                elif WFILLColor[2] >= 10 and keys[pygame.K_b]:
+                    WFILLColor[2] -= plus
 
-                elif ADD >= 1:
-                    ADD -= 1
+                elif ADD >= 10:
+                    ADD -= plus
 
     if Run:
-        if CycleColors:
+        inverseRGBColor = (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2])
+        if options["CycleColors"]:
             cycleColors()
         hits = [x.wallHits for x in DVDSDict.values()]
         if hits:
@@ -324,36 +315,36 @@ while Run:
         except:
             pass
 
-        mainKeyChks()
+        options, ADD, win = mainKeyChks(options, ADD, win)
 
         for DVD in DVDSDict:
             DVDSDict[DVD]()
         if not keys[pygame.K_F1]:
             win.fill((WFILLColor[0], WFILLColor[1], WFILLColor[2]))
-            if ShowAVG:
-                avgWallHits = avgHitsFont.render(f'AVG HITS: {AVGHits}', False, (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2]))
+            if options["ShowAVG"]:
+                avgWallHits = avgHitsFont.render(f'AVG HITS: {AVGHits}', False, inverseRGBColor)
                 win.blit(avgWallHits, (0, winHeight / 2))
-            if ShowLeader:
-                leaderBoardDisp = leaderBoardFont.render(f'MOST HITS: {leaders}', False, (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2]))
+            if options["ShowLeader"]:
+                leaderBoardDisp = leaderBoardFont.render(f'MOST HITS: {leaders}', False, inverseRGBColor)
                 win.blit(leaderBoardDisp, (0, 90))
-            if ShowAdd:
-                add = addFont.render(f'ADD: {ADD}', False, (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2]))
+            if options["ShowAdd"]:
+                add = addFont.render(f'ADD: {ADD}', False, inverseRGBColor)
                 win.blit(add, (0, 0))
-            if ShowTotal:
-                countTotal = countFont.render(f'DVDS: {len(DVDSDict)}', False, (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2]))
+            if options["ShowTotal"]:
+                countTotal = countFont.render(f'DVDS: {len(DVDSDict)}', False, inverseRGBColor)
                 win.blit(countTotal, (0, 40))
-            if ShowRGB:
-                RGBDisp = avgHitsFont.render(f'RGB: {WFILLColor}', False, (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2]))
-                RGBBaseDisp = avgHitsFont.render(f'RGB Base: {baseColor}', False, (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2]))
+            if options["ShowRGB"]:
+                RGBDisp = avgHitsFont.render(f'RGB: {WFILLColor}', False, inverseRGBColor)
+                RGBBaseDisp = avgHitsFont.render(f'RGB Base: {baseColor}', False, inverseRGBColor)
                 win.blit(RGBDisp, (0, 110))
                 win.blit(RGBBaseDisp, (0, 130))
-            if ShowSum:
-                sumDisp = countFont.render(f'TOTAL HITS: {totalHits}', False, (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2]))
+            if options["ShowSum"]:
+                sumDisp = countFont.render(f'TOTAL HITS: {totalHits}', False, inverseRGBColor)
                 win.blit(sumDisp, (0, 70))
             for DVD in DVDSDict:
                 win.blit(DVDSDict[DVD].currentLogo, (DVDSDict[DVD].SX, DVDSDict[DVD].SY))
                 if DVDSDict[DVD].dispInfo:
-                    info = DVDInfoFont.render(f'wall hits: {DVDSDict[DVD].wallHits}', False, (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2]))
+                    info = DVDInfoFont.render(f'wall hits: {DVDSDict[DVD].wallHits}', False, inverseRGBColor)
                     win.blit(info, (DVDSDict[DVD].SX + DVDSDict[DVD].SW, DVDSDict[DVD].SY))
             pygame.display.flip()
        
