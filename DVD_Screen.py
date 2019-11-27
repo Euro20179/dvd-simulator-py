@@ -47,6 +47,8 @@ leaders = 0
 
 WFILLColor = [0, 0, 0]
 
+baseColor = 255
+
 #options
 ShowLeader = False
 ShowAdd = False
@@ -54,6 +56,7 @@ ShowTotal = False
 ShowAVG = False
 ShowRGB = False
 ShowSum = False
+CycleColors = False
 
 if winWidth == 1920 and winHeight == 1080:
     FULLSCRN = True
@@ -117,7 +120,7 @@ def pygameMenus(screen):
             infoMenu()
 
 def mainKeyChks():
-    global ShowLeader, ShowTotal, ShowAdd, ShowAVG, ShowRGB, ShowSum, ADD, win, keys
+    global ShowLeader, ShowTotal, ShowAdd, ShowAVG, ShowRGB, ShowSum, CycleColors, ADD, win, keys
     if keys[pygame.K_UP]:
         ADD += .1
     if keys[pygame.K_DOWN] and ADD >= .1:
@@ -132,6 +135,8 @@ def mainKeyChks():
         ADD += 5
     if keys[pygame.K_F5]:
         DVDSDict.clear()
+    if keys[pygame.K_F3]:
+        CycleColors = True if not CycleColors else False
 
     if keys[pygame.K_F1] and keys[pygame.K_c]:
         pygameMenus("src/txt_files/controls.txt")
@@ -180,10 +185,31 @@ def mainKeyChks():
     if keys[pygame.K_PAUSE]:
         pygame.image.save(win, f'SCREENSHOTS\{time.time()}.jpeg')
 
+def cycleColors():
+    R = WFILLColor[0]
+    G = WFILLColor[1]
+    B = WFILLColor[2]
+    if R != baseColor and G != baseColor and B != baseColor:
+        WFILLColor[0] = baseColor
+        WFILLColor[1] = 0
+        WFILLColor[2] = 0
+    if R == baseColor and G >= 0 and B == 0 and G < baseColor:
+        WFILLColor[1] += 1
+    if R <= baseColor and G == baseColor and B == 0 and R > 0:
+        WFILLColor[0] -= 1
+    if R == 0 and G == baseColor and B >= 0 and B < baseColor:
+        WFILLColor[2] += 1
+    if R == 0 and G <= baseColor and B == baseColor and G > 0:
+        WFILLColor[1] -= 1
+    if R >= 0 and G == 0 and B == baseColor and R < baseColor:
+        WFILLColor[0] += 1
+    if R == baseColor and G == 0 and B <= baseColor and B > 0:
+        WFILLColor[2] -= 1
 
 while Run:
     clock = pygame.time.Clock()
     keys = pygame.key.get_pressed()
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.display.quit()
@@ -230,7 +256,10 @@ while Run:
                             break
             
             elif event.button == 4 and keys[pygame.K_LSHIFT]:
-                if keys[pygame.K_r] and WFILLColor[0] <= 245:
+                if keys[pygame.K_LCTRL] and baseColor <= 245:
+                    baseColor += 10
+
+                elif keys[pygame.K_r] and WFILLColor[0] <= 245:
                     WFILLColor[0] += 10
                 elif keys[pygame.K_g] and WFILLColor[1] <= 245:
                     WFILLColor[1] += 10
@@ -241,7 +270,10 @@ while Run:
                     ADD += 10
 
             elif event.button == 5 and keys[pygame.K_LSHIFT]:
-                if WFILLColor[0] >= 10 and keys[pygame.K_r]:
+                if keys[pygame.K_LCTRL] and baseColor >= 10:
+                    baseColor -= 10
+
+                elif WFILLColor[0] >= 10 and keys[pygame.K_r]:
                     WFILLColor[0] -= 10
                 elif WFILLColor[1] >= 10 and keys[pygame.K_g]:
                     WFILLColor[1] -= 10
@@ -252,7 +284,10 @@ while Run:
                     ADD -= 10
 
             elif event.button == 4:
-                if keys[pygame.K_r] and WFILLColor[0] <= 254:
+                if keys[pygame.K_LCTRL] and baseColor <= 254:
+                    baseColor += 1
+
+                elif keys[pygame.K_r] and WFILLColor[0] <= 254:
                     WFILLColor[0] += 1
                 elif keys[pygame.K_g] and WFILLColor[1] <= 254:
                     WFILLColor[1] += 1
@@ -263,7 +298,10 @@ while Run:
                     ADD += 1
 
             elif event.button == 5:
-                if WFILLColor[0] >= 1 and keys[pygame.K_r]:
+                if keys[pygame.K_LCTRL] and baseColor >= 1:
+                    baseColor -= 1
+
+                elif WFILLColor[0] >= 1 and keys[pygame.K_r]:
                     WFILLColor[0] -= 1
                 elif WFILLColor[1] >= 1 and keys[pygame.K_g]:
                     WFILLColor[1] -= 1
@@ -274,6 +312,8 @@ while Run:
                     ADD -= 1
 
     if Run:
+        if CycleColors:
+            cycleColors()
         hits = [x.wallHits for x in DVDSDict.values()]
         if hits:
             leaders = max(hits)
@@ -304,7 +344,9 @@ while Run:
                 win.blit(countTotal, (0, 40))
             if ShowRGB:
                 RGBDisp = avgHitsFont.render(f'RGB: {WFILLColor}', False, (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2]))
+                RGBBaseDisp = avgHitsFont.render(f'RGB Base: {baseColor}', False, (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2]))
                 win.blit(RGBDisp, (0, 110))
+                win.blit(RGBBaseDisp, (0, 130))
             if ShowSum:
                 sumDisp = countFont.render(f'TOTAL HITS: {totalHits}', False, (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2]))
                 win.blit(sumDisp, (0, 70))
