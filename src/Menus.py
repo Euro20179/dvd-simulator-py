@@ -17,7 +17,7 @@ class Menu:
         self.winWidthE.insert(0, self.winWidth.get())
 
     def controlsMenu(self):
-        with open("controls.txt", "r") as CF:
+        with open("src\txt_files\controls.txt", "r") as CF:
             string = CF.read()
             CTRLSRoot = tk.Tk()
 
@@ -28,7 +28,7 @@ class Menu:
             CTRLSRoot.mainloop()
 
     def infoMenu(self):
-        with open("info.txt", "r") as IF:
+        with open("src\txt_files\info.txt", "r") as IF:
             string = IF.read()
             IFRoot = tk.Tk()
 
@@ -47,8 +47,6 @@ class Menu:
     def setSetting(self):
         self.winHeight.set(self.winHeightE.get())
         self.winWidth.set(self.winWidthE.get())
-
-        print(self.winHeight.get())
 
         self.root.after(500, self.setSetting)
 
