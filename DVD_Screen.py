@@ -14,8 +14,8 @@ DIMENSIONS = Menus.Menu()
 DIMENSIONS.mainMenu()
 winWidth = DIMENSIONS.winWidth
 winHeight = DIMENSIONS.winHeight
-
-print(winWidth)
+SH = int(DIMENSIONS.picHeight)
+SW = int(DIMENSIONS.picWidth)
 
 #/Main Menu
 
@@ -40,33 +40,39 @@ DVDSDict = {}
 
 #RANDOM VARS
 Run = True
+
 ADD = 1
+
 leaders = 0
 
+WFILLColor = [0, 0, 0]
+
 #options
-ShowLeader = True
-ShowAdd = True
-ShowTotal = True
-ShowAVG = True
+ShowLeader = False
+ShowAdd = False
+ShowTotal = False
+ShowAVG = False
+ShowRGB = False
+ShowSum = False
 
 if winWidth == 1920 and winHeight == 1080:
     FULLSCRN = True
-    win = pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN)
+    win = pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN, pygame.RESIZABLE)
 else:
     FULLSCRN = False
     win = pygame.display.set_mode((winWidth, winHeight))
 
 class DVDS:
-    def __init__(self, SX=False, SY=False):
+    def __init__(self, SX=False, SY=False, SH=SH, SW=SW):
         if not SX:
             SX = random.randint(0, round(winWidth - (.1 * winWidth)))
             SY = random.randint(0, round(winHeight - (.1 * winHeight)))
         self.SX = SX
         self.SY = SY
-        self.SH = 43
-        self.SW = 98
+        self.SH = SH
+        self.SW = SH
         self.wallHits = 0
-        self.SXGain = random.choice([(winWidth + winHeight) / 2 / 1000, -((winWidth + winHeight) / 2 / 1000)]); self.SYGain = random.choice([self.SXGain, -self.SXGain])
+        self.SXGain = random.choice([(winWidth + winHeight) / 2 / 700, -((winWidth + winHeight) / 2 / 700)]); self.SYGain = random.choice([self.SXGain, -self.SXGain])
         self.currentLogo = random.choice(DVD_Logos)
         self.dispInfo = False
 
@@ -76,15 +82,19 @@ class DVDS:
 
         if self.SX <= 0 or self.SX + self.SW >= winWidth:
             self.SXGain *= (-1 + random.uniform(-.1, .1))
-            self.SX += self.SXGain + 1
             self.currentLogo = random.choice(DVD_Logos)
             self.wallHits += 1
 
         if self.SY <= 0 or self.SY + self.SH >= winHeight:
             self.SYGain *= (-1 + random.uniform(-.1, .1))
-            self.SX += self.SYGain + 1
             self.currentLogo = random.choice(DVD_Logos)
             self.wallHits += 1
+
+        if self.SY <= 0 - self.SH or self.SY + self.SH >= winHeight + self.SH:
+            self.SY = 1
+
+        if self.SX <= 0 - self.SW or self.SX + self.SW >= winWidth + self.SW:
+            self.SX = 1
 
 
 DVDSDict[1] = DVDS()
@@ -92,7 +102,7 @@ DVDSDict[1] = DVDS()
 def pygameMenus(screen):
     if FULLSCRN:
         with open(screen, "r") as CF:
-            win.fill((0, 0, 0))
+            win.fill(tuple(WFILLColor))
             string = CF.read()
             string = string.split(chr(10))
             y = 0
@@ -101,13 +111,13 @@ def pygameMenus(screen):
                 y += 17
             pygame.display.flip()
     else:
-        if screen == "controls.txt":
+        if screen == "src/txt_files/controls.txt":
             controlsMenu()
-        elif screen == "info.txt":
+        elif screen == "src/txt_files/info.txt":
             infoMenu()
 
 def mainKeyChks():
-    global ShowLeader, ShowTotal, ShowAdd, ShowAVG, ADD, win
+    global ShowLeader, ShowTotal, ShowAdd, ShowAVG, ShowRGB, ShowSum, ADD, win, keys
     if keys[pygame.K_UP]:
         ADD += .1
     if keys[pygame.K_DOWN] and ADD >= .1:
@@ -124,10 +134,24 @@ def mainKeyChks():
         DVDSDict.clear()
 
     if keys[pygame.K_F1] and keys[pygame.K_c]:
-        pygameMenus("controls.txt")
+        pygameMenus("src/txt_files/controls.txt")
     elif keys[pygame.K_F1]:
-        pygameMenus("info.txt")
+        pygameMenus("src/txt_files/info.txt")
 
+    if keys[pygame.K_o] and keys[pygame.K_LSHIFT]:
+        ShowAdd = True
+        ShowAVG = True
+        ShowLeader = True
+        ShowRGB = True
+        ShowSum = True
+        ShowTotal = True
+    if keys[pygame.K_o] and keys[pygame.K_LCTRL]:
+        ShowAdd = False
+        ShowAVG = False
+        ShowLeader = False
+        ShowRGB = False
+        ShowSum = False
+        ShowTotal = False
     if keys[pygame.K_h]:
         ShowLeader = False if ShowLeader else True
     if keys[pygame.K_t]:
@@ -136,12 +160,16 @@ def mainKeyChks():
         ShowAdd = False if ShowAdd else True
     if keys[pygame.K_m]:
         ShowAVG = False if ShowAVG else True
+    if keys[pygame.K_F2]:
+        ShowRGB = False if ShowRGB else True
+    if keys[pygame.K_s]:
+        ShowSum = False if ShowSum else True
 
 
     if keys[pygame.K_w] and keys[pygame.K_i] and keys[pygame.K_n]:
-        pygame.mixer.Sound("Assets\Sounds\WINXP_Startup.wav").play()
+        pygame.mixer.Sound(".\src\Sounds\WINXP_Startup.wav").play()
     if keys[pygame.K_t] and keys[pygame.K_h] and keys[pygame.K_x]:
-        pygame.mixer.Sound("Assets\Sounds\THX_Sound.wav").play()
+        pygame.mixer.Sound(".\src\Sounds\THX_Sound.wav").play()
 
 
         
@@ -155,16 +183,14 @@ def mainKeyChks():
 
 while Run:
     clock = pygame.time.Clock()
+    keys = pygame.key.get_pressed()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.display.quit()
             pygame.quit()
             Run = False
             break
-        print(event)
-        keys = pygame.key.get_pressed()
         if event.type == pygame.MOUSEBUTTONDOWN:
-            print(event)
             ADD = round(ADD)
 
             if event.button == 1:
@@ -204,13 +230,49 @@ while Run:
                             break
             
             elif event.button == 4 and keys[pygame.K_LSHIFT]:
-                ADD += 10
-            elif event.button == 5 and keys[pygame.K_LSHIFT] and ADD >= 10:
-                ADD -= 10
+                if keys[pygame.K_r] and WFILLColor[0] <= 245:
+                    WFILLColor[0] += 10
+                elif keys[pygame.K_g] and WFILLColor[1] <= 245:
+                    WFILLColor[1] += 10
+                elif keys[pygame.K_b] and WFILLColor[2] <= 245:
+                    WFILLColor[2] += 10
+
+                else:
+                    ADD += 10
+
+            elif event.button == 5 and keys[pygame.K_LSHIFT]:
+                if WFILLColor[0] >= 10 and keys[pygame.K_r]:
+                    WFILLColor[0] -= 10
+                elif WFILLColor[1] >= 10 and keys[pygame.K_g]:
+                    WFILLColor[1] -= 10
+                elif WFILLColor[2] >= 10 and keys[pygame.K_b]:
+                    WFILLColor[2] -= 10
+
+                elif ADD >= 10:
+                    ADD -= 10
+
             elif event.button == 4:
-                ADD += 1
-            elif event.button == 5 and ADD >= 1:
-                ADD -= 1
+                if keys[pygame.K_r] and WFILLColor[0] <= 254:
+                    WFILLColor[0] += 1
+                elif keys[pygame.K_g] and WFILLColor[1] <= 254:
+                    WFILLColor[1] += 1
+                elif keys[pygame.K_b] and WFILLColor[2] <= 254:
+                    WFILLColor[2] += 1
+
+                else:
+                    ADD += 1
+
+            elif event.button == 5:
+                if WFILLColor[0] >= 1 and keys[pygame.K_r]:
+                    WFILLColor[0] -= 1
+                elif WFILLColor[1] >= 1 and keys[pygame.K_g]:
+                    WFILLColor[1] -= 1
+                elif WFILLColor[2] >= 1 and keys[pygame.K_b]:
+                    WFILLColor[2] -= 1
+
+                elif ADD >= 1:
+                    ADD -= 1
+
     if Run:
         hits = [x.wallHits for x in DVDSDict.values()]
         if hits:
@@ -218,6 +280,7 @@ while Run:
         temp = [x.wallHits for x in DVDSDict.values()]
         try:
             AVGHits = mean(temp)
+            totalHits = sum(temp)
         except:
             pass
 
@@ -226,27 +289,29 @@ while Run:
         for DVD in DVDSDict:
             DVDSDict[DVD]()
         if not keys[pygame.K_F1]:
-            win.fill((0, 0, 0))
-            add = addFont.render(f'ADD: {ADD}', False, (0, 255, 255))
-            countTotal = countFont.render(f'TOTAL: {len(DVDSDict)}', False, (0, 255, 255))
-            avgWallHits = avgHitsFont.render(f'AVG HITS: {AVGHits}', False, (0, 255, 255))
+            win.fill((WFILLColor[0], WFILLColor[1], WFILLColor[2]))
             if ShowAVG:
+                avgWallHits = avgHitsFont.render(f'AVG HITS: {AVGHits}', False, (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2]))
                 win.blit(avgWallHits, (0, winHeight / 2))
             if ShowLeader:
-                leaderBoardDisp = leaderBoardFont.render(f'MOST HITS: {leaders}', False, (0, 255, 255))
-                win.blit(leaderBoardDisp, (0, 70))
+                leaderBoardDisp = leaderBoardFont.render(f'MOST HITS: {leaders}', False, (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2]))
+                win.blit(leaderBoardDisp, (0, 90))
             if ShowAdd:
+                add = addFont.render(f'ADD: {ADD}', False, (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2]))
                 win.blit(add, (0, 0))
             if ShowTotal:
+                countTotal = countFont.render(f'DVDS: {len(DVDSDict)}', False, (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2]))
                 win.blit(countTotal, (0, 40))
-
+            if ShowRGB:
+                RGBDisp = avgHitsFont.render(f'RGB: {WFILLColor}', False, (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2]))
+                win.blit(RGBDisp, (0, 110))
+            if ShowSum:
+                sumDisp = countFont.render(f'TOTAL HITS: {totalHits}', False, (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2]))
+                win.blit(sumDisp, (0, 70))
             for DVD in DVDSDict:
                 win.blit(DVDSDict[DVD].currentLogo, (DVDSDict[DVD].SX, DVDSDict[DVD].SY))
                 if DVDSDict[DVD].dispInfo:
-                    info = DVDInfoFont.render(f'wall hits: {DVDSDict[DVD].wallHits}', False, (0, 255, 255))
+                    info = DVDInfoFont.render(f'wall hits: {DVDSDict[DVD].wallHits}', False, (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2]))
                     win.blit(info, (DVDSDict[DVD].SX + DVDSDict[DVD].SW, DVDSDict[DVD].SY))
             pygame.display.flip()
-        
-
-    else:
-        break
+       

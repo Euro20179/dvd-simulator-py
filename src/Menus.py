@@ -16,8 +16,24 @@ class Menu:
         self.winWidthE = tk.Entry()
         self.winWidthE.insert(0, self.winWidth.get())
 
+        self.picHeight = tk.IntVar()
+        self.picHeight.set(97)
+
+        self.picHeightE = tk.Entry()
+        self.picHeightE.insert(0, self.picHeight.get())
+
+        self.picWidth = tk.IntVar()
+        self.picWidth.set(43)
+
+        self.picWidthE = tk.Entry()
+        self.picWidthE.insert(0, self.picWidth.get())
+
+    def RUNFEATURELESS(self):
+        self.root.destroy()
+        import Featureless
+
     def controlsMenu(self):
-        with open("src\txt_files\controls.txt", "r") as CF:
+        with open(r".\src\txt_files\controls.txt", "r") as CF:
             string = CF.read()
             CTRLSRoot = tk.Tk()
 
@@ -28,7 +44,7 @@ class Menu:
             CTRLSRoot.mainloop()
 
     def infoMenu(self):
-        with open("src\txt_files\info.txt", "r") as IF:
+        with open(r".\src\txt_files/info.txt", "r") as IF:
             string = IF.read()
             IFRoot = tk.Tk()
 
@@ -42,34 +58,44 @@ class Menu:
         self.winHeight = self.winHeight.get()
         self.winWidth = self.winWidth.get()
 
+        self.picWidth = self.picWidthE.get()
+        self.picHeight = self.picHeightE.get()
+
         self.root.destroy()
 
     def setSetting(self):
         self.winHeight.set(self.winHeightE.get())
         self.winWidth.set(self.winWidthE.get())
+        self.picHeight.set(self.picHeightE.get())
+        self.picWidth.set(self.picWidthE.get())
 
         self.root.after(500, self.setSetting)
 
     def mainMenu(self):
         environ['SDL_VIDEO_CENTERED'] = "1"
 
-        tk.Label(text="Window height", font=("MS Reference Sans Serif", 23)).pack()
+        tk.Label(text="Window height", font=("MS Reference Sans Serif", 15)).grid(column=1, row=1)
+        self.winHeightE.grid(column=1, row=2)
 
-        self.winHeightE.pack()
+        tk.Label(text="Window width", font=("MS Reference Sans Serif", 15)).grid(column=1, row=3)
+        self.winWidthE.grid(column=1, row=4)
 
-        tk.Label(text="Window width", font=("MS Reference Sans Serif", 23)).pack()
+        tk.Label(text="picture width\nRECOMMENDED DEFAULT", font=("MS Reference Sans Serif", 10)).grid(column=1, row=5)
+        self.picWidthE.grid(column=1, row=6)
 
-        
-        self.winWidthE.pack()
+        tk.Label(text="picture height\nRECOMMENDED DEFAULT", font=("MS Reference Sans Serif", 10)).grid(column=1, row=7)
+        self.picHeightE.grid(column=1, row=8)
 
-        doneB = tk.Button(self.root, command=lambda: self.done(), text="done", font=("Valken", 20))
-        doneB.pack()
+        doneB = tk.Button(self.root, command=lambda: self.done(), text="run main version", font=("arial", 15))
+        doneB.grid(column=3, row=1)
+        featureLessB = tk.Button(self.root, text="run featureless ersion", font=("arial", 10), command=lambda: self.RUNFEATURELESS())
+        featureLessB.grid(column=3, row=8)
 
         controlsB = tk.Button(text="Controls", font=("MS Reference Sans Serif", 10), command=lambda: self.controlsMenu())
-        controlsB.pack()
+        controlsB.grid(column=2, row=3)
 
         infoB = tk.Button(text="Info", font=("MS Reference Sans Serif", 10), command=lambda: self.infoMenu())
-        infoB.pack()
+        infoB.grid(column=2, row=5)
 
         self.setSetting()
 

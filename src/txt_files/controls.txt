@@ -1,10 +1,11 @@
 MOUSE:
-LEFT CLICK (+ LSHIFT): add ADD # of logos randomly on the screen (show info on it/them)
+LEFT CLICK (+ LSHIFT): add ADD # of logos randomly on the screen (show info on new)
 MIDDLE CLICK (+ LSHIFT): remove ADD # of logos randomly on the screen (remove logo at mouse)
 RIGHT CLICK (on logo) [+ LSHIFT]: add ADD # of logos at the cursors location (show info) [show info on new]
 
-ScrollUP (+ LSHIFT): add 1 to the ADD counter (add 10 to the ADD counter)
-ScrollDown (+ LSHIFT): remove 1 from the ADD counter (remove 10 from the ADD counter)
+ScrollUP (+ LSHIFT) (+ R/G/B): add 1 to the ADD counter (add 10 to the ADD/R/G/B counter) (R: change red)
+(G: change green) (B change blue)
+ScrollDown (+ LSHIFT) (+ R/G/B): remove 1 from the ADD counter (remove 10 from ADD/R/G/B counter)
 
 KEYBOARD:
 all of the following are per frame:
@@ -21,7 +22,11 @@ ESC: close window
 PAUSEBREAK: take screenshot
 
 F1 (+ C)show info (show controls)
+
 T: show total
-A: show ADD
+O (+ LSHIFT) [+LCTRL]: show ADD (toggle all on/off) [reverse all]
+A: show add
 H: show leader
 M: show avg hits
+S: show total hits
+F2: show RGB
