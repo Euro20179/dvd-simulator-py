@@ -46,14 +46,16 @@ baseColor = 255
 
 inverseRGBColor = (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2])
 
+SysFont = pygame.font.SysFont
+
 #FONTS
 CTRLSFontSize = 20
-addFont = pygame.font.SysFont("Alien Encounters", 20)
-countFont = pygame.font.SysFont("Alien Encounters", 17)
-controlsFont = pygame.font.SysFont("arial", CTRLSFontSize)
-DVDInfoFont = pygame.font.SysFont("arial", 20)
-leaderBoardFont = pygame.font.SysFont("Alien Encounters", 15)
-avgHitsFont = pygame.font.SysFont("arial", 15)
+addFont = SysFont("Alien Encounters", 20)
+countFont = SysFont("Alien Encounters", 17)
+controlsFont = SysFont("arial", CTRLSFontSize)
+DVDInfoFont = SysFont("arial", 20)
+leaderBoardFont = SysFont("Alien Encounters", 15)
+avgHitsFont = SysFont("arial", 15)
 
 #options
 options = {
@@ -72,13 +74,7 @@ sounds = {
     "THX": ".\src\Sounds\THX_Sound.wav"
     }
 
-
-if winWidth == 1920 and winHeight == 1080:
-    FULLSCRN = True
-    win = pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN)
-else:
-    FULLSCRN = False
-    win = pygame.display.set_mode((winWidth, winHeight))
+FULLSCRN, win = True if winWidth == 1920 and winHeight == 1080 else False, pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN) if winWidth == 1920 and winHeight == 1080 else pygame.display.set_mode((winWidth, winHeight))
 
 class DVDS:
     def __init__(self, SX=False, SY=False, SH=SH, SW=SW):
@@ -135,19 +131,15 @@ def pygameMenus(screen):
             infoMenu()
 
 def mainKeyChks(options, ADD, win):
-    
-    if keys[pygame.K_UP]:
-        ADD += .1
-    if keys[pygame.K_DOWN] and ADD >= .1:
-        ADD -= .1
+   
     if keys[pygame.K_PAGEDOWN] and ADD >= 1:
-        ADD -= 1
-    if keys[pygame.K_PAGEUP]:
-        ADD += 1
-    if keys[pygame.K_END] and ADD >= 5:
         ADD -= 5
-    if keys[pygame.K_HOME]:
+    if keys[pygame.K_PAGEUP]:
         ADD += 5
+    if keys[pygame.K_END] and ADD >= 5:
+        ADD -= 10
+    if keys[pygame.K_HOME]:
+        ADD += 10
     if keys[pygame.K_F5]:
         DVDSDict.clear()
     if keys[pygame.K_F3]:
