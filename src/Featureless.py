@@ -2,7 +2,7 @@ import pygame; pygame.init(); pygame.font.init(); pygame.mixer.init()
 from os import listdir, environ
 from tkinter.messagebox import showinfo
 import random
-from MovieBouncer2 import Menu
+from DVD_Screen import Menu
 
 def main():
     winWidth = 1920

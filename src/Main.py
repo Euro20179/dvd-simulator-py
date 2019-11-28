@@ -5,7 +5,7 @@ import pygame
 import tkinter as tk
 from Dvds import DVDS
 from statistics import mean
-from MovieBouncer2 import Menu
+from DVD_Screen import Menu
 from os import listdir, environ
 from tkinter.messagebox import showinfo
 
