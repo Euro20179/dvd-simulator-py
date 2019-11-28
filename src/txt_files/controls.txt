@@ -1,7 +1,8 @@
 MOUSE:
 LEFT CLICK (+ LSHIFT): add ADD # of logos randomly on the screen (show info on new)
 MIDDLE CLICK (+ LSHIFT): remove ADD # of logos randomly on the screen (remove logo at mouse)
-RIGHT CLICK (on logo) [+ LSHIFT]: add ADD # of logos at the cursors location (show info) [show info on new]
+RIGHT CLICK (on logo) [+ LSHIFT] {+ LCTRL}: add ADD # of logos at the cursors location (show info) [show info on new]
+{Shows info on all}
 
 ScrollUP (+ LSHIFT) (+ R/G/B) [+ LCTRL]: add 1 to the ADD counter (add 10 to the ADD/R/G/B/base counter) (R: change red)
 (G: change green) (B change blue) [changes the base]

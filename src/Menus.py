@@ -1,5 +1,27 @@
 import tkinter as tk
 from os import environ
+
+def controlsMenu():
+    with open(r".\src\txt_files\controls.txt", "r") as CF:
+        string = CF.read()
+        CTRLSRoot = tk.Tk()
+
+        mainL = tk.Label(CTRLSRoot, text=string, font=("Consolas", 13))
+        mainL.pack()
+
+        environ['SDL_VIDEO_CENTERED'] = "1"
+        CTRLSRoot.mainloop()
+
+def infoMenu():
+    with open(r".\src\txt_files/info.txt", "r") as IF:
+        string = IF.read()
+        IFRoot = tk.Tk()
+
+        mainL = tk.Label(IFRoot, text=string, font=("Consolas", 13))
+        mainL.pack()
+        environ['SDL_VIDOE_CENTERED'] = "1"
+        IFRoot.mainloop()
+
 class Menu:
     def __init__(self):
         self.root = tk.Tk()
@@ -33,29 +55,7 @@ class Menu:
 
     def RUNFEATURELESS(self):
         self.root.destroy()
-        import Featureless
-
-    def controlsMenu(self):
-        with open(r".\src\txt_files\controls.txt", "r") as CF:
-            string = CF.read()
-            CTRLSRoot = tk.Tk()
-
-            mainL = tk.Label(CTRLSRoot, text=string, font=("Consolas", 13))
-            mainL.pack()
-
-            environ['SDL_VIDEO_CENTERED'] = "1"
-            CTRLSRoot.mainloop()
-
-    def infoMenu(self):
-        with open(r".\src\txt_files/info.txt", "r") as IF:
-            string = IF.read()
-            IFRoot = tk.Tk()
-
-            mainL = tk.Label(IFRoot, text=string, font=("Consolas", 13))
-            mainL.pack()
-            environ['SDL_VIDOE_CENTERED'] = "1"
-            IFRoot.mainloop()
-        
+        import Featureless        
 
     def done(self):
         self.winHeight = self.winHeight.get()
@@ -94,10 +94,10 @@ class Menu:
         featureLessB = tk.Button(self.root, text="run featureless ersion", font=("arial", 10), command=lambda: self.RUNFEATURELESS())
         featureLessB.grid(column=3, row=8)
 
-        controlsB = tk.Button(text="Controls", font=("MS Reference Sans Serif", 10), command=lambda: self.controlsMenu())
+        controlsB = tk.Button(text="Controls", font=("MS Reference Sans Serif", 10), command=lambda: controlsMenu())
         controlsB.grid(column=2, row=3)
 
-        infoB = tk.Button(text="Info", font=("MS Reference Sans Serif", 10), command=lambda: self.infoMenu())
+        infoB = tk.Button(text="Info", font=("MS Reference Sans Serif", 10), command=lambda: infoMenu())
         infoB.grid(column=2, row=5)
 
         self.root.update_idletasks()

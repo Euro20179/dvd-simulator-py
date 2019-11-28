@@ -36,15 +36,15 @@ ADD = 1
 
 leaders = 0
 
-
+FRAME = 0
 
 #color settings
 
-WFILLColor = [0, 0, 0]
+R, G, B = 0, 0, 0
 
 baseColor = 255
 
-inverseRGBColor = (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2])
+inverseRGBColor = (255 - R, 255 - G, 255 - B)
 
 SysFont = pygame.font.SysFont
 
@@ -98,17 +98,14 @@ class DVDS:
             self.SXGain *= (-1 + random.uniform(-.1, .1))
             self.currentLogo = random.choice(DVD_Logos)
             self.wallHits += 1
+            self.SX += self.SXGain / 2
 
         if self.SY <= 0 or self.SY + self.SH >= winHeight:
             self.SYGain *= (-1 + random.uniform(-.1, .1))
             self.currentLogo = random.choice(DVD_Logos)
             self.wallHits += 1
-
-        if self.SY <= 0 - self.SH or self.SY + self.SH >= winHeight + self.SH:
-            self.SY = 1
-
-        if self.SX <= 0 - self.SW or self.SX + self.SW >= winWidth + self.SW:
-            self.SX = 1
+            self.SY += self.SYGain / 2
+        
 
 
 DVDSDict[1] = DVDS()
@@ -116,7 +113,7 @@ DVDSDict[1] = DVDS()
 def pygameMenus(screen):
     if FULLSCRN:
         with open(screen, "r") as CF:
-            win.fill(tuple(WFILLColor))
+            win.fill(tuple([R, G, B]))
             string = CF.read()
             string = string.split(chr(10))
             y = 0
@@ -126,12 +123,12 @@ def pygameMenus(screen):
             pygame.display.flip()
     else:
         if screen == "src/txt_files/controls.txt":
-            controlsMenu()
+            Menus.infoMenu()
         elif screen == "src/txt_files/info.txt":
-            infoMenu()
+            Menus.controlsMenu()
 
 def mainKeyChks(options, ADD, win):
-   
+    keys = pygame.key.get_pressed()
     if keys[pygame.K_PAGEDOWN] and ADD >= 1:
         ADD -= 5
     if keys[pygame.K_PAGEUP]:
@@ -193,38 +190,40 @@ def mainKeyChks(options, ADD, win):
     return options, ADD, win
 
 def cycleColors():
-    R = WFILLColor[0]
-    G = WFILLColor[1]
-    B = WFILLColor[2]
+    global R, G, B
     if R != baseColor and G != baseColor and B != baseColor:
-        WFILLColor[0] = baseColor
-        WFILLColor[1] = 0
-        WFILLColor[2] = 0
+        R = baseColor
+        G = 0
+        B = 0
     if R == baseColor and G >= 0 and B == 0 and G < baseColor:
-        WFILLColor[1] += 1
+        G += 1
     if R <= baseColor and G == baseColor and B == 0 and R > 0:
-        WFILLColor[0] -= 1
+        R -= 1
     if R == 0 and G == baseColor and B >= 0 and B < baseColor:
-        WFILLColor[2] += 1
+        B += 1
     if R == 0 and G <= baseColor and B == baseColor and G > 0:
-        WFILLColor[1] -= 1
+        G -= 1
     if R >= 0 and G == 0 and B == baseColor and R < baseColor:
-        WFILLColor[0] += 1
+        R += 1
     if R == baseColor and G == 0 and B <= baseColor and B > 0:
-        WFILLColor[2] -= 1
+        B -= 1
+    WFILLColor = [R, G, B]
 
 while Run:
     clock = pygame.time.Clock()
     keys = pygame.key.get_pressed()
-    
+    FRAME += 1
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.display.quit()
             pygame.quit()
             Run = False
             break
+        if event.type == pygame.KEYDOWN:
+            options, ADD, win = mainKeyChks(options, ADD, win)
         if event.type == pygame.MOUSEBUTTONDOWN:
             ADD = round(ADD)
+            MPos = pygame.mouse.get_pos()
 
             if event.button == 1:
                 for a in range(ADD):
@@ -232,28 +231,8 @@ while Run:
                     if keys[pygame.K_LSHIFT]:
                         DVDSDict[len(DVDSDict)].dispInfo = True
 
-            elif event.button == 3:
-                MPos = pygame.mouse.get_pos()
-                for DVD in DVDSDict:
-                    if MPos[0] > DVDSDict[DVD].SX and MPos[0] < DVDSDict[DVD].SX + DVDSDict[DVD].SW and MPos[1] > DVDSDict[DVD].SY and MPos[1] < DVDSDict[DVD].SY + DVDSDict[DVD].SH:
-                        DVDSDict[DVD].dispInfo = False if DVDSDict[DVD].dispInfo else True
-                        break
-                else:
-                    for a in range(ADD):
-                        pos = pygame.mouse.get_pos()
-                        DVDSDict[len(DVDSDict) + 1] = DVDS(SX=pos[0], SY=pos[1])
-                        if keys[pygame.K_LSHIFT]:
-                            DVDSDict[len(DVDSDict)].dispInfo = True
-
             elif event.button == 2:
-                if not keys[pygame.K_LSHIFT]:
-                    for a in range(ADD):
-                        try:
-                            del DVDSDict[len(DVDSDict)]
-                        except:
-                            break
-                else:
-                    MPos = pygame.mouse.get_pos()
+                if keys[pygame.K_LSHIFT]:
                     for DVD in DVDSDict:
                         if MPos[0] > DVDSDict[DVD].SX and MPos[0] < DVDSDict[DVD].SX + DVDSDict[DVD].SW and MPos[1] > DVDSDict[DVD].SY and MPos[1] < DVDSDict[DVD].SY + DVDSDict[DVD].SH:
                             temp = DVDSDict[len(DVDSDict)]
@@ -261,19 +240,40 @@ while Run:
                             DVDSDict[DVD] = temp
                             del DVDSDict[len(DVDSDict)]
                             break
+
+                else:
+                    for a in range(ADD):
+                        try:
+                            del DVDSDict[len(DVDSDict)]
+                        except:
+                            break
+
+            elif event.button == 3:
+                for DVD in DVDSDict:
+                    if MPos[0] > DVDSDict[DVD].SX and MPos[0] < DVDSDict[DVD].SX + DVDSDict[DVD].SW and MPos[1] > DVDSDict[DVD].SY and MPos[1] < DVDSDict[DVD].SY + DVDSDict[DVD].SH:
+                        DVDSDict[DVD].dispInfo = False if DVDSDict[DVD].dispInfo else True
+                        break
+                else:
+                    if keys[pygame.K_LCTRL]:
+                        for DVD in DVDSDict: DVDSDict[DVD].dispInfo = False if DVDSDict[DVD].dispInfo else True
+
+                    else:
+                        for a in range(ADD):
+                            DVDSDict[len(DVDSDict) + 1] = DVDS(SX=MPos[0], SY=MPos[1])
+                            DVDSDict[len(DVDSDict)].dispInfo = True if keys[pygame.K_LSHIFT] else False
             
             elif event.button == 4:
                 plus = 10 if keys[pygame.K_LSHIFT] else 1
 
-                if keys[pygame.K_LCTRL] and baseColor <= 245:
+                if keys[pygame.K_LCTRL] and baseColor <= 255 - plus:
                     baseColor += plus
 
-                elif keys[pygame.K_r] and WFILLColor[0] <= 245:
-                    WFILLColor[0] += plus
-                elif keys[pygame.K_g] and WFILLColor[1] <= 245:
-                    WFILLColor[1] += plus
-                elif keys[pygame.K_b] and WFILLColor[2] <= 245:
-                    WFILLColor[2] += plus
+                elif keys[pygame.K_r] and R <= 255 - plus:
+                    R += plus
+                elif keys[pygame.K_g] and G <= 255 - plus:
+                    G += plus
+                elif keys[pygame.K_b] and B <= 255 - plus:
+                    B += plus
 
                 else:
                     ADD += plus
@@ -283,36 +283,33 @@ while Run:
                 if keys[pygame.K_LCTRL] and baseColor >= 10:
                     baseColor -= plus
 
-                elif WFILLColor[0] >= 10 and keys[pygame.K_r]:
-                    WFILLColor[0] -= plus
-                elif WFILLColor[1] >= 10 and keys[pygame.K_g]:
-                    WFILLColor[1] -= plus
-                elif WFILLColor[2] >= 10 and keys[pygame.K_b]:
-                    WFILLColor[2] -= plus
+                elif R >= 10 and keys[pygame.K_r]:
+                    R -= plus
+                elif G >= 10 and keys[pygame.K_g]:
+                    G -= plus
+                elif B >= 10 and keys[pygame.K_b]:
+                    B -= plus
 
-                elif ADD >= 10:
+                elif ADD >= plus:
                     ADD -= plus
 
-    if Run:
-        inverseRGBColor = (255 - WFILLColor[0], 255 - WFILLColor[1], 255 - WFILLColor[2])
+            
+
+    else:
+        pygame.key.set_repeat(5000, 5000)
+        inverseRGBColor = (255 - R, 255 - G, 255 - B)
         if options["CycleColors"]:
             cycleColors()
         hits = [x.wallHits for x in DVDSDict.values()]
         if hits:
             leaders = max(hits)
-        temp = [x.wallHits for x in DVDSDict.values()]
-        try:
-            AVGHits = mean(temp)
-            totalHits = sum(temp)
-        except:
-            pass
-
-        options, ADD, win = mainKeyChks(options, ADD, win)
+            totalHits = sum(hits)
+            AVGHits = mean(hits) if len(hits) >= 2 else totalHits
 
         for DVD in DVDSDict:
             DVDSDict[DVD]()
         if not keys[pygame.K_F1]:
-            win.fill((WFILLColor[0], WFILLColor[1], WFILLColor[2]))
+            win.fill((R, G, B))
             if options["ShowAVG"]:
                 avgWallHits = avgHitsFont.render(f'AVG HITS: {AVGHits}', False, inverseRGBColor)
                 win.blit(avgWallHits, (0, winHeight / 2))
@@ -326,7 +323,7 @@ while Run:
                 countTotal = countFont.render(f'DVDS: {len(DVDSDict)}', False, inverseRGBColor)
                 win.blit(countTotal, (0, 40))
             if options["ShowRGB"]:
-                RGBDisp = avgHitsFont.render(f'RGB: {WFILLColor}', False, inverseRGBColor)
+                RGBDisp = avgHitsFont.render(f'RGB: {R, G, B}', False, inverseRGBColor)
                 RGBBaseDisp = avgHitsFont.render(f'RGB Base: {baseColor}', False, inverseRGBColor)
                 win.blit(RGBDisp, (0, 110))
                 win.blit(RGBBaseDisp, (0, 130))
