@@ -16,16 +16,18 @@ HOME: add 10 to the ADD counter
 END: remove 10 from the ADD counter
 F5: remove all.
 
-ESC: close window
+ESC: exit
+PAUSEBREAK: main menu
 
-PAUSEBREAK: take screenshot
+F2: take screenshot
 
-F1 (+ C)show info (show controls)
+F1 (+ C/I) refresh (show controls/show info) (if not fullscreen)
 
+F3: show/remove all options
 T: show total
-O (+ LSHIFT) [+LCTRL]: show ADD (toggle all on/off) [reverse all]
 A: show add
 H: show leader
 M: show avg hits
 S: show total hits
-F2: show RGB
+F4: show RGB
+F6: cycle bg color
