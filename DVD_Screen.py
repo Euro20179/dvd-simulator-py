@@ -25,6 +25,9 @@ class Menu:
     def __init__(self):
         self.root = tk.Tk()
 
+        self.root.title("Main Menu")
+        self.root.iconbitmap(r".\src\ico_files\Main_Menu_ICO.ico")
+
         self.winHeight = tk.IntVar()
         self.winHeight.set(1080)
 
@@ -86,10 +89,10 @@ class Menu:
         tk.Label(text="Window width", font=("MS Reference Sans Serif", 15)).grid(column=1, row=3)
         self.winWidthE.grid(column=1, row=4)
 
-        tk.Label(text="picture width\nRECOMMENDED DEFAULT", font=("MS Reference Sans Serif", 10)).grid(column=2, row=1)
+        tk.Label(text="picture width\n(recommended 97)", font=("MS Reference Sans Serif", 10)).grid(column=2, row=1)
         self.picWidthE.grid(column=2, row=2)
 
-        tk.Label(text="picture height\nRECOMMENDED DEFAULT", font=("MS Reference Sans Serif", 10)).grid(column=2, row=3)
+        tk.Label(text="picture height\n(recommended 43)", font=("MS Reference Sans Serif", 10)).grid(column=2, row=3)
         self.picHeightE.grid(column=2, row=4)
 
         doneB = tk.Button(self.root, command=lambda: self.done(), text="run main version", font=("arial", 15), bg="#e1f40c")

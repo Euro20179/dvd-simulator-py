@@ -2,8 +2,8 @@ import random
 class DVDS:
     def __init__(self, VARS, SH, SW, SX=False, SY=False):
         if not SX:
-            SX = random.randint(0, round(VARS["winWidth"] - (.1 * VARS["winWidth"])))
-            SY = random.randint(0, round(VARS["winHeight"] - (.1 * VARS["winHeight"])))
+            SX = random.randint(0, round(VARS["winWidth"] - SW))
+            SY = random.randint(0, round(VARS["winHeight"] - SH))
         self.SX, self.SY = SX, SY
         self.SH, self.SW = SH, SW
         self.wallHits = 0

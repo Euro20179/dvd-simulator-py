@@ -1,6 +1,7 @@
 import pygame
 def toggleFull(win): #global functions
     win = pygame.display.get_surface()
+    caption = pygame.display.get_caption()
     tmp = win.convert()
     cursor = pygame.mouse.get_cursor()  # Duoas 16-04-2007 
     
@@ -10,9 +11,10 @@ def toggleFull(win): #global functions
     
     win = pygame.display.set_mode((w,h),flags^pygame.FULLSCREEN,bits)
     win.blit(tmp,(0,0))
+    pygame.display.set_caption(*caption)
 
     pygame.key.set_mods(0) #HACK: work-a-round for a SDL bug??
 
-    pygame.mouse.set_cursor( *cursor )  # Duoas 16-04-2007
+    pygame.mouse.set_cursor(*cursor)  # Duoas 16-04-2007
     
     return win

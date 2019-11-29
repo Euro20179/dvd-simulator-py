@@ -9,6 +9,13 @@ import globalFuncs
 
 def main(winWidth, winHeight, sh, sw):
     win = pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN) if winWidth == 1920 and winHeight == 1080 else pygame.display.set_mode((winWidth, winHeight))
+    pygame.display.set_caption("DVD")
+
+    path = "./src/ico_files"
+    icos = [str(f'{path}/{x}') for x in listdir(path)if "Menu" not in x and "Main" not in x]
+    icos = [pygame.image.load(x) for x in icos]
+    pygame.display.set_icon(random.choice(icos))
+
     Run = True
     path = "./DVD_Logos"
     sw, sh = int(sw), int(sh)
@@ -17,17 +24,17 @@ def main(winWidth, winHeight, sh, sw):
 
     DVDSDict = {}
 
-    swap = lambda: mainInit(winWidth, winHeight, sw, sh)
+    swap = lambda: mainInit(winWidth, winHeight, sh, sw)
 
     class DVDS:
         def __init__(self, SX=False, SY=False, SH=sh, SW=sw):
             if not SX:
-                SX = random.randint(0, round(winWidth - (.1 * winWidth)))
-                SY = random.randint(0, round(winHeight - (.1 * winHeight)))
+                SX = random.randint(0, round(winWidth - sw))
+                SY = random.randint(0, round(winHeight - sh))
             self.SX = SX
             self.SY = SY
             self.SH = SH
-            self.SW = SH
+            self.SW = SW
             self.wallHits = 0
             self.SXGain = random.choice([(winWidth + winHeight) / 2 / 700, -((winWidth + winHeight) / 2 / 700)]); self.SYGain = random.choice([self.SXGain, -self.SXGain])
             self.currentLogo = random.choice(DVD_Logos)
@@ -51,8 +58,9 @@ def main(winWidth, winHeight, sh, sw):
 
 
     DVDSDict[1] = DVDS()
-
+    clock = pygame.time.Clock()
     while Run:
+        clock.tick(300)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.display.quit()

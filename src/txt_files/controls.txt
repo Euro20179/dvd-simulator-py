@@ -26,5 +26,6 @@ A: show add
 H: show leader
 M: show avg hits
 S: show total hits
+UP/DOWN: show options ontop of DVDS/vice versa
 
 F6: cycle bg color
