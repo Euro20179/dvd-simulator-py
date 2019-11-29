@@ -57,7 +57,7 @@ class Menu:
         self.picHeight = self.picHeightE.get()
         self.root.destroy()
         import Featureless
-        Featureless.main(self.winWidth, self.winHeight, self.picWidth, self.picHeight)
+        Featureless.main(self.winWidth, self.winHeight, self.picHeight, self.picWidth)
 
     def done(self):
         self.winHeight = self.winHeight.get()
@@ -94,7 +94,7 @@ class Menu:
 
         doneB = tk.Button(self.root, command=lambda: self.done(), text="run main version", font=("arial", 15), bg="#e1f40c")
         doneB.grid(column=3, row=5)
-        featureLessB = tk.Button(self.root, text="run featureless version\n(none of these settings will work)", font=("arial", 9), command=lambda: self.RUNFEATURELESS(), bg="#f40ce1")
+        featureLessB = tk.Button(self.root, text="run featureless version", font=("arial", 15), command=lambda: self.RUNFEATURELESS(), bg="#f40ce1")
         featureLessB.grid(column=1, row=5)
 
         controlsB = tk.Button(text="Controls", font=("MS Reference Sans Serif", 12), command=lambda: controlsMenu(), bg="#0055ee")
