@@ -3,21 +3,24 @@ from os import listdir, environ
 from tkinter.messagebox import showinfo
 import random
 from DVD_Screen import Menu
+from sys import path
+from Main import mainInit
+import globalFuncs
 
-def main():
-    winWidth = 1920
-    winHeight = 1080
-    win = pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN, pygame.RESIZABLE)
+def main(winWidth, winHeight, sh, sw):
+    win = pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN) if winWidth == 1920 and winHeight == 1080 else pygame.display.set_mode((winWidth, winHeight))
     Run = True
     path = "./DVD_Logos"
-
+    sw, sh = int(sw), int(sh)
     logos = [str(f'{path}/{x}') for x in listdir(path)]
     DVD_Logos = [pygame.image.load(x) for x in logos]
 
     DVDSDict = {}
 
+    swap = lambda: mainInit(winWidth, winHeight, sw, sh)
+
     class DVDS:
-        def __init__(self, SX=False, SY=False, SH=97, SW=43):
+        def __init__(self, SX=False, SY=False, SH=sh, SW=sw):
             if not SX:
                 SX = random.randint(0, round(winWidth - (.1 * winWidth)))
                 SY = random.randint(0, round(winHeight - (.1 * winHeight)))
@@ -64,16 +67,17 @@ def main():
                 elif event.button == 3:
                     MPos = pygame.mouse.get_pos()
                     DVDSDict[len(DVDSDict) + 1] = DVDS(SX=MPos[0], SY=MPos[1])
-        if Run:
+        else:
             keys = pygame.key.get_pressed()
-            if keys[pygame.K_ESCAPE]:
-                pygame.display.quit()
-                pygame.quit()
-                Run = False
-                break
-            if keys[pygame.K_PAUSE]: 
-                pygame.quit(); Run = False
-                Menu().mainMenu()
+            if keys[pygame.K_ESCAPE] or (keys[pygame.K_LALT] and keys[pygame.K_F4]): pygame.display.quit(); pygame.quit(); Run = False; break
+            if keys[pygame.K_PAUSE]:
+                if keys[pygame.K_LSHIFT]: swap()
+                else:
+                    pygame.quit()
+                    Menu().mainMenu()
+            if keys[pygame.K_F12]: swap()
+            if keys[pygame.K_F11]: globalFuncs.toggleFull(win)
+                
             win.fill((0, 0, 0))
             for DVD in DVDSDict:
                 DVDSDict[DVD]()

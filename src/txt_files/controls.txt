@@ -14,25 +14,17 @@ F5: remove all.
 F1: refresh
 
 ESC: exit
-PAUSEBREAK: main menu
+PAUSEBREAK (+ LSHIFT): main menu (switch to featureless/main vice versa.)
+F12: switch
 
 F2: take screenshot
 
 F3: show/remove all options
+c: show RGB
 T: show total
 A: show add
 H: show leader
 M: show avg hits
 S: show total hits
-F4: show RGB
-F6: cycle bg color
 
-all of the following are per frame:
-(i would almost never use these)
-(just use the mouse wheel instead
-unless you're trying to get in the 
-thousands)
-PAGEUP: add 5 to the ADD counter
-PAGEDOWN: remove 5 from the ADD counter
-HOME: add 10 to the ADD counter
-END: remove 10 from the ADD counter
+F6: cycle bg color

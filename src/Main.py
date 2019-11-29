@@ -3,16 +3,16 @@ import time
 import random
 import pygame
 import tkinter as tk
+from os import listdir, environ
+import globalFuncs
 from Dvds import DVDS
 from statistics import mean
 from DVD_Screen import Menu
-from os import listdir, environ
-from tkinter.messagebox import showinfo
-
-#this looks really nice tbh
 
 #MAIN MENU
 def VARS(winWidth, winHeight, SH, SW):
+    import Featureless
+
     winWidth, winHeight = winWidth, winHeight
     SH, SW = SH, SW
 
@@ -54,8 +54,8 @@ def VARS(winWidth, winHeight, SH, SW):
     #options
     options = {
         "ShowLeader": False,
-        "ShowAdd": False,
-        "ShowTotal": False,
+        "ShowAdd": True,
+        "ShowTotal": True,
         "ShowAVG": False,
         "ShowRGB": False,
         "ShowSum": False,
@@ -67,15 +67,12 @@ def VARS(winWidth, winHeight, SH, SW):
 
     win = pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN) if winWidth == 1920 and winHeight == 1080 else pygame.display.set_mode((winWidth, winHeight))
 
-    return winWidth, winHeight, DVD_Logos, DVDSDict, Run ,ADD, leaders, R, G, B, baseColor, inverseRGBColor, fonts, options, sounds, win, SH, SW
+    swap = lambda: Featureless.main(winWidth,winHeight, SH, SW)
 
+    return winWidth, winHeight, DVD_Logos, DVDSDict, Run ,ADD, leaders, R, G, B, baseColor, inverseRGBColor, fonts, options, sounds, win, SH, SW, swap
 
 def mainKeyChks(VAR):
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_PAGEDOWN] and VAR["ADD"] >= 1: VAR["ADD"] -= 5 
-    if keys[pygame.K_PAGEUP]: VAR["ADD"] += 5  
-    if keys[pygame.K_END] and VAR["ADD"] >= 5: VAR["ADD"] -= 10     
-    if keys[pygame.K_HOME]: VAR["ADD"] += 10   
     if keys[pygame.K_F5]: VAR["DVDSDict"].clear()     
     if keys[pygame.K_F6]: VAR["options"]["CycleColors"] = True if not VAR["options"]["CycleColors"] else False
         
@@ -87,18 +84,23 @@ def mainKeyChks(VAR):
     if keys[pygame.K_t]: VAR["options"]["ShowTotal"] = False if VAR["options"]["ShowTotal"] else True      
     if keys[pygame.K_a]: VAR["options"]["ShowAdd"] = False if VAR["options"]["ShowAdd"] else True       
     if keys[pygame.K_m]: VAR["options"]["ShowAVG"] = False if VAR["options"]["ShowAVG"] else True       
-    if keys[pygame.K_F4]: VAR["options"]["ShowRGB"] = False if VAR["options"]["ShowRGB"] else True
+    if keys[pygame.K_c]: VAR["options"]["ShowRGB"] = False if VAR["options"]["ShowRGB"] else True
     if keys[pygame.K_s]: VAR["options"]["ShowSum"] = False if VAR["options"]["ShowSum"] else True
         
     if keys[pygame.K_w] and keys[pygame.K_i] and keys[pygame.K_n]: pygame.mixer.Sound(VAR["sounds"]["windows"]).play()
     if keys[pygame.K_t] and keys[pygame.K_h] and keys[pygame.K_x]: pygame.mixer.Sound(VAR["sounds"]["THX"]).play()   
   
-    if keys[pygame.K_ESCAPE]: pygame.quit(); pygame.display.quit(); VAR["Run"] = False
+    if keys[pygame.K_ESCAPE] or (keys[pygame.K_LALT] and keys[pygame.K_F4]): pygame.quit(); pygame.display.quit(); VAR["Run"] = False
+    if keys[pygame.K_F12]: VAR["swap"]()
     if keys[pygame.K_PAUSE]: 
-        pygame.quit(); VAR["Run"] = False
-        Menu().mainMenu()
+        if keys[pygame.K_LSHIFT]: VAR["swap"]()           
+        else:
+            pygame.quit()
+            Menu().mainMenu()
 
     if keys[pygame.K_F2]: pygame.image.save(VAR["win"], f'SCREENSHOTS\{time.time()}.jpeg')
+
+    if keys[pygame.K_F11]: globalFuncs.toggleFull(VAR["win"])
 
     return VAR
 
@@ -181,7 +183,7 @@ def cycleColors(VAR):
     return VAR
 
 def main(vars):
-    winWidth, winHeight, DVD_Logos, DVDSDict, Run ,ADD, leaders, R, G, B, baseColor, inverseRGBColor, fonts, options, sounds, win, SH, SW = vars
+    winWidth, winHeight, DVD_Logos, DVDSDict, Run ,ADD, leaders, R, G, B, baseColor, inverseRGBColor, fonts, options, sounds, win, SH, SW, swap = vars
     vars = {"winWidth": winWidth,
     "winHeight": winHeight,
     "DVD_Logos": DVD_Logos,
@@ -199,7 +201,8 @@ def main(vars):
     "sounds": sounds,
     "win": win,
     "SH": SH,
-    "SW": SW}
+    "SW": SW,
+    "swap": swap}
     vars["DVDSDict"][1] = DVDS(vars, vars["SH"], vars["SW"])
 
     while Run:

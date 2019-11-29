@@ -1,5 +1,4 @@
 import tkinter as tk
-from os import environ
 from sys import path
 path.append(".\src")
 
@@ -11,7 +10,6 @@ def controlsMenu():
         mainL = tk.Label(CTRLSRoot, text=string, font=("Consolas", 13))
         mainL.pack()
 
-        environ['SDL_VIDEO_CENTERED'] = "1"
         CTRLSRoot.mainloop()
 
 def infoMenu():
@@ -21,7 +19,6 @@ def infoMenu():
 
         mainL = tk.Label(IFRoot, text=string, font=("Consolas", 13))
         mainL.pack()
-        environ['SDL_VIDOE_CENTERED'] = "1"
         IFRoot.mainloop()
 
 class Menu:
@@ -53,9 +50,14 @@ class Menu:
         self.picWidthE.insert(0, self.picWidth.get())
 
     def RUNFEATURELESS(self):
-        self.root.destroy()       
-        import Featureless 
-        Featureless.main()
+        self.winHeight = self.winHeight.get()
+        self.winWidth = self.winWidth.get()
+
+        self.picWidth = self.picWidthE.get()
+        self.picHeight = self.picHeightE.get()
+        self.root.destroy()
+        import Featureless
+        Featureless.main(self.winWidth, self.winHeight, self.picWidth, self.picHeight)
 
     def done(self):
         self.winHeight = self.winHeight.get()
@@ -77,7 +79,6 @@ class Menu:
         self.root.after(500, self.setSetting)
 
     def mainMenu(self):
-        environ['SDL_VIDEO_CENTERED'] = "1"
 
         tk.Label(text="Window height", font=("MS Reference Sans Serif", 15)).grid(column=1, row=1)
         self.winHeightE.grid(column=1, row=2)
