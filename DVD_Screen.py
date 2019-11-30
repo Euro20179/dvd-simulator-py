@@ -59,6 +59,7 @@ class Menu:
         self.picWidth = self.picWidthE.get()
         self.picHeight = self.picHeightE.get()
         self.root.destroy()
+
         import Featureless
         Featureless.main(self.winWidth, self.winHeight, self.picHeight, self.picWidth)
 
@@ -95,22 +96,16 @@ class Menu:
         tk.Label(text="picture height\n(recommended 43)", font=("MS Reference Sans Serif", 10)).grid(column=2, row=3)
         self.picHeightE.grid(column=2, row=4)
 
-        doneB = tk.Button(self.root, command=lambda: self.done(), text="run main version", font=("arial", 15), bg="#e1f40c")
-        doneB.grid(column=3, row=5)
-        featureLessB = tk.Button(self.root, text="run featureless version", font=("arial", 15), command=lambda: self.RUNFEATURELESS(), bg="#f40ce1")
-        featureLessB.grid(column=1, row=5)
+        tk.Button(self.root, command=lambda: self.done(), text="run main version", font=("arial", 15), bg="#e1f40c").grid(column=3, row=5)
+        tk.Button(self.root, text="run featureless version", font=("arial", 15), command=lambda: self.RUNFEATURELESS(), bg="#f40ce1").grid(column=1, row=5)
 
-        controlsB = tk.Button(text="Controls", font=("MS Reference Sans Serif", 12), command=lambda: controlsMenu(), bg="#0055ee")
-        controlsB.grid(column=3, row=1)
-        infoB = tk.Button(text="Info", font=("MS Reference Sans Serif", 12), command=lambda: infoMenu(), bg="#0055ee")
-        infoB.grid(column=3, row=3)
+        tk.Button(text="Controls", font=("MS Reference Sans Serif", 12), command=lambda: controlsMenu(), bg="#0055ee").grid(column=3, row=1)
+        tk.Button(text="Info", font=("MS Reference Sans Serif", 12), command=lambda: infoMenu(), bg="#0055ee").grid(column=3, row=3)
 
         self.root.update_idletasks()
-        w =self.root.winfo_screenwidth()
-        h = self.root.winfo_screenheight()
+        w, h = self.root.winfo_screenwidth(), self.root.winfo_screenheight()
         size = tuple(int(_) for _ in self.root.geometry().split("+")[0].split("x"))
-        x = w / 2 - size[0] / 2
-        y = h / 2 - size[1] / 2
+        x, y = w / 2 - size[0] / 2, h / 2 - size[1] / 2
         self.root.geometry("%dx%d+%d+%d" %(size + (x, y)))
         self.setSetting()
 

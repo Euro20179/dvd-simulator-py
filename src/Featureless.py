@@ -1,13 +1,17 @@
-import pygame; pygame.init(); pygame.font.init(); pygame.mixer.init()
-from os import listdir, environ
-from tkinter.messagebox import showinfo
+import sys
+import pygame
+from os import listdir
+import tkinter as tk
 import random
 from DVD_Screen import Menu
-from sys import path
 from Main import mainInit
 import globalFuncs
 
+def swap(winWidth, winHeight, sh, sw):
+    mainInit(winWidth, winHeight, sh, sw)        
 def main(winWidth, winHeight, sh, sw):
+    pygame.quit()
+    pygame.init(); pygame.font.init(); pygame.mixer.init()
     win = pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN) if winWidth == 1920 and winHeight == 1080 else pygame.display.set_mode((winWidth, winHeight))
     pygame.display.set_caption("DVD")
 
@@ -24,7 +28,6 @@ def main(winWidth, winHeight, sh, sw):
 
     DVDSDict = {}
 
-    swap = lambda: mainInit(winWidth, winHeight, sh, sw)
 
     class DVDS:
         def __init__(self, SX=False, SY=False, SH=sh, SW=sw):
@@ -60,7 +63,7 @@ def main(winWidth, winHeight, sh, sw):
     DVDSDict[1] = DVDS()
     clock = pygame.time.Clock()
     while Run:
-        clock.tick(300)
+        clock.tick(120)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.display.quit()
@@ -68,10 +71,8 @@ def main(winWidth, winHeight, sh, sw):
                 Run = False
                 break
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    DVDSDict[len(DVDSDict) + 1] = DVDS()
-                elif event.button == 2:
-                    del DVDSDict[len(DVDSDict)]
+                if event.button == 1: DVDSDict[len(DVDSDict) + 1] = DVDS()           
+                elif event.button == 2: del DVDSDict[len(DVDSDict)]
                 elif event.button == 3:
                     MPos = pygame.mouse.get_pos()
                     DVDSDict[len(DVDSDict) + 1] = DVDS(SX=MPos[0], SY=MPos[1])
@@ -79,16 +80,16 @@ def main(winWidth, winHeight, sh, sw):
             keys = pygame.key.get_pressed()
             if keys[pygame.K_ESCAPE] or (keys[pygame.K_LALT] and keys[pygame.K_F4]): pygame.display.quit(); pygame.quit(); Run = False; break
             if keys[pygame.K_PAUSE]:
-                if keys[pygame.K_LSHIFT]: swap()
+                if keys[pygame.K_LSHIFT]: swap(winWidth, winHeight, sh, sw)
                 else:
                     pygame.quit()
                     Menu().mainMenu()
-            if keys[pygame.K_F12]: swap()
-            if keys[pygame.K_F11]: globalFuncs.toggleFull(win)
+            if keys[pygame.K_F12]: swap(winWidth, winHeight, sh, sw)
+
+            if keys[pygame.K_d]: globalFuncs.randDisMov()
+            if keys[pygame.K_p]: globalFuncs.randPixMov()       
                 
             win.fill((0, 0, 0))
-            for DVD in DVDSDict:
-                DVDSDict[DVD]()
-            for DVD in DVDSDict:
-                win.blit(DVDSDict[DVD].currentLogo, (DVDSDict[DVD].SX, DVDSDict[DVD].SY))
+            for DVD in DVDSDict: DVDSDict[DVD]()
+            for DVD in DVDSDict: win.blit(DVDSDict[DVD].currentLogo, (DVDSDict[DVD].SX, DVDSDict[DVD].SY))
             pygame.display.update()

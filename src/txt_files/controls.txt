@@ -9,9 +9,11 @@ ScrollUP (+ LSHIFT) (+ R/G/B) [+ LCTRL]: add 1 to the ADD counter (add 10 to the
 ScrollDown (+ LSHIFT) (+ R/G/B) [+ LCTRL]: remove 1 from the ADD counter (remove 10 from ADD/R/G/B/base counter) (same as above)
 [same as above]
 
+LSHIFT + LCTRL + mousewheel up/down: change the dvd the mouse is on
+LSHFIT + LCTRL + left click: stop the dvd the mouse is on
+
 KEYBOARD:
 F5: remove all.
-F1: refresh
 
 ESC: exit
 PAUSEBREAK (+ LSHIFT): main menu (switch to featureless/main vice versa.)
@@ -26,6 +28,13 @@ A: show add
 H: show leader
 M: show avg hits
 S: show total hits
+F: show fps
 UP/DOWN: show options ontop of DVDS/vice versa
+
+d + LSHIFT: learn about a random disney movie 
+p + LSHIFT: learn about a random pixar movie
+
+UP + LSHIFT (+ LCTRL) increase FPS limit by 1 (by 10)
+DOWN + LSHIFT (+ LCTRL) decrease FPS limit by 1(by 10)
 
 F6: cycle bg color
