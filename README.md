@@ -1,3 +1,5 @@
+REQUIRES PYTHON 3.7.x
+
 (this project is mainly for me but this is public and i don't want it private so you can use it)
 
 take out of zip file
