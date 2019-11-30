@@ -16,7 +16,7 @@ KEYBOARD:
 F5: remove all.
 
 ESC: exit
-PAUSEBREAK (+ LSHIFT): main menu (switch to featureless/main vice versa.)
+PAUSEBREAK: main menu
 F12: switch
 
 F2: take screenshot

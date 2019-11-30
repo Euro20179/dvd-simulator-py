@@ -60,18 +60,19 @@ def VARS(winwidth, winheight):
     FPSCap = 120
 
     #sounds
-    sounds = {"windows": ".\src\Sounds\WINXP_Startup.wav", 
-           "THX": ".\src\Sounds\THX_Sound.wav", 
-           "disney": ".\src\Sounds\Disney.wav",
-           "pixar": ".\src\Sounds\Pixar.wav",
-           "clap": ".\src\Sounds\Clap.wav"}
+    sounds = {"windows": pygame.mixer.Sound(".\src\Sounds\WINXP_Startup.wav"), 
+           "THX": pygame.mixer.Sound(".\src\Sounds\THX_Sound.wav"), 
+           "disney": pygame.mixer.Sound(".\src\Sounds\Disney.wav"),
+           "pixar": pygame.mixer.Sound(".\src\Sounds\Pixar.wav"),
+           "fox": pygame.mixer.Sound(".\src\Sounds\Fox.wav"),
+           "clap": pygame.mixer.Sound(".\src\Sounds\Clap.wav")}
 
     win = pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN) if winWidth == 1920 and winHeight == 1080 else pygame.display.set_mode((winWidth, winHeight))
 
 
-    return DVD_Logos, DVDSDict, Run ,ADD, leaders, R, G, B, baseColor, inverseRGBColor, fonts, options, sounds, swap, FPSCap
-
+    return DVD_Logos, DVDSDict, Run ,ADD, leaders, R, G, B, baseColor, inverseRGBColor, fonts, options, sounds, FPSCap
 def swap(winWidth, winHeight, SH, SW):
+    pygame.display.quit()
     import Featureless
     Featureless.main(winWidth, winHeight, SH, SW)
 
@@ -81,7 +82,6 @@ def mainKeyChks(**kwargs):
         if varName == "options": options = var
         if varName == "sounds": sounds = var
         if varName == "Run": Run = var
-        if varName == "swap": swap = var
         if varName == "FPSCap": FPSCap = var
 
     keys = pygame.key.get_pressed()
@@ -104,23 +104,30 @@ def mainKeyChks(**kwargs):
     if keys[pygame.K_LSHIFT] and keys[pygame.K_UP]: FPSCap += 1 if not keys[pygame.K_LCTRL] else 10
     if keys[pygame.K_LSHIFT] and keys[pygame.K_DOWN]: FPSCap -= 1 if not keys[pygame.K_LCTRL] else 10
 
-    if keys[pygame.K_w] and keys[pygame.K_i] and keys[pygame.K_n]: pygame.mixer.Sound(sounds["windows"]).play()
-    if keys[pygame.K_t] and keys[pygame.K_h] and keys[pygame.K_x]: pygame.mixer.Sound(sounds["THX"]).play()   
-    if keys[pygame.K_d] and keys[pygame.K_i] and keys[pygame.K_s]: pygame.mixer.Sound(sounds["disney"]).play()
-    if keys[pygame.K_p] and keys[pygame.K_i] and keys[pygame.K_x]: pygame.mixer.Sound(sounds["pixar"]).play()
+    if keys[pygame.K_w] and keys[pygame.K_i] and keys[pygame.K_n]: sounds["windows"].play()
+    if keys[pygame.K_t] and keys[pygame.K_h] and keys[pygame.K_x]: sounds["THX"].play()   
+    if keys[pygame.K_d] and keys[pygame.K_i] and keys[pygame.K_s]: sounds["disney"].play()
+    if keys[pygame.K_p] and keys[pygame.K_i] and keys[pygame.K_x]: sounds["pixar"].play()
+    if keys[pygame.K_f] and keys[pygame.K_o] and keys[pygame.K_x]: sounds["fox"].play()
 
     if keys[pygame.K_d] and keys[pygame.K_LSHIFT]: globalFuncs.randDisMov()
     if keys[pygame.K_p] and keys[pygame.K_LSHIFT]: globalFuncs.randPixMov()
 
-    if keys[pygame.K_ESCAPE] or (keys[pygame.K_LALT] and keys[pygame.K_F4]): Run = False; 
+    if keys[pygame.K_ESCAPE]: run = False; pygame.display.quit(); pygame.quit()
+
     if keys[pygame.K_F12]: swap(winWidth, winHeight, SH, SW)
     if keys[pygame.K_PAUSE]: 
         if keys[pygame.K_LSHIFT]: swap(winWidth, winHeight, SH, SW)           
         else:
-            pygame.quit()
+            pygame.display.quit()
             Menu().mainMenu()
 
     if keys[pygame.K_F2]: pygame.image.save(win, f'SCREENSHOTS\{time.time()}.jpeg')
+
+    if keys[pygame.K_s] and keys[pygame.K_e] and keys[pygame.K_c] and keys[pygame.K_r] and keys[pygame.K_t]:
+        pygame.display.quit()
+        from Secret import main as m
+        m(len(DVDSDict), SH, SW)
 
     return DVDSDict, options, sounds, Run, FPSCap
 
@@ -244,24 +251,24 @@ def renderDVDS(**kwargs):
             win.blit(info, (DVDSDict[DVD].SX + DVDSDict[DVD].SW, DVDSDict[DVD].SY))
 
 def main(vars):
-    DVD_Logos, DVDSDict, Run ,ADD, leaders, R, G, B, baseColor, inverseRGBColor, fonts, options, sounds, swap, FPSCap = vars
+    DVD_Logos, DVDSDict, Run ,ADD, leaders, R, G, B, baseColor, inverseRGBColor, fonts, options, sounds, FPSCap = vars
     DVDSDict[1] = DVDS(winWidth, winHeight, DVD_Logos, SH, SW)
     clock = pygame.time.Clock()
     while Run:
         clock.tick(FPSCap)
         for event in pygame.event.get():
             if event.type == pygame.QUIT: pygame.display.quit(); pygame.quit(); Run = False; break
-            if event.type == pygame.KEYDOWN: DVDSDict, options, sounds, Run, FPSCap = mainKeyChks(DVDSDict=DVDSDict, options=options, sounds=sounds, Run=Run, swap=swap, win=win, FPSCap=FPSCap)  
+            if event.type == pygame.KEYDOWN: DVDSDict, options, sounds, Run, FPSCap = mainKeyChks(DVDSDict=DVDSDict, options=options, sounds=sounds, Run=Run, win=win, FPSCap=FPSCap)  
             if event.type == pygame.MOUSEBUTTONDOWN: ADD, DVDSDict, R, G, B, baseColor = mouseChks(ADD=ADD, DVDSDict=DVDSDict, SH=SH, SW=SW, R=R, G=G, B=B, baseColor=baseColor, event=event, DVD_Logos=DVD_Logos, winWidth=winWidth, winHeight=winHeight)    
             
         else:
             if len(DVDSDict) >= 20:
                 for DVD in DVDSDict.values():
-                    if DVD.Move:
-                        break
+                    if DVD.Move: break    
                 else:
-                    pygame.mixer.Sound(sounds["clap"])
-                    random.choice(DVDSDict).Move = True
+                    sounds["clap"].play()
+                    for DVD in DVDSDict.values(): DVD.Move = True
+                        
             inverseRGBColor = (255 - R, 255 - G, 255 - B)
 
             if options["CycleColors"]: R, G, B, baseColor = cycleColors(R=R, G=G, B=B, baseColor=baseColor)  
@@ -272,7 +279,7 @@ def main(vars):
                 AVGHits = mean(hits) if len(hits) >= 2 else totalHits
 
             #rendering
-            for DVD in DVDSDict.values(): 
+            for DVD in DVDSDict.values():
                 if DVD.Move: DVD(winWidth,  winHeight, DVD_Logos)
 
             fonts = fonts
@@ -319,5 +326,7 @@ def main(vars):
 
 def mainInit(winWidth, winHeight, sh, sw):
     global SH, SW; SH, SW = int(sh), int(sw)
+    pygame.init(); pygame.mixer.init(); pygame.font.init()
     VAR = VARS(winWidth, winHeight)
     main(VAR)
+

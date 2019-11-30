@@ -27,4 +27,4 @@ class DVDS:
             self.currentLogo = random.choice(DVD_Logos)
             self.wallHits += 1
             self.SY += self.SYGain / 2
-       
+
