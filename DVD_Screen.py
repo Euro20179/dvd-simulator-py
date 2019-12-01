@@ -22,7 +22,12 @@ def infoMenu():
         IFRoot.mainloop()
 
 class Menu:
+    with open("DEFAULTS.txt", "r") as RF:
+        text = (RF.read()).split(" ")
+        winWidth = text[1]
+        winHeight = text[2]
     def __init__(self):
+
         self.root = tk.Tk()
 
         self.root.configure(background="#ffffff")
@@ -31,10 +36,10 @@ class Menu:
         self.root.iconbitmap(r".\src\ico_files\Main_Menu_ICO.ico")
         
         self.winHeightE = tk.Entry()
-        self.winHeightE.insert(0, 1080)
+        self.winHeightE.insert(0, Menu.winHeight)
         
         self.winWidthE = tk.Entry()
-        self.winWidthE.insert(0, 1920)
+        self.winWidthE.insert(0, Menu.winWidth)
 
         self.picHeightE = tk.Entry()
         self.picHeightE.insert(0, 43)
@@ -43,7 +48,7 @@ class Menu:
         self.picWidthE.insert(0, 97)
 
     def RUNFEATURELESS(self): #featureless
-        winHeight, winWidth = int(self.winHeightE.get()), int(self.winWidthE.get())
+        Menu.winHeight, Menu.winWidth = int(self.winHeightE.get()), int(self.winWidthE.get())
         picWidth, picHeight = int(self.picWidthE.get()), int(self.picHeightE.get())
 
         self.root.destroy()
@@ -54,7 +59,7 @@ class Menu:
         main(winWidth, winHeight, picHeight, picWidth)
 
     def done(self): #main
-        winHeight, winWidth = int(self.winHeightE.get()), int(self.winWidthE.get())
+        Menu.winHeight, Menu.winWidth = int(self.winHeightE.get()), int(self.winWidthE.get())
 
         picWidth, picHeight = int(self.picWidthE.get()), int(self.picHeightE.get())
 
@@ -63,7 +68,7 @@ class Menu:
         print("Loading...")
         from Main import mainInit
         print("Loading... 50%")
-        mainInit(winWidth, winHeight, picHeight, picWidth)
+        mainInit(Menu.winWidth, Menu.winHeight, picHeight, picWidth)
 
     def mainMenu(self):
 
@@ -79,8 +84,8 @@ class Menu:
         tk.Label(text="picture height\n(recommended 43)", font=("MS Reference Sans Serif", 10), bg="#ffffff").grid(column=2, row=3)
         self.picHeightE.grid(column=2, row=4)
 
-        tk.Button(self.root, command=lambda: self.done(), text="run main version", font=("arial", 15), bg="#1cdb15").grid(column=3, row=5)
-        tk.Button(self.root, text="run featureless version", font=("arial", 15), command=lambda: self.RUNFEATURELESS(), bg="#1cdb15").grid(column=1, row=5)
+        tk.Button(self.root, command=lambda: self.done(), text="run main version", font=("arial", 15), bg="#1cdb15").grid(column=3, row=6)
+        tk.Button(self.root, text="run featureless version", font=("arial", 15), command=lambda: self.RUNFEATURELESS(), bg="#1cdb15").grid(column=1, row=6)
 
         tk.Button(text="Controls", font=("MS Reference Sans Serif", 12), command=lambda: controlsMenu(), bg="#0055ee").grid(column=3, row=1)
         tk.Button(text="Info", font=("MS Reference Sans Serif", 12), command=lambda: infoMenu(), bg="#0055ee").grid(column=3, row=3)

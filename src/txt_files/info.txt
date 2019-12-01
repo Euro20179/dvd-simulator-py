@@ -2,10 +2,7 @@ IT IS HIGHLY RECOMMENDED YOU DONT CHANGE THE IMAGE SIZE
 UNLESS YOU MAKE IMAGES WITH A DIFFERENT IMAGE SIZE THAN 97x43PX
 put any 97x43px image in the DVD_Logos folder for it to be used
 
-in the featureless version the only features are:
-left click to add
-middle click to remove
-right click to add at cursor
+in the DEFAULTS.txt file you can change the default window width, window height
 
 In the top right are ADD, and TOTAL
 ADD: tells you how many logos to add when left or right click, 
