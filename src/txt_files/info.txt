@@ -1,5 +1,5 @@
 IT IS HIGHLY RECOMMENDED YOU DONT CHANGE THE IMAGE SIZE
-UNLESS YOU MAKE IMAGES WITH A NON 97x43px IMAGE
+UNLESS YOU MAKE IMAGES WITH A DIFFERENT IMAGE SIZE THAN 97x43PX
 put any 97x43px image in the DVD_Logos folder for it to be used
 
 in the featureless version the only features are:
@@ -11,5 +11,3 @@ In the top right are ADD, and TOTAL
 ADD: tells you how many logos to add when left or right click, 
 also removes that many when middle clicked
 TOTAL: total number of logos on the screen
-
-

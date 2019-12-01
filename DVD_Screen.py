@@ -40,17 +40,15 @@ class Menu:
         self.picWidthE.insert(0, 97)
 
     def RUNFEATURELESS(self): #featureless
-        self.winHeight = self.winHeight.get()
-        self.winWidth = self.winWidth.get()
+        winHeight, winWidth = int(self.winHeightE.get()), int(self.winWidthE.get())
+        picWidth, picHeight = int(self.picWidthE.get()), int(self.picHeightE.get())
 
-        self.picWidth = self.picWidthE.get()
-        self.picHeight = self.picHeightE.get()
         self.root.destroy()
 
         print("Loading...")
         from Featureless import main
         print("Loading... 50%")
-        main(self.winWidth, self.winHeight, self.picHeight, self.picWidth)
+        main(winWidth, winHeight, picHeight, picWidth)
 
     def done(self): #main
         winHeight, winWidth = int(self.winHeightE.get()), int(self.winWidthE.get())

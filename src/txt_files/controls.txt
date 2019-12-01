@@ -1,9 +1,16 @@
+BOTH MODES:
 MOUSE:
 LEFT CLICK (+ LSHIFT): add ADD # of logos randomly on the screen (show info on new)
 MIDDLE CLICK (+ LSHIFT): remove ADD # of newest logos on the screen (remove at mouse)
 RIGHT CLICK (on logo) [+ LSHIFT] {+ LCTRL}: add ADD # of logos at the cursors location (show info) [show info on new]
 {Shows info on all}
 
+KEYBOARD:
+UP + LSHIFT (+ LCTRL) increase FPS limit by 1 (by 10)
+DOWN + LSHIFT (+ LCTRL) decrease FPS limit by 1(by 10)
+
+
+FEATURE MODE ONLY CONTROLS:
 ScrollUP (+ LSHIFT) (+ R/G/B) [+ LCTRL]: add 1 to the ADD counter (add 10 to the ADD/R/G/B/base counter) (R: change red)
 (G: change green) (B change blue) [changes the base]
 ScrollDown (+ LSHIFT) (+ R/G/B) [+ LCTRL]: remove 1 from the ADD counter (remove 10 from ADD/R/G/B/base counter) (same as above)
@@ -31,11 +38,8 @@ H: show leader
 M: show avg hits
 S: show total hits
 F: show fps
+P: show AVG position DVD
 UP/DOWN: show options ontop of DVDS/vice versa
 
 D + LSHIFT: learn about a random disney movie 
 P + LSHIFT: learn about a random pixar movie
-
-UP + LSHIFT (+ LCTRL) increase FPS limit by 1 (by 10)
-DOWN + LSHIFT (+ LCTRL) decrease FPS limit by 1(by 10)
-
