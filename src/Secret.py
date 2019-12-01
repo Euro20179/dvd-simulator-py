@@ -30,6 +30,7 @@ def main(count, sh, sw):
         scores = File.read().split("\n")
         tuples = [x.split(" ") for x in scores]
         tuples.pop(0)
+        print(tuples)
         scores = [int(x[0]) for x in tuples]
         highScore = max(scores)
         avgScore = mean(scores)

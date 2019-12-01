@@ -1,5 +1,6 @@
 import tkinter as tk
 from sys import path
+import random
 path.append(".\src")
 
 def controlsMenu():
@@ -24,7 +25,9 @@ class Menu:
     def __init__(self):
         self.root = tk.Tk()
 
-        self.root.title("Main Menu")
+        self.root.configure(background="#ffffff")
+
+        self.root.title(random.choice(["DVD Screen", "Main Menu", "Cool Title Here", "I'm Surprised You Read This", "New And Improved"]))
         self.root.iconbitmap(r".\src\ico_files\Main_Menu_ICO.ico")
         
         self.winHeightE = tk.Entry()
@@ -64,20 +67,20 @@ class Menu:
 
     def mainMenu(self):
 
-        tk.Label(text="Window height", font=("MS Reference Sans Serif", 15)).grid(column=1, row=1)
+        tk.Label(text="Window height", font=("MS Reference Sans Serif", 15), bg="#ffffff").grid(column=1, row=1)
         self.winHeightE.grid(column=1, row=2)
 
-        tk.Label(text="Window width", font=("MS Reference Sans Serif", 15)).grid(column=1, row=3)
+        tk.Label(text="Window width", font=("MS Reference Sans Serif", 15), bg="#ffffff").grid(column=1, row=3)
         self.winWidthE.grid(column=1, row=4)
 
-        tk.Label(text="picture width\n(recommended 97)", font=("MS Reference Sans Serif", 10)).grid(column=2, row=1)
+        tk.Label(text="picture width\n(recommended 97)", font=("MS Reference Sans Serif", 10), bg="#ffffff").grid(column=2, row=1)
         self.picWidthE.grid(column=2, row=2)
 
-        tk.Label(text="picture height\n(recommended 43)", font=("MS Reference Sans Serif", 10)).grid(column=2, row=3)
+        tk.Label(text="picture height\n(recommended 43)", font=("MS Reference Sans Serif", 10), bg="#ffffff").grid(column=2, row=3)
         self.picHeightE.grid(column=2, row=4)
 
-        tk.Button(self.root, command=lambda: self.done(), text="run main version", font=("arial", 15), bg="#e1f40c").grid(column=3, row=5)
-        tk.Button(self.root, text="run featureless version", font=("arial", 15), command=lambda: self.RUNFEATURELESS(), bg="#f40ce1").grid(column=1, row=5)
+        tk.Button(self.root, command=lambda: self.done(), text="run main version", font=("arial", 15), bg="#1cdb15").grid(column=3, row=5)
+        tk.Button(self.root, text="run featureless version", font=("arial", 15), command=lambda: self.RUNFEATURELESS(), bg="#1cdb15").grid(column=1, row=5)
 
         tk.Button(text="Controls", font=("MS Reference Sans Serif", 12), command=lambda: controlsMenu(), bg="#0055ee").grid(column=3, row=1)
         tk.Button(text="Info", font=("MS Reference Sans Serif", 12), command=lambda: infoMenu(), bg="#0055ee").grid(column=3, row=3)

@@ -48,7 +48,7 @@ def VARS():
         "CycleColors": False,
         "opsOnTop": True,
         "ShowFps": True,
-        "ShowAVGPos": True
+        "ShowAVGPos": False
         }
     FPSCap = 120
     
@@ -75,7 +75,6 @@ def mainKeyChks(**kwargs):
         if varName == "options": options = var
         if varName == "sounds": sounds = var
         if varName == "Run": Run = var
-        if varName == "FPSCap": FPSCap = var
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_F5]: DVDSDict.clear()     
@@ -95,10 +94,6 @@ def mainKeyChks(**kwargs):
     if keys[pygame.K_f]: options["ShowFps"] = False if options["ShowFps"] else True
     if keys[pygame.K_p]: options["ShowAVGPos"] = False if options["ShowAVGPos"] else True
     if keys[pygame.K_UP] or keys[pygame.K_DOWN]: options["opsOnTop"] = False if options["opsOnTop"] else True
-
-    #FPS
-    if keys[pygame.K_LSHIFT] and keys[pygame.K_UP]: FPSCap += 1 if not keys[pygame.K_LCTRL] else 10
-    if keys[pygame.K_LSHIFT] and keys[pygame.K_DOWN]: FPSCap -= 1 if not keys[pygame.K_LCTRL] else 10
 
     #;)
     if keys[pygame.K_w] and keys[pygame.K_i] and keys[pygame.K_n]: sounds["windows"].play()
@@ -126,7 +121,7 @@ def mainKeyChks(**kwargs):
 
     if keys[pygame.K_F2]: pygame.image.save(win, f'SCREENSHOTS\{time.time()}.jpeg')
 
-    return DVDSDict, options, sounds, Run, FPSCap
+    return DVDSDict, options, sounds, Run
 
 def mouseChks(**kwargs):
     for varName, var in kwargs.items():
@@ -261,10 +256,14 @@ def main(vars):
         clock.tick(FPSCap)
         for event in pygame.event.get(): #mouse clicks and button presses
             if event.type == pygame.QUIT: pygame.display.quit(); pygame.quit(); Run = False; break
-            if event.type == pygame.KEYDOWN: DVDSDict, options, sounds, Run, FPSCap = mainKeyChks(DVDSDict=DVDSDict, options=options, sounds=sounds, Run=Run, win=win, FPSCap=FPSCap)  
+            if event.type == pygame.KEYDOWN: DVDSDict, options, sounds, Run = mainKeyChks(DVDSDict=DVDSDict, options=options, sounds=sounds, Run=Run, win=win)  
             if event.type == pygame.MOUSEBUTTONDOWN: ADD, DVDSDict, R, G, B, baseColor = mouseChks(options=options, ADD=ADD, DVDSDict=DVDSDict, SH=SH, SW=SW, R=R, G=G, B=B, baseColor=baseColor, event=event, DVD_Logos=DVD_Logos, winWidth=winWidth, winHeight=winHeight)    
             
         else:
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_UP]: FPSCap += 1
+            if keys[pygame.K_DOWN]: FPSCap -= 1
+
             if len(DVDSDict) >= 20:
                 for DVD in DVDSDict.values():
                     if DVD.Move: break    

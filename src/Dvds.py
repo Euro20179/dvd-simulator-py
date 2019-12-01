@@ -7,7 +7,7 @@ class DVDS:
         self.SX, self.SY = SX, SY
         self.SH, self.SW = SH, SW
         self.wallHits = 0
-        self.SXGain = random.choice([(winWidth + winHeight) / 2 / 700, -((winWidth + winHeight) / 2 / 700)]); self.SYGain = random.choice([self.SXGain, -self.SXGain])
+        self.SXGain = random.choice([(winWidth + winHeight) / 2 / 1000, -((winWidth + winHeight) / 2 / 1000)]); self.SYGain = random.choice([self.SXGain, -self.SXGain])
         self.currentLogo = random.choice(DVD_Logos)
         self.dispInfo = False
         self.Move = True
