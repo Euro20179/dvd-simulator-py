@@ -4,21 +4,20 @@ path.append(".\src")
 
 def controlsMenu():
     with open(r".\src\txt_files\controls.txt", "r") as CF:
-        string = CF.read()
         CTRLSRoot = tk.Tk()
 
-        mainL = tk.Label(CTRLSRoot, text=string, font=("Consolas", 13))
+        mainL = tk.Label(CTRLSRoot, text=CF.read(), font=("Consolas", 13))
         mainL.pack()
 
         CTRLSRoot.mainloop()
 
 def infoMenu():
     with open(r".\src\txt_files/info.txt", "r") as IF:
-        string = IF.read()
         IFRoot = tk.Tk()
 
-        mainL = tk.Label(IFRoot, text=string, font=("Consolas", 13))
+        mainL = tk.Label(IFRoot, text=IF.read(), font=("Consolas", 13))
         mainL.pack()
+
         IFRoot.mainloop()
 
 class Menu:
@@ -27,32 +26,20 @@ class Menu:
 
         self.root.title("Main Menu")
         self.root.iconbitmap(r".\src\ico_files\Main_Menu_ICO.ico")
-
-        self.winHeight = tk.IntVar()
-        self.winHeight.set(1080)
-
+        
         self.winHeightE = tk.Entry()
-        self.winHeightE.insert(0, self.winHeight.get())
-
-        self.winWidth = tk.IntVar()
-        self.winWidth.set(1920)
-
+        self.winHeightE.insert(0, 1080)
+        
         self.winWidthE = tk.Entry()
-        self.winWidthE.insert(0, self.winWidth.get())
-
-        self.picHeight = tk.IntVar()
-        self.picHeight.set(43)
+        self.winWidthE.insert(0, 1920)
 
         self.picHeightE = tk.Entry()
-        self.picHeightE.insert(0, self.picHeight.get())
-
-        self.picWidth = tk.IntVar()
-        self.picWidth.set(97)
+        self.picHeightE.insert(0, 43)
 
         self.picWidthE = tk.Entry()
-        self.picWidthE.insert(0, self.picWidth.get())
+        self.picWidthE.insert(0, 97)
 
-    def RUNFEATURELESS(self):
+    def RUNFEATURELESS(self): #featureless
         self.winHeight = self.winHeight.get()
         self.winWidth = self.winWidth.get()
 
@@ -60,27 +47,22 @@ class Menu:
         self.picHeight = self.picHeightE.get()
         self.root.destroy()
 
-        import Featureless
-        Featureless.main(self.winWidth, self.winHeight, self.picHeight, self.picWidth)
+        print("Loading...")
+        from Featureless import main
+        print("Loading... 50%")
+        main(self.winWidth, self.winHeight, self.picHeight, self.picWidth)
 
-    def done(self):
-        self.winHeight = self.winHeight.get()
-        self.winWidth = self.winWidth.get()
+    def done(self): #main
+        winHeight, winWidth = int(self.winHeightE.get()), int(self.winWidthE.get())
 
-        self.picWidth = self.picWidthE.get()
-        self.picHeight = self.picHeightE.get()
+        picWidth, picHeight = int(self.picWidthE.get()), int(self.picHeightE.get())
 
         self.root.destroy()
-        import Main
-        Main.mainInit(self.winWidth, self.winHeight, self.picHeight, self.picWidth)
 
-    def setSetting(self):
-        self.winHeight.set(self.winHeightE.get())
-        self.winWidth.set(self.winWidthE.get())
-        self.picHeight.set(self.picHeightE.get())
-        self.picWidth.set(self.picWidthE.get())
-
-        self.root.after(500, self.setSetting)
+        print("Loading...")
+        from Main import mainInit
+        print("Loading... 50%")
+        mainInit(winWidth, winHeight, picHeight, picWidth)
 
     def mainMenu(self):
 
@@ -107,9 +89,7 @@ class Menu:
         size = tuple(int(_) for _ in self.root.geometry().split("+")[0].split("x"))
         x, y = w / 2 - size[0] / 2, h / 2 - size[1] / 2
         self.root.geometry("%dx%d+%d+%d" %(size + (x, y)))
-        self.setSetting()
 
         self.root.mainloop()
 if __name__ == '__main__':
     Menu().mainMenu()
-

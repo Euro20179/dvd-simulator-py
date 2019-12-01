@@ -19,10 +19,12 @@ ESC: exit
 PAUSEBREAK: main menu
 F12: switch
 
+F6: cycle background color
+
 F2: take screenshot
 
 F3: show/remove all options
-c: show RGB
+C: show RGB
 T: show total
 A: show add
 H: show leader
@@ -31,10 +33,9 @@ S: show total hits
 F: show fps
 UP/DOWN: show options ontop of DVDS/vice versa
 
-d + LSHIFT: learn about a random disney movie 
-p + LSHIFT: learn about a random pixar movie
+D + LSHIFT: learn about a random disney movie 
+P + LSHIFT: learn about a random pixar movie
 
 UP + LSHIFT (+ LCTRL) increase FPS limit by 1 (by 10)
 DOWN + LSHIFT (+ LCTRL) decrease FPS limit by 1(by 10)
 
-F6: cycle bg color

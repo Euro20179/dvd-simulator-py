@@ -22,7 +22,10 @@ def mouseChks(event, DVDSDict):
 
 
 def main(count, sh, sw):
-    global gotten, MClicks
+    global gotten
+
+    pygame.init(); pygame.mixer.init(); pygame.font.init()
+
     with open(r".\src\txt_files\High_Score!!.txt", "r") as File:
         scores = File.read().split("\n")
         tuples = [x.split(" ") for x in scores]
@@ -33,11 +36,8 @@ def main(count, sh, sw):
     MClicks = 0
     gotten = 0
     start = time.time()
-    pygame.init(); pygame.mixer.init(); pygame.font.init()
     root = tk.Tk(); root.withdraw()
     messagebox.showinfo("YOU DESCOVERED THE SECRET", "the secret minigame!\n(press esc to go back at any time)")
-
-    pygame.display.set_caption("SECRET GAME")
 
     winWidth, winHeight = 1920, 1080
 
@@ -55,13 +55,15 @@ def main(count, sh, sw):
 
     win = pygame.display.set_mode((1920, 1080), pygame.FULLSCREEN)
 
+    pygame.display.set_caption("SECRET GAME")
+
     Run = True
     clock = pygame.time.Clock()
     while Run:
         clock.tick(120)
         for event in pygame.event.get():
             if event.type == pygame.QUIT: pygame.display.quit(); pygame.quit(); Run = False; break
-            if event.type == pygame.MOUSEBUTTONDOWN: MClicks += 1 if mouseChks(event, DVDSDict) else 0
+            if event.type == pygame.MOUSEBUTTONDOWN: MClicks += 1; mouseChks(event, DVDSDict)
 
         for DVD in DVDSDict.values():
             if DVD.Move: break   
@@ -81,17 +83,13 @@ def main(count, sh, sw):
 
         win.fill((0, 0, 0))
         for DVD in DVDSDict.values(): 
-            if DVD.Move: DVD(1920, 1080, DVD_Logos)
-                
+            if DVD.Move: DVD(1920, 1080, DVD_Logos)               
             win.blit(DVD.currentLogo, (DVD.SX, DVD.SY))
-        gottenL = mainFont.render(f'Gotten: {gotten}/{len(DVDSDict)}', False, (255, 255, 255))
-        win.blit(gottenL, (0, 0))
-        score = mainFont.render(f'Score: {round((gotten * 2 + (start - time.time())) * len(DVDSDict) - (MClicks / len(DVDSDict) * (MClicks / (time.time() - start))))}', False, (255, 255, 255))
-        win.blit(score, (0, 40))
-        MCLicksL = mainFont.render(f'Mouse Clicks: {MClicks}', False, (255, 255, 255))
-        win.blit(MCLicksL, (0, 20))
-        scoreStuff = mainFont.render(f'High Score: {highScore}', False, (255, 255, 255))
-        aveScoreF = mainFont.render(f'Avg score: {avgScore}', False, (255, 255, 255))
-        win.blit(scoreStuff, (0, 60)); win.blit(aveScoreF, (0, 80))
-        pygame.display.update()
 
+        win.blit(mainFont.render(f'Gotten: {gotten}/{len(DVDSDict)}', False, (255, 255, 255)), (0, 0))
+        win.blit(mainFont.render(f'Score: {round((gotten * 2 + (start - time.time())) * len(DVDSDict) - (MClicks / len(DVDSDict) * (MClicks / (time.time() - start))))}', False, (255, 255, 255)), (0, 40))
+        win.blit(mainFont.render(f'Mouse Clicks: {MClicks}', False, (255, 255, 255)), (0, 20))
+        win.blit(mainFont.render(f'High Score: {highScore}', False, (255, 255, 255)), (0, 60))
+        win.blit(mainFont.render(f'Avg score: {avgScore}', False, (255, 255, 255)), (0, 80))
+
+        pygame.display.update()
