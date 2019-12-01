@@ -101,10 +101,10 @@ def mainKeyChks(**kwargs):
     if keys[pygame.K_d] and keys[pygame.K_i] and keys[pygame.K_s]: sounds["disney"].play()
     if keys[pygame.K_p] and keys[pygame.K_i] and keys[pygame.K_x]: sounds["pixar"].play()
     if keys[pygame.K_f] and keys[pygame.K_o] and keys[pygame.K_x]: sounds["fox"].play()
-    if keys[pygame.K_s] and keys[pygame.K_e] and keys[pygame.K_c] and keys[pygame.K_r] and keys[pygame.K_t]:
+    if keys[pygame.K_s] and keys[pygame.K_e] and keys[pygame.K_c] and keys[pygame.K_r] and keys[pygame.K_t] or keys[pygame.K_F10]:
         pygame.display.quit()
         from Secret import main as m
-        m(len(DVDSDict), SH, SW)
+        m(len(DVDSDict), SH, SW, winWidth, winHeight)
 
     #random facts
     if keys[pygame.K_d] and keys[pygame.K_LSHIFT]: globalFuncs.randDisMov()

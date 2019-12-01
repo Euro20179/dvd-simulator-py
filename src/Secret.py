@@ -21,7 +21,7 @@ def mouseChks(event, DVDSDict):
     return False
 
 
-def main(count, sh, sw):
+def main(count, sh, sw, winWidth, winHeight):
     global gotten
 
     pygame.init(); pygame.mixer.init(); pygame.font.init()
@@ -30,8 +30,7 @@ def main(count, sh, sw):
         scores = File.read().split("\n")
         tuples = [x.split(" ") for x in scores]
         tuples.pop(0)
-        print(tuples)
-        scores = [int(x[0]) for x in tuples]
+        scores = [float(x[0]) for x in tuples]
         highScore = max(scores)
         avgScore = mean(scores)
     MClicks = 0
@@ -39,8 +38,6 @@ def main(count, sh, sw):
     start = time.time()
     root = tk.Tk(); root.withdraw()
     messagebox.showinfo("YOU DESCOVERED THE SECRET", "the secret minigame!\n(press esc to go back at any time)")
-
-    winWidth, winHeight = 1920, 1080
 
     Run = True
     path = "./DVD_Logos"
@@ -52,16 +49,24 @@ def main(count, sh, sw):
     mainFont = pygame.font.SysFont("AR DESTINE", 25)
 
     for x in range(count):
-        DVDSDict[x] = DVDS(1920, 1080, DVD_Logos, sh, sw)
+        DVDSDict[x] = DVDS(winWidth, winHeight, DVD_Logos, sh, sw)
 
-    win = pygame.display.set_mode((1920, 1080), pygame.FULLSCREEN)
+    win = pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN)
 
     pygame.display.set_caption("SECRET GAME")
 
     Run = True
     clock = pygame.time.Clock()
+
+    timeLim = len(DVDSDict) * random.gauss(3, .1)
+
     while Run:
         clock.tick(120)
+        if time.time() - start >= timeLim:
+            r = tk.Tk(); r.withdraw()
+            messagebox.showinfo("GAME OVER", "you ran out of time")
+            pygame.display.quit()
+            mainInit(winWidth, winHeight, sh, sw)
         for event in pygame.event.get():
             if event.type == pygame.QUIT: pygame.display.quit(); pygame.quit(); Run = False; break
             if event.type == pygame.MOUSEBUTTONDOWN: MClicks += 1; mouseChks(event, DVDSDict)
@@ -71,26 +76,27 @@ def main(count, sh, sw):
         else:
             end = time.time()
             pygame.mixer.Sound(".\src\Sounds\Clap.wav").play()
-            messagebox.showinfo("YOU WIN", f"FINAL SCORE:\n{round((gotten * 2 + (start - end)) * len(DVDSDict) - (MClicks / len(DVDSDict) * (MClicks / (end - start))))}\nclicks: {MClicks}\nDVDS: {len(DVDSDict)}")
+            messagebox.showinfo("YOU WIN", f"FINAL SCORE:\n{(end - start) / timeLim * 100} seconds")
             pygame.display.quit()
             with open(r".\src\txt_files\High_Score!!.txt", "a") as File:
-                File.write(f'\n{round((gotten * 2 + (start - end)) * len(DVDSDict) - (MClicks / len(DVDSDict) * (MClicks / (end - start))))} {MClicks} {len(DVDSDict)}')
-            mainInit(1920, 1080, sh, sw)
+                File.write(f'\n{(end - start) / timeLim * 100} {MClicks} {len(DVDSDict)}')
+            mainInit(winWidth, winHeight, sh, sw)
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_ESCAPE]:
             pygame.display.quit()
-            mainInit(1920, 1080, sh, sw)
+            mainInit(winWidth, winHeight, sh, sw)
 
         win.fill((0, 0, 0))
         for DVD in DVDSDict.values(): 
-            if DVD.Move: DVD(1920, 1080, DVD_Logos)               
+            if DVD.Move: DVD(winWidth, winHeight, DVD_Logos)               
             win.blit(DVD.currentLogo, (DVD.SX, DVD.SY))
 
         win.blit(mainFont.render(f'Gotten: {gotten}/{len(DVDSDict)}', False, (255, 255, 255)), (0, 0))
-        win.blit(mainFont.render(f'Score: {round((gotten * 2 + (start - time.time())) * len(DVDSDict) - (MClicks / len(DVDSDict) * (MClicks / (time.time() - start))))}', False, (255, 255, 255)), (0, 40))
+        win.blit(mainFont.render(f'Time left: {timeLim - (time.time() - start)}', False, (255, 255, 255)), (0, 40))
+        win.blit(mainFont.render(f'Score: {(time.time() - start) / timeLim * 100}', False, (255, 255, 255)), (0, 60))
         win.blit(mainFont.render(f'Mouse Clicks: {MClicks}', False, (255, 255, 255)), (0, 20))
-        win.blit(mainFont.render(f'High Score: {highScore}', False, (255, 255, 255)), (0, 60))
-        win.blit(mainFont.render(f'Avg score: {avgScore}', False, (255, 255, 255)), (0, 80))
+        win.blit(mainFont.render(f'High Score: {highScore}', False, (255, 255, 255)), (0, 80))
+        win.blit(mainFont.render(f'Avg score: {avgScore}', False, (255, 255, 255)), (0, 100))
 
         pygame.display.update()
