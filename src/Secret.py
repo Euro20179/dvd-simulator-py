@@ -55,12 +55,11 @@ def main(count, sh, sw, winWidth, winHeight):
 
     pygame.display.set_caption("SECRET GAME")
 
-    Run = True
     clock = pygame.time.Clock()
 
     timeLim = len(DVDSDict) * random.gauss(3, .1)
 
-    while Run:
+    while (Run := True):
         clock.tick(120)
         if time.time() - start >= timeLim:
             r = tk.Tk(); r.withdraw()

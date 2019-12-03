@@ -24,8 +24,7 @@ def infoMenu():
 class Menu:
     with open("DEFAULTS.txt", "r") as RF:
         text = (RF.read()).split(" ")
-        winWidth = text[1]
-        winHeight = text[2]
+        winWidth, winHeight = text[1], text[2]
     def __init__(self):
 
         self.root = tk.Tk()
@@ -47,18 +46,9 @@ class Menu:
         self.picWidthE = tk.Entry()
         self.picWidthE.insert(0, 97)
 
-    def RUNFEATURELESS(self): #featureless
-        Menu.winHeight, Menu.winWidth = int(self.winHeightE.get()), int(self.winWidthE.get())
-        picWidth, picHeight = int(self.picWidthE.get()), int(self.picHeightE.get())
+        self.root.bind("<F10>", lambda x: self.done("secret"))
 
-        self.root.destroy()
-
-        print("Loading...")
-        from Featureless import main
-        print("Loading... 50%")
-        main(winWidth, winHeight, picHeight, picWidth)
-
-    def done(self): #main
+    def done(self, version): #main
         Menu.winHeight, Menu.winWidth = int(self.winHeightE.get()), int(self.winWidthE.get())
 
         picWidth, picHeight = int(self.picWidthE.get()), int(self.picHeightE.get())
@@ -66,9 +56,19 @@ class Menu:
         self.root.destroy()
 
         print("Loading...")
-        from Main import mainInit
-        print("Loading... 50%")
-        mainInit(Menu.winWidth, Menu.winHeight, picHeight, picWidth)
+        if version == "main":
+            from Main import mainInit
+            print("Loading... 50%")
+            mainInit(Menu.winWidth, Menu.winHeight, picHeight, picWidth)
+
+        elif version == "featureless":
+            from Featureless import main
+            print("Loading... 50%")
+            main(Menu.winWidth, Menu.winHeight, picHeight, picWidth)
+
+        elif version == "secret":
+            from Secret import main as m
+            m(20, picHeight, picWidth, Menu.winWidth, Menu.winHeight)
 
     def mainMenu(self):
 
@@ -84,11 +84,11 @@ class Menu:
         tk.Label(text="picture height\n(recommended 43)", font=("MS Reference Sans Serif", 10), bg="#ffffff").grid(column=2, row=3)
         self.picHeightE.grid(column=2, row=4)
 
-        tk.Button(self.root, command=lambda: self.done(), text="run main version", font=("arial", 15), bg="#1cdb15").grid(column=3, row=6)
-        tk.Button(self.root, text="run featureless version", font=("arial", 15), command=lambda: self.RUNFEATURELESS(), bg="#1cdb15").grid(column=1, row=6)
+        tk.Button(self.root, command=lambda: self.done("main"), text="run main version", font=("arial", 15), bg="#1cdb15").grid(column=3, row=6)
+        tk.Button(self.root, text="run featureless version", font=("arial", 15), command=lambda: self.done("featureless"), bg="#1cdb15").grid(column=1, row=6)
 
-        tk.Button(text="Controls", font=("MS Reference Sans Serif", 12), command=lambda: controlsMenu(), bg="#0055ee").grid(column=3, row=1)
-        tk.Button(text="Info", font=("MS Reference Sans Serif", 12), command=lambda: infoMenu(), bg="#0055ee").grid(column=3, row=3)
+        tk.Button(text="Controls", font=("MS Reference Sans Serif", 12), command=lambda: controlsMenu(), bg="#e324ea").grid(column=3, row=1)
+        tk.Button(text="Info", font=("MS Reference Sans Serif", 12), command=lambda: infoMenu(), bg="#e324ea").grid(column=3, row=3)
 
         self.root.update_idletasks()
         w, h = self.root.winfo_screenwidth(), self.root.winfo_screenheight()

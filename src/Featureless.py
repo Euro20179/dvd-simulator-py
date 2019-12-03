@@ -24,8 +24,6 @@ def main(winWidth, winHeight, sh, sw):
 
     DVDSDict = {}
 
-    Run = True
-
     sw, sh = int(sw), int(sh)
 
     DVDSDict[1] = DVDS(winWidth, winHeight, DVD_Logos, sh, sw)
@@ -34,7 +32,7 @@ def main(winWidth, winHeight, sh, sw):
 
     FPSCap = 120
 
-    while Run:
+    while (Run := True):
         clock.tick(FPSCap)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
