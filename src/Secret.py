@@ -17,8 +17,6 @@ def mouseChks(event, DVDSDict):
             if MPos[0] > DVD.SX and MPos[0] < DVD.SX + DVD.SW and MPos[1] > DVD.SY and MPos[1] < DVD.SY + DVD.SH:
                 if DVD.Move: gotten += 1; DVD.Move = False
                 else: gotten -= 1; DVD.Move = True
-                return True
-    return False
 
 
 def main(count, sh, sw, winWidth, winHeight):
@@ -48,8 +46,7 @@ def main(count, sh, sw, winWidth, winHeight):
     DVDSDict = {}
     mainFont = pygame.font.SysFont("AR DESTINE", 25)
 
-    for x in range(count):
-        DVDSDict[x] = DVDS(winWidth, winHeight, DVD_Logos, sh, sw)
+    for x in range(count): DVDSDict[x] = DVDS(winWidth, winHeight, DVD_Logos, sh, sw)
 
     win = pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN)
 
@@ -57,10 +54,14 @@ def main(count, sh, sw, winWidth, winHeight):
 
     clock = pygame.time.Clock()
 
-    timeLim = len(DVDSDict) * random.gauss(3, .1)
+    timeLim = 0
+    for x in range(0, len(DVDSDict)):
+        timeLim += random.gauss(3, .5)
+
 
     while (Run := True):
         clock.tick(120)
+        
         if time.time() - start >= timeLim:
             r = tk.Tk(); r.withdraw()
             messagebox.showinfo("GAME OVER", "you ran out of time")
@@ -74,11 +75,12 @@ def main(count, sh, sw, winWidth, winHeight):
             if DVD.Move: break   
         else:
             end = time.time()
+            score = round(len(DVDSDict) / (end - start) * timeLim - (MClicks - len(DVDSDict)), 2)
             pygame.mixer.Sound(".\src\Sounds\Clap.wav").play()
-            messagebox.showinfo("YOU WIN", f"FINAL SCORE:\n{(end - start) / timeLim * 100} seconds")
+            messagebox.showinfo("YOU WIN", f"FINAL SCORE: {score}\nClicks: {MClicks}\nDVDS: {len(DVDSDict)}\nAccuracy: {len(DVDSDict) / MClicks * 100}")
             pygame.display.quit()
             with open(r".\src\txt_files\High_Score!!.txt", "a") as File:
-                File.write(f'\n{(end - start) / timeLim * 100} {MClicks} {len(DVDSDict)}')
+                File.write(f'\n{score} {MClicks} {len(DVDSDict)}')
             mainInit(winWidth, winHeight, sh, sw)
 
         keys = pygame.key.get_pressed()
@@ -91,9 +93,10 @@ def main(count, sh, sw, winWidth, winHeight):
             if DVD.Move: DVD(winWidth, winHeight, DVD_Logos)               
             win.blit(DVD.currentLogo, (DVD.SX, DVD.SY))
 
+        score = round(len(DVDSDict) / (time.time() - start) * timeLim - (MClicks - len(DVDSDict)), 2)
         win.blit(mainFont.render(f'Gotten: {gotten}/{len(DVDSDict)}', False, (255, 255, 255)), (0, 0))
-        win.blit(mainFont.render(f'Time left: {timeLim - (time.time() - start)}', False, (255, 255, 255)), (0, 40))
-        win.blit(mainFont.render(f'Score: {(time.time() - start) / timeLim * 100}', False, (255, 255, 255)), (0, 60))
+        win.blit(mainFont.render(f'Time left: {timeLim}', False, (255, 255, 255)), (0, 40))
+        win.blit(mainFont.render(f'Score: {score}', False, (255, 255, 255)), (0, 60))
         win.blit(mainFont.render(f'Mouse Clicks: {MClicks}', False, (255, 255, 255)), (0, 20))
         win.blit(mainFont.render(f'High Score: {highScore}', False, (255, 255, 255)), (0, 80))
         win.blit(mainFont.render(f'Avg score: {avgScore}', False, (255, 255, 255)), (0, 100))

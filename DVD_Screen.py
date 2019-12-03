@@ -48,7 +48,7 @@ class Menu:
 
         self.root.bind("<F10>", lambda x: self.done("secret"))
 
-    def done(self, version): #main
+    def done(self, version): #LAUNCH
         Menu.winHeight, Menu.winWidth = int(self.winHeightE.get()), int(self.winWidthE.get())
 
         picWidth, picHeight = int(self.picWidthE.get()), int(self.picHeightE.get())
@@ -68,7 +68,7 @@ class Menu:
 
         elif version == "secret":
             from Secret import main as m
-            m(20, picHeight, picWidth, Menu.winWidth, Menu.winHeight)
+            m(random.randint(15, 25), picHeight, picWidth, Menu.winWidth, Menu.winHeight)
 
     def mainMenu(self):
 

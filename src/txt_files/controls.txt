@@ -6,8 +6,8 @@ RIGHT CLICK (on logo) [+ LSHIFT] {+ LCTRL}: add ADD # of logos at the cursors lo
 {Shows info on all}
 
 KEYBOARD:
-UP + LSHIFT (+ LCTRL) increase FPS limit by 1 (by 10)
-DOWN + LSHIFT (+ LCTRL) decrease FPS limit by 1(by 10)
+UP + LSHIFT increase FPS limit by 1
+DOWN + LSHIFT decrease FPS limit by 1
 
 
 FEATURE MODE ONLY CONTROLS:
