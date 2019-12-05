@@ -97,5 +97,5 @@ class Menu:
         self.root.geometry("%dx%d+%d+%d" %(size + (x, y)))
 
         self.root.mainloop()
-if __name__ == '__main__':
-    Menu().mainMenu()
+
+if __name__ == '__main__': Menu().mainMenu()

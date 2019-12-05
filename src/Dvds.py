@@ -1,6 +1,6 @@
 import random
 class DVDS:
-    def __init__(self, winWidth, winHeight, DVD_Logos, SH, SW, SX=False, SY=False):
+    def __init__(self, winWidth, winHeight, DVD_Logos, SH, SW, SX=False, SY=False, dispInfo=False):
         if not SX:
             SX = random.randint(0, round(winWidth - SW))
             SY = random.randint(0, round(winHeight - SH))
@@ -9,7 +9,7 @@ class DVDS:
         self.wallHits = 0
         self.SXGain = random.choice([(winWidth + winHeight) / 2 / 1000, -((winWidth + winHeight) / 2 / 1000)]); self.SYGain = random.choice([self.SXGain, -self.SXGain])
         self.currentLogo = random.choice(DVD_Logos)
-        self.dispInfo = False
+        self.dispInfo = dispInfo
         self.Move = True
         
     def __call__(self, winWidth, winHeight, DVD_Logos):
