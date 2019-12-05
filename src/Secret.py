@@ -24,13 +24,14 @@ def main(count, sh, sw, winWidth, winHeight):
 
     pygame.init(); pygame.mixer.init(); pygame.font.init()
 
-    with open(r".\src\txt_files\High_Score!!.txt", "r") as File:
+    with open(r".\src\txt_files\High_Score!!.txt", "r") as File: #finds the high score from the "High_Score!!.txt" text file
         scores = File.read().split("\n")
         tuples = [x.split(" ") for x in scores]
         tuples.pop(0)
         scores = [float(x[0]) for x in tuples]
         highScore = max(scores)
         avgScore = mean(scores)
+
     MClicks = 0
     gotten = 0
     start = time.time()
@@ -55,9 +56,8 @@ def main(count, sh, sw, winWidth, winHeight):
     clock = pygame.time.Clock()
 
     timeLim = 0
-    for x in range(0, len(DVDSDict)):
+    for x in range(0, len(DVDSDict)): #increases the time limit a bit for each DVD
         timeLim += random.gauss(3, .5)
-
 
     while (Run := True):
         clock.tick(120)
@@ -71,15 +71,15 @@ def main(count, sh, sw, winWidth, winHeight):
             if event.type == pygame.QUIT: pygame.display.quit(); pygame.quit(); Run = False; break
             if event.type == pygame.MOUSEBUTTONDOWN: MClicks += 1; mouseChks(event, DVDSDict)
 
-        for DVD in DVDSDict.values():
+        for DVD in DVDSDict.values(): #checks if all are frozen
             if DVD.Move: break   
-        else:
+        else: #if they are, do this
             end = time.time()
             score = round(len(DVDSDict) / (end - start) * timeLim - (MClicks - len(DVDSDict)), 2)
             pygame.mixer.Sound(".\src\Sounds\Clap.wav").play()
             messagebox.showinfo("YOU WIN", f"FINAL SCORE: {score}\nClicks: {MClicks}\nDVDS: {len(DVDSDict)}\nAccuracy: {len(DVDSDict) / MClicks * 100}")
             pygame.display.quit()
-            with open(r".\src\txt_files\High_Score!!.txt", "a") as File:
+            with open(r".\src\txt_files\High_Score!!.txt", "a") as File: #saves the stats from this game
                 File.write(f'\n{score} {MClicks} {len(DVDSDict)}')
             mainInit(winWidth, winHeight, sh, sw)
 

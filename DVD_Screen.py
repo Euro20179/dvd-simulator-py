@@ -22,7 +22,7 @@ def infoMenu():
         IFRoot.mainloop()
 
 class Menu:
-    with open("DEFAULTS.txt", "r") as RF:
+    with open("DEFAULTS.txt", "r") as RF: #gets the default width, height from the DEFAULTS.txt file
         text = (RF.read()).split(" ")
         winWidth, winHeight = text[1], text[2]
     def __init__(self):
@@ -48,7 +48,7 @@ class Menu:
 
         self.root.bind("<F10>", lambda x: self.done("secret"))
 
-    def done(self, version): #LAUNCH
+    def done(self, version): #runs the picked version
         Menu.winHeight, Menu.winWidth = int(self.winHeightE.get()), int(self.winWidthE.get())
 
         picWidth, picHeight = int(self.picWidthE.get()), int(self.picHeightE.get())
@@ -84,9 +84,12 @@ class Menu:
         tk.Label(text="picture height\n(recommended 43)", font=("MS Reference Sans Serif", 10), bg="#ffffff").grid(column=2, row=3)
         self.picHeightE.grid(column=2, row=4)
 
+        #main version
         tk.Button(self.root, command=lambda: self.done("main"), text="run main version", font=("arial", 15), bg="#1cdb15").grid(column=3, row=6)
+        #featureless version
         tk.Button(self.root, text="run featureless version", font=("arial", 15), command=lambda: self.done("featureless"), bg="#1cdb15").grid(column=1, row=6)
 
+        #info/control buttons
         tk.Button(text="Controls", font=("MS Reference Sans Serif", 12), command=lambda: controlsMenu(), bg="#e324ea").grid(column=3, row=1)
         tk.Button(text="Info", font=("MS Reference Sans Serif", 12), command=lambda: infoMenu(), bg="#e324ea").grid(column=3, row=3)
 

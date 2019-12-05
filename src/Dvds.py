@@ -12,7 +12,10 @@ class DVDS:
         self.dispInfo = dispInfo
         self.Move = True
         
-    def __call__(self, winWidth, winHeight, DVD_Logos):
+    def __call__(self, winWidth, winHeight, DVD_Logos): 
+        #moves the DVD around the screen
+        #also checks if it hit a wall
+
         self.SX += self.SXGain
         self.SY += self.SYGain
 
