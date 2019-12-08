@@ -1,6 +1,7 @@
 import tkinter as tk
 from sys import path
 import random
+import os
 path.append(".\src")
 
 def controlsMenu():
@@ -21,10 +22,14 @@ def infoMenu():
 
         IFRoot.mainloop()
 
+def defaultsMenu():
+    os.system(".\DEFAULTS.txt")
+
 class Menu:
     with open("DEFAULTS.txt", "r") as RF: #gets the default width, height from the DEFAULTS.txt file
         text = (RF.read()).split(" ")
         winWidth, winHeight = text[1], text[2]
+        picWidth, picHeight = text[4], text[5]
     def __init__(self):
 
         self.root = tk.Tk()
@@ -48,10 +53,10 @@ class Menu:
 
         self.root.bind("<F10>", lambda x: self.done("secret"))
 
-    def done(self, version): #runs the picked version
+    def done(self, version): #runs the picked version6
         Menu.winHeight, Menu.winWidth = int(self.winHeightE.get()), int(self.winWidthE.get())
 
-        picWidth, picHeight = int(self.picWidthE.get()), int(self.picHeightE.get())
+        Menu.picWidth, Menu.picHeight = int(self.picWidthE.get()), int(self.picHeightE.get())
 
         self.root.destroy()
 
@@ -59,23 +64,23 @@ class Menu:
         if version == "main":
             from Main import mainInit
             print("Loading... 50%")
-            mainInit(Menu.winWidth, Menu.winHeight, picHeight, picWidth)
+            mainInit(Menu.winWidth, Menu.winHeight, Menu.picHeight, Menu.picWidth)
 
         elif version == "featureless":
             from Featureless import main
             print("Loading... 50%")
-            main(Menu.winWidth, Menu.winHeight, picHeight, picWidth)
+            main(Menu.winWidth, Menu.winHeight, Menu.picHeight, Menu.picWidth)
 
         elif version == "secret":
             from Secret import main as m
-            m(random.randint(15, 25), picHeight, picWidth, Menu.winWidth, Menu.winHeight)
+            m(random.randint(15, 25), Menu.picHeight, Menu.picWidth, Menu.winWidth, Menu.winHeight)
 
     def mainMenu(self):
 
-        tk.Label(text="Window height", font=("MS Reference Sans Serif", 15), bg="#ffffff").grid(column=1, row=1)
+        tk.Label(text="Window height", font=("MS Reference Sans Serif", 15), bg="#ffffff").grid(column=1, row=3)
         self.winHeightE.grid(column=1, row=2)
 
-        tk.Label(text="Window width", font=("MS Reference Sans Serif", 15), bg="#ffffff").grid(column=1, row=3)
+        tk.Label(text="Window width", font=("MS Reference Sans Serif", 15), bg="#ffffff").grid(column=1, row=1)
         self.winWidthE.grid(column=1, row=4)
 
         tk.Label(text="picture width\n(recommended 97)", font=("MS Reference Sans Serif", 10), bg="#ffffff").grid(column=2, row=1)
@@ -89,9 +94,11 @@ class Menu:
         #featureless version
         tk.Button(self.root, text="run featureless version", font=("arial", 15), command=lambda: self.done("featureless"), bg="#1cdb15").grid(column=1, row=6)
 
-        #info/control buttons
+		#info/control buttons
         tk.Button(text="Controls", font=("MS Reference Sans Serif", 12), command=lambda: controlsMenu(), bg="#e324ea").grid(column=3, row=1)
-        tk.Button(text="Info", font=("MS Reference Sans Serif", 12), command=lambda: infoMenu(), bg="#e324ea").grid(column=3, row=3)
+        tk.Button(text="Info", font=("MS Reference Sans Serif", 12), command=lambda: infoMenu(), bg="#e324ea").grid(column=3, row=2)
+
+        tk.Button(text="Open Defaults", font=("MS Reference Sans Serif", 12), command=lambda: defaultsMenu(), bg="#e324ea").grid(column=3, row=3)
 
         self.root.update_idletasks()
         w, h = self.root.winfo_screenwidth(), self.root.winfo_screenheight()
