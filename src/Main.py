@@ -9,16 +9,7 @@ from statistics import mean
 
 import globalFuncs
 from DVD_Screen import Menu
-from Dvds import DVDS
-
-class Options:
-    def __init__(self, on, key, name):
-        self.on = on
-        self.key = key
-        self.name = name
-
-    def switch(self, keys):
-        if keys[self.key]: self.on = False if self.on else True
+from classes import DVDS, Options
 
 #MAIN MENU
 def VARS():
@@ -111,11 +102,6 @@ def mainKeyChks(*args):
 
     #quitting/switching/main menu
     if keys[pygame.K_F12]: swap(winWidth, winHeight, SH, SW)
-    if keys[pygame.K_PAUSE]: 
-        if keys[pygame.K_LSHIFT]: swap(winWidth, winHeight, SH, SW)           
-        else:
-            pygame.display.quit()
-            Menu().mainMenu()
 
     if keys[pygame.K_F2]: pygame.image.save(win, f'SCREENSHOTS\{time.time()}.jpeg')
 
@@ -233,24 +219,31 @@ def main(vars):
             if event.type == pygame.QUIT: pygame.quit(); Run = False; break
             if event.type == pygame.KEYDOWN: DVDSList, options, sounds, Run = mainKeyChks(DVDSList, options, sounds, Run, win)  
             if event.type == pygame.MOUSEBUTTONDOWN: ADD, DVDSList, R, G, B, baseColor = mouseChks(options, ADD, DVDSList, SH, SW, R, G, B, baseColor, event, DVD_Logos)    
-        else:
+        else: #key checks
             keys = pygame.key.get_pressed()
             if keys[pygame.K_UP] and keys[pygame.K_LSHIFT]: FPSCap += 1
             if keys[pygame.K_DOWN] and keys[pygame.K_LSHIFT]: FPSCap -= 1
-            if keys[pygame.K_ESCAPE] or (keys[pygame.K_LALT] and keys[pygame.K_F4]): pygame.quit(); Run = False; break
+            if keys[pygame.K_ESCAPE]:
+                pygame.display.quit()
+                Menu().mainMenu()
+            if keys[pygame.K_PAUSE]:    
+                pygame.display.quit()
+                Menu().mainMenu()
+            elif (keys[pygame.K_ESCAPE] and keys[pygame.K_LSHIFT]) or (keys[pygame.K_LALT] and keys[pygame.K_F4]): pygame.quit(); Run = False; break
 
-            if len(DVDSList) >= 20:
+
+            if len(DVDSList) >= 20: #checks if you stopped all dvds with 20+ dvds on screen
                 for DVD in DVDSList:
                     if DVD.Move: break    
                 else:
                     sounds["clap"].play()
                     for DVD in DVDSList: DVD.Move = True
 
-            if len(DVDSList) > 1: AVGX, AVGY = mean([x.SX for x in DVDSList]), mean([y.SY for y in DVDSList])
+            if len(DVDSList) > 1: AVGX, AVGY = mean([x.SX for x in DVDSList]), mean([y.SY for y in DVDSList]) #sets avgx, avgy
                         
-            inverseRGBColor = (255 - R, 255 - G, 255 - B)
-            for op in options:
-                if op.name == "CycleColors" and op.on: R, G, B, baseColor = cycleColors(R, G, B, baseColor)
+            inverseRGBColor = (255 - R, 255 - G, 255 - B) #sets inverse color
+
+            if options[5].on: R, G, B, baseColor = cycleColors(R, G, B, baseColor)
             
             #setting stats
             if hits := [x.wallHits for x in DVDSList]:

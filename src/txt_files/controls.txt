@@ -22,8 +22,8 @@ LSHFIT + LCTRL + left click: stop the dvd the mouse is on
 KEYBOARD:
 F5: remove all.
 
-ESC: exit
-PAUSEBREAK: main menu
+LSHIFT + ESC: exit
+PAUSEBREAK/ESC: main menu
 F12: switch
 
 F6: cycle background color

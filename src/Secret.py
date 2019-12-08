@@ -1,12 +1,13 @@
 import pygame
 import tkinter as tk
-from tkinter import messagebox
-from Main import mainInit
-from os import listdir
 import random
 import time
+from os import listdir
 from statistics import mean
-from Dvds import DVDS
+from tkinter import messagebox
+
+from classes import DVDS
+from Main import mainInit
 
 def mouseChks(event, DVDSDict):
     global gotten

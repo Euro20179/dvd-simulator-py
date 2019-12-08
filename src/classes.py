@@ -14,11 +14,10 @@ class DVDS:
         
     def __call__(self, winWidth, winHeight, DVD_Logos): 
         #moves the DVD around the screen
-        #also checks if it hit a wall
-
         self.SX += self.SXGain
         self.SY += self.SYGain
 
+        #wall collision detection
         if self.SX <= 0 or self.SX + self.SW >= winWidth:
             self.SXGain *= (-1 + random.uniform(-.1, .1))
             self.currentLogo = random.choice(DVD_Logos)
@@ -30,4 +29,13 @@ class DVDS:
             self.currentLogo = random.choice(DVD_Logos)
             self.wallHits += 1
             self.SY += self.SYGain / 2
+
+class Options:
+    def __init__(self, on, key, name):
+        self.on = on
+        self.key = key
+        self.name = name
+
+    def switch(self, keys):
+        if keys[self.key]: self.on = False if self.on else True
 

@@ -46,10 +46,10 @@ class Menu:
         self.winWidthE.insert(0, Menu.winWidth)
 
         self.picHeightE = tk.Entry()
-        self.picHeightE.insert(0, 43)
+        self.picHeightE.insert(0, Menu.picHeight)
 
         self.picWidthE = tk.Entry()
-        self.picWidthE.insert(0, 97)
+        self.picWidthE.insert(0, Menu.picWidth)
 
         self.root.bind("<F10>", lambda x: self.done("secret"))
 
@@ -94,11 +94,13 @@ class Menu:
         #featureless version
         tk.Button(self.root, text="run featureless version", font=("arial", 15), command=lambda: self.done("featureless"), bg="#1cdb15").grid(column=1, row=6)
 
-		#info/control buttons
+		#other buttons
         tk.Button(text="Controls", font=("MS Reference Sans Serif", 12), command=lambda: controlsMenu(), bg="#e324ea").grid(column=3, row=1)
         tk.Button(text="Info", font=("MS Reference Sans Serif", 12), command=lambda: infoMenu(), bg="#e324ea").grid(column=3, row=2)
-
         tk.Button(text="Open Defaults", font=("MS Reference Sans Serif", 12), command=lambda: defaultsMenu(), bg="#e324ea").grid(column=3, row=3)
+
+        #QUIT button
+        tk.Button(text="QUIT", font=("MS Reference Sans Serif", 12), command=lambda: self.root.destroy(), bg="#d81111").grid(column=2, row=6)
 
         self.root.update_idletasks()
         w, h = self.root.winfo_screenwidth(), self.root.winfo_screenheight()
