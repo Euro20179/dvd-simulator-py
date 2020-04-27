@@ -1,4 +1,6 @@
 import random
+import pygame
+
 class DVDS:
     def __init__(self, winWidth, winHeight, DVD_Logos, SH, SW, SX=False, SY=False, dispInfo=False):
         if not SX:

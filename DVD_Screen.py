@@ -77,10 +77,10 @@ class Menu:
 
     def mainMenu(self):
 
-        tk.Label(text="Window height", font=("MS Reference Sans Serif", 15), bg="#ffffff").grid(column=1, row=3)
+        tk.Label(text="Window width", font=("MS Reference Sans Serif", 15), bg="#ffffff").grid(column=1, row=3)
         self.winHeightE.grid(column=1, row=2)
 
-        tk.Label(text="Window width", font=("MS Reference Sans Serif", 15), bg="#ffffff").grid(column=1, row=1)
+        tk.Label(text="Window height", font=("MS Reference Sans Serif", 15), bg="#ffffff").grid(column=1, row=1)
         self.winWidthE.grid(column=1, row=4)
 
         tk.Label(text="picture width\n(recommended 97)", font=("MS Reference Sans Serif", 10), bg="#ffffff").grid(column=2, row=1)

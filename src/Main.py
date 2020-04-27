@@ -4,6 +4,7 @@ import random
 import pygame
 import tkinter as tk
 from tkinter import messagebox
+import os
 from os import listdir
 from statistics import mean
 
@@ -11,10 +12,13 @@ import globalFuncs
 from DVD_Screen import Menu
 from classes import DVDS, Options
 
+
+
 #MAIN MENU
 def VARS():
-    global winWidth, winHeight, win
+    global winWidth, winHeight, win, fonts
 
+    
     pygame.display.set_caption("DVD")
     icos = pygame.display.set_icon(random.choice([pygame.image.load(f'{"./src/ico_files"}/{x}') for x in listdir("./src/ico_files")if "Menu" not in x and "FLess" not in x]))
 
@@ -58,7 +62,9 @@ def VARS():
            "fox": pygame.mixer.Sound(r".\src\Sounds\Fox.wav"),
            "clap": pygame.mixer.Sound(r".\src\Sounds\Clap.wav")}
 
-    win = pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN) if winWidth == 1920 and winHeight == 1080 else pygame.display.set_mode((winWidth, winHeight))
+
+
+    win = pygame.display.set_mode((winWidth, winHeight), pygame.RESIZABLE) if winWidth == 1920 and winHeight == 1080 else pygame.display.set_mode((winWidth, winHeight))
 
 
     return DVD_Logos, DVDSList, ADD, leaders, R, G, B, baseColor, inverseRGBColor, fonts, options, sounds, FPSCap
@@ -103,6 +109,10 @@ def mainKeyChks(*args):
     #quitting/switching/main menu
     if keys[pygame.K_F12]: swap(winWidth, winHeight, SH, SW)
 
+    if keys[pygame.K_F11]: 
+        flags = win.get_flags()
+        pygame.display.set_mode((winWidth, winHeight),flags^pygame.FULLSCREEN)
+
     if keys[pygame.K_F2]: pygame.image.save(win, f'SCREENSHOTS\{time.time()}.jpeg')
 
     return DVDSList, options, sounds, Run
@@ -128,6 +138,8 @@ def mouseChks(*args):
         if keys[pygame.K_LSHIFT]: #remove DVD at mouse
             for plc, DVD in enumerate(DVDSList): 
                 if mouseCollide(MPos, DVD): DVDSList.pop(plc)
+
+        if keys[pygame.K_LCTRL]: DVDSList.clear() #remove all dvds
 
         else:
             for a in range(ADD): #remove DVDS
@@ -203,8 +215,12 @@ def renderDVDS(*args): #see function name
             win.blit(fonts["DVDInfoFont"].render(f'wall hits: {DVD.wallHits}', False, inverseRGBColor), (DVD.SX + DVD.SW, DVD.SY))
             win.blit(fonts["DVDInfoFont"].render(f'X, Y: {round(DVD.SX, 2), round(DVD.SY, 2)}', False, inverseRGBColor), (DVD.SX + DVD.SW, DVD.SY + 20))
 
+def blitOps(font, string, color, renderSpot):
+    global fonts
+    win.blit(fonts[font].render(string, True, color), (0, renderSpot))
+
 def main(vars):
-    global AVGX, AVGY, avgPosDVD
+    global AVGX, AVGY, avgPosDVD, winWidth, winHeight
 
     DVD_Logos, DVDSList, ADD, leaders, R, G, B, baseColor, inverseRGBColor, fonts, options, sounds, FPSCap = vars
     DVDSList.append(DVDS(winWidth, winHeight, DVD_Logos, SH, SW))
@@ -219,6 +235,9 @@ def main(vars):
             if event.type == pygame.QUIT: pygame.quit(); Run = False; break
             if event.type == pygame.KEYDOWN: DVDSList, options, sounds, Run = mainKeyChks(DVDSList, options, sounds, Run, win)  
             if event.type == pygame.MOUSEBUTTONDOWN: ADD, DVDSList, R, G, B, baseColor = mouseChks(options, ADD, DVDSList, SH, SW, R, G, B, baseColor, event, DVD_Logos)    
+            if event.type == pygame.VIDEORESIZE:
+                surfface = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+                winWidth, winHeight = pygame.display.get_surface().get_size()
         else: #key checks
             keys = pygame.key.get_pressed()
             if keys[pygame.K_UP] and keys[pygame.K_LSHIFT]: FPSCap += 1
@@ -262,24 +281,25 @@ def main(vars):
             for op in options:
                 if op.name == "opsOnTop" and not op.on: renderDVDS(fonts, DVDSList, inverseRGBColor, win)
                 if op.on:
-                    if op.name == "ShowFps": win.blit(fonts["DVDInfoFont"].render(f'FPS (f): {round(clock.get_fps(), 2)}', False, inverseRGBColor), (0, rendSpot1))
-                    if op.name == "ShowAdd": win.blit(fonts["mainFont"].render(f'ADD (a): {ADD}', False, inverseRGBColor), (0, rendSpot2))
-                    if op.name == "ShowTotal": win.blit(fonts["mainFont"].render(f'DVDS (t): {len(DVDSList)}', False, inverseRGBColor), (0, rendSpot3))
-                    if op.name == "ShowSum": win.blit(fonts["mainFont"].render(f'TOTAL HITS (s): {totalHits}', False, inverseRGBColor), (0, rendSpot4))
-                    if op.name == "ShowLeader": leaderBoardDisp = win.blit(fonts["mainFont"].render(f'MOST HITS (h): {leaders}', False, inverseRGBColor), (0, rendSpot5))
-                    if op.name == "ShowAVG": win.blit(fonts["DVDInfoFont"].render(f'AVG HITS (m): {AVGHits}', False, inverseRGBColor), (0, rendSpot8))
+                    if op.name == "ShowFps": blitOps("DVDInfoFont", f'FPS (f): {round(clock.get_fps(), 2)}', inverseRGBColor, rendSpot1)
+                    if op.name == "ShowAdd": blitOps("mainFont", f'ADD (a): {ADD}', inverseRGBColor, rendSpot2)
+                    if op.name == "ShowTotal": blitOps("mainFont", f'DVDS (t): {len(DVDSList)}', inverseRGBColor, rendSpot3)
+                    if op.name == "ShowSum": blitOps("mainFont", f'TOTAL HITS (s): {totalHits}', inverseRGBColor, rendSpot4)
+                    if op.name == "ShowLeader": blitOps("mainFont", f'MOST HITS (h): {leaders}', inverseRGBColor, rendSpot5)
+                    if op.name == "ShowAVG": blitOps("DVDInfoFont", f'AVG HITS (m): {AVGHits}', inverseRGBColor, rendSpot8)
                     if op.name == "ShowAVGPos" and len(DVDSList) > 1:
                         win.blit(avgPosDVD.currentLogo, (AVGX, AVGY))
                         if avgPosDVD.dispInfo: win.blit(fonts["DVDInfoFont"].render(f'X, Y: ({round(AVGX, 2), round(AVGY, 2)})', False, inverseRGBColor), (AVGX + SW, AVGY))
                     if op.name == "ShowRGB":
-                        win.blit(fonts["DVDInfoFont"].render(f'RGB (c): {R, G, B}', False, inverseRGBColor), (0, rendSpot6))
-                        win.blit(fonts["DVDInfoFont"].render(f'RGB Base: {baseColor}', False, inverseRGBColor), (0, rendSpot7))
+                        blitOps("DVDInfoFont", f'RGB (c): {R, G, B}', inverseRGBColor, rendSpot6)
+                        blitOps("DVDInfoFont", f'RGB Base: {baseColor}', inverseRGBColor, rendSpot7)
                     if op.name == "opsOnTop": renderDVDS(fonts, DVDSList, inverseRGBColor, win)
             
             pygame.display.update()
             
 def mainInit(winwidth, winheight, sh, sw):
     global SH, SW, winWidth, winHeight
+
     SH, SW = int(sh), int(sw)
     winWidth, winHeight = winwidth, winheight
     pygame.init(); pygame.mixer.init(); pygame.font.init()
