@@ -1,6 +1,7 @@
 BOTH MODES:
 MOUSE:
 LEFT CLICK (+ LSHIFT): add ADD # of logos randomly on the screen (show info on new)
+LCTRL + LSHIFT + LEFT CLICK: Stop the logo that was clicked
 MIDDLE CLICK (+ LSHIFT): remove ADD # of newest logos on the screen (remove at mouse)
 RIGHT CLICK (on logo) [+ LSHIFT] {+ LCTRL}: add ADD # of logos at the cursors location (show info) [show info on new]
 {Shows info on all}

@@ -1,9 +1,14 @@
 import tkinter as tk
+import pygame
 from sys import path
 import random
 import os
 path.append(".\src")
 
+def _Main():
+    import Main
+    print("Loading... 50%")
+    Main.mainInit(Menu.winWidth, Menu.winHeight, Menu.picHeight, Menu.picWidth)
 def controlsMenu():
     with open(r".\src\txt_files\controls.txt", "r") as CF:
         CTRLSRoot = tk.Tk()
@@ -31,7 +36,6 @@ class Menu:
         winWidth, winHeight = text[1], text[2]
         picWidth, picHeight = text[4], text[5]
     def __init__(self):
-
         self.root = tk.Tk()
 
         self.root.configure(background="#ffffff")
@@ -54,6 +58,7 @@ class Menu:
         self.root.bind("<F10>", lambda x: self.done("secret"))
 
     def done(self, version): #runs the picked version6
+
         Menu.winHeight, Menu.winWidth = int(self.winHeightE.get()), int(self.winWidthE.get())
 
         Menu.picWidth, Menu.picHeight = int(self.picWidthE.get()), int(self.picHeightE.get())
@@ -62,18 +67,21 @@ class Menu:
 
         print("Loading...")
         if version == "main":
-            from Main import mainInit
-            print("Loading... 50%")
-            mainInit(Menu.winWidth, Menu.winHeight, Menu.picHeight, Menu.picWidth)
+            _Main()
 
         elif version == "featureless":
-            from Featureless import main
+            import Featureless
             print("Loading... 50%")
-            main(Menu.winWidth, Menu.winHeight, Menu.picHeight, Menu.picWidth)
+            Featureless.main(Menu.winWidth, Menu.winHeight, Menu.picHeight, Menu.picWidth)
 
         elif version == "secret":
-            from Secret import main as m
-            m(random.randint(15, 25), Menu.picHeight, Menu.picWidth, Menu.winWidth, Menu.winHeight)
+            import Secret
+            Secret.main(random.randint(15, 25), Menu.picHeight, Menu.picWidth, Menu.winWidth, Menu.winHeight)
+
+    def xButton(self):
+        self.root.iconify()
+        return
+
 
     def mainMenu(self):
 
@@ -107,7 +115,8 @@ class Menu:
         size = tuple(int(_) for _ in self.root.geometry().split("+")[0].split("x"))
         x, y = w / 2 - size[0] / 2, h / 2 - size[1] / 2
         self.root.geometry("%dx%d+%d+%d" %(size + (x, y)))
-
+        self.root.protocol("WM_DELETE_WINDOW", self.xButton)
         self.root.mainloop()
+
 
 if __name__ == '__main__': Menu().mainMenu()

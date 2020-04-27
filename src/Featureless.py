@@ -55,10 +55,7 @@ def main(winWidth, winHeight, sh, sw):
                 pygame.quit()
                 Menu().mainMenu()
             elif (keys[pygame.K_ESCAPE] and keys[pygame.K_LSHIFT]) or (keys[pygame.K_LALT] and keys[pygame.K_F4]): pygame.display.quit(); pygame.quit(); Run = False; break
-            if keys[pygame.K_F12]: swap(winWidth, winHeight, sh, sw)
-
-            if keys[pygame.K_d] and keys[pygame.K_LSHIFT]: globalFuncs.randDisMov()
-            if keys[pygame.K_p] and keys[pygame.K_LSHIFT]: globalFuncs.randPixMov()    
+            if keys[pygame.K_F12]: swap(winWidth, winHeight, sh, sw) 
             
             if keys[pygame.K_LSHIFT] and keys[pygame.K_UP]: FPSCap += 1 if not keys[pygame.K_LCTRL] else 10
             if keys[pygame.K_LSHIFT] and keys[pygame.K_DOWN]: FPSCap -= 1 if not keys[pygame.K_LCTRL] else 10
