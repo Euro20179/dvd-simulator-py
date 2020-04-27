@@ -33,10 +33,12 @@ class DVDS:
             self.SY += self.SYGain / 2
 
 class Options:
-    def __init__(self, on, key, name):
+    def __init__(self, on, key, name, xRend, yRend):
         self.on = on
         self.key = key
         self.name = name
+        self.xRend = xRend
+        self.yRend = yRend
 
     def switch(self, keys):
         if keys[self.key]: self.on = False if self.on else True
