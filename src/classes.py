@@ -2,7 +2,7 @@ import random
 import pygame
 
 class DVDS:
-    def __init__(self, winWidth, winHeight, DVD_Logos, SH, SW, SX=False, SY=False, dispInfo=False):
+    def __init__(self, winWidth, winHeight, DVD_Logos, SH, SW, *args, SX=False, SY=False, dispInfo=False):
         if not SX:
             SX = random.randint(0, round(winWidth - SW))
             SY = random.randint(0, round(winHeight - SH))
@@ -13,6 +13,10 @@ class DVDS:
         self.currentLogo = random.choice(DVD_Logos)
         self.dispInfo = dispInfo
         self.Move = True
+        if "inverseColor" in args:
+            self.inverseColor = True
+        else:
+            self.inverseColor = False
         
     def __call__(self, winWidth, winHeight, DVD_Logos): 
         #moves the DVD around the screen
