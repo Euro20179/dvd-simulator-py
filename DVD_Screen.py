@@ -1,15 +1,12 @@
 import tkinter as tk
 import pygame
-from sys import path
 import random
 import os
 
-path.append(".\src")
-
 def _Main():
-    import Main
+    from src.Main import mainInit
     print("Loading... 50%")
-    Main.mainInit(Menu.winWidth, Menu.winHeight, Menu.picHeight, Menu.picWidth)
+    mainInit(Menu.winWidth, Menu.winHeight, Menu.picHeight, Menu.picWidth)
 
 def controlsMenu():
     with open(r".\src\txt_files\controls.txt", "r") as CF:
@@ -74,12 +71,12 @@ class Menu:
             _Main()
 
         elif version == "featureless":
-            import Featureless
+            import src.Featureless as Featureless
             print("Loading... 50%")
             Featureless.main(Menu.winWidth, Menu.winHeight, Menu.picHeight, Menu.picWidth)
 
         elif version == "secret":
-            import Secret
+            import src.Secret as Secret
             Secret.main(random.randint(15, 25), Menu.picHeight, Menu.picWidth, Menu.winWidth, Menu.winHeight)
 
     def xButton(self):

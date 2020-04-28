@@ -6,8 +6,8 @@ from os import listdir
 from statistics import mean
 from tkinter import messagebox
 
-from classes import DVDS
-from Main import mainInit
+from src.classes import DVDS
+from src.Main import mainInit
 
 def mouseChks(event, DVDSList):
     global gotten
@@ -46,7 +46,7 @@ def main(count, sh, sw, winWidth, winHeight):
     DVD_Logos = [pygame.image.load(x) for x in logos]
 
     DVDSList = [DVDS(winWidth, winHeight, DVD_Logos, sh, sw) for _ in range(count)]
-    
+
     mainFont = pygame.font.SysFont("AR DESTINE", 25)
 
     win = pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN)

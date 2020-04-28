@@ -98,6 +98,19 @@ class DVDS:
             self.setLogo()
             self.wallHits += 1
             self.SY += self.SYGain / 2
+            
+
+class AvgPosDVD(DVDS):
+    def __init__(self, winWidth, winHeight, DVD_Logos, SH, SW, *args, SX=None, SY=None, dispInfo=[True]*2):
+        super().__init__(winWidth, winHeight, DVD_Logos, SH, SW, *args, SX=SX, SY=SY, dispInfo=[None]*4)
+        self.dispInfo = dispInfo
+        self.dispXY, self.dispXYDist = dispInfo
+
+    def setDispXYDist(self, b=None):
+        if b:
+            self.dispXYDist = b
+        else:
+            self.dispXYDist = False if self.dispXYDist else True
 
     def findAVGPos(self, DVDSList):
         self.setSX(mean([x.SX for x in DVDSList]))

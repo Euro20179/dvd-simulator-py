@@ -5,8 +5,8 @@ import random
 from os import listdir
 
 from DVD_Screen import Menu
-from Main import mainInit
-from classes import DVDS
+from src.Main import mainInit
+from src.classes import DVDS
 
 def swap(winWidth, winHeight, sh, sw):
     pygame.display.quit()

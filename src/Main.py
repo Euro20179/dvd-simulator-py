@@ -12,12 +12,12 @@ from tkinter import messagebox
 from statistics import mean
 
 from DVD_Screen import Menu
-from classes import DVDS, Options, VisualOptions
+from src.classes import *
 
 #goes from this mode to featureless
 def swap(winWidth, winHeight, SH, SW):
     pygame.display.quit()
-    import Featureless
+    import src.Featureless as Featureless
     Featureless.main(winWidth, winHeight, SH, SW)
 
 #checks if mouse is clicking on dvd
@@ -82,7 +82,7 @@ def mainKeyChks(*args):
     if keys[pygame.K_f] and keys[pygame.K_o] and keys[pygame.K_x]: sounds["fox"].play()
     if keys[pygame.K_s] and keys[pygame.K_e] and keys[pygame.K_c] and keys[pygame.K_r] and keys[pygame.K_t] or keys[pygame.K_F10]:
         pygame.display.quit()
-        from Secret import main as m
+        from src.Secret import main as m
         m(len(DVDSList), SH, SW, winWidth, winHeight)
 
     #quitting/switching/main menu
@@ -107,6 +107,11 @@ def mainKeyChks(*args):
     if keys[pygame.K_EQUALS]:
         for DVD in DVDSList:
             DVD.setDispYSpeed()    
+
+    if keys[pygame.K_z]:
+        avgPosDVD.setDispXY()
+    if keys[pygame.K_x]:
+        avgPosDVD.setDispXYDist()
 
     return DVDSList, options, sounds, Run
 
@@ -190,8 +195,15 @@ def mouseChks(*args):
                 break
 
         else:
-            if MPos[0] > avgPosDVD.SX and MPos[0] < avgPosDVD.SX + SW and MPos[1] > avgPosDVD.SY and MPos[1] < avgPosDVD.SY + SH: 
-                avgPosDVD.setDispInfo() #avg DVD show info
+            if mouseCollide(MPos, avgPosDVD): 
+                if avgPosDVD.dispInfo:
+                    avgPosDVD.setDispInfo(False)
+                    avgPosDVD.setDispXY(False)
+                    avgPosDVD.setDispXYDist(False)
+                else:
+                    avgPosDVD.setDispInfo(True)
+                    avgPosDVD.setDispXY(True)
+                    avgPosDVD.setDispXYDist(True)#avg DVD show info
             
             elif keys[pygame.K_LALT]:
                 for _ in range(ADD):
@@ -278,8 +290,13 @@ def blitOps(*args):
     win.blit(fonts[font].render(string, True, color), (x, renderSpot))
 
 def renderDVDS(*args): #see function name
-    fonts, DVDSList, inverseRGBColor, win = args
-
+    fonts, DVDSList, inverseRGBColor, win, options = args
+    if options["ShowAVGPos"].on and len(DVDSList) > 1:
+        win.blit(avgPosDVD.currentLogo, (avgPosDVD.SX, avgPosDVD.SY))
+        if avgPosDVD.dispXY: 
+            blitOps(fonts, "DVDInfoFont", f'X, Y: {round(avgPosDVD.SX, 2), round(avgPosDVD.SY, 2)} (z)', inverseRGBColor, avgPosDVD.SX + SW, avgPosDVD.SY)
+        if avgPosDVD.dispXYDist:
+            blitOps(fonts, "DVDInfoFont", f'X-mid, Y-mid: {round(avgPosDVD.SX - (winWidth / 2)), round(avgPosDVD.SY - (winHeight / 2))} (x)', inverseRGBColor, avgPosDVD.SX + SW, avgPosDVD.SY + 15)
     for DVD in DVDSList:
         win.blit(DVD.currentLogo, (DVD.SX, DVD.SY))
         if DVD.dispHits:
@@ -341,7 +358,7 @@ def main():
            "fox": pygame.mixer.Sound(r".\src\Sounds\Fox.wav"),
            "clap": pygame.mixer.Sound(r".\src\Sounds\Clap.wav")}
 
-    avgPosDVD = DVDS(winWidth, winHeight, DVD_Logos, SH, SW, SX=mean([x.SX for x in DVDSList]), SY=mean([y.SY for y in DVDSList]))
+    avgPosDVD = AvgPosDVD(winWidth, winHeight, DVD_Logos, SH, SW, SX=mean([x.SX for x in DVDSList]), SY=mean([y.SY for y in DVDSList]))
     clock = pygame.time.Clock()
 
     while (Run := True):
@@ -385,7 +402,7 @@ def main():
             win.fill((R, G, B))
             #options rendering
             if not options["opsOnTop"].on:
-                renderDVDS(fonts, DVDSList, inverseRGBColor, win)
+                renderDVDS(fonts, DVDSList, inverseRGBColor, win, options)
             for op in options.values():
                 if op.on:
                     if op.name == "ShowLeader": blitOps(fonts, "mainFont", f'MOST HITS (5): {leaders}', inverseRGBColor, op.xRend, op.yRend)
@@ -395,14 +412,10 @@ def main():
                     if op.name == "ShowRGBBase": blitOps(fonts, "DVDInfoFont", f'RGB Base(7): {baseColor}', inverseRGBColor, op.xRend, op.yRend)
                     if op.name == "ShowSum": blitOps(fonts, "mainFont", f'TOTAL HITS (4): {totalHits}', inverseRGBColor, op.xRend, op.yRend)
                     if op.name == "ShowFps": blitOps(fonts, "DVDInfoFont", f'FPS (1): {round(clock.get_fps(), 2)}', inverseRGBColor, op.xRend, op.yRend)
-                    if op.name == "ShowAVGPos" and len(DVDSList) > 1:
-                        win.blit(avgPosDVD.currentLogo, (avgPosDVD.SX, avgPosDVD.SY))
-                        if avgPosDVD.dispInfo: 
-                            blitOps(fonts, "DVDInfoFont", f'X, Y: {round(avgPosDVD.SX, 2), round(avgPosDVD.SY, 2)}', inverseRGBColor, avgPosDVD.SX + SW, avgPosDVD.SY)
-                            blitOps(fonts, "DVDInfoFont", f'X-mid, Y-mid: {round(avgPosDVD.SX - (winWidth / 2)), round(avgPosDVD.SY - (winHeight / 2))}', inverseRGBColor, avgPosDVD.SX + SW, avgPosDVD.SY + 15)
+                    
                     if op.name == "ShowAVG": blitOps(fonts, "DVDInfoFont", f'AVG HITS (8): {AVGHits}', inverseRGBColor, op.xRend, op.yRend)
             if options["opsOnTop"].on:
-                renderDVDS(fonts, DVDSList, inverseRGBColor, win)
+                renderDVDS(fonts, DVDSList, inverseRGBColor, win, options)
             
             pygame.display.update()
             
