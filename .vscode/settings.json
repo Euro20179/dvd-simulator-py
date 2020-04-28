@@ -1,0 +1,9 @@
+{
+    "editor.tokenColorCustomizations": {
+        "comments": "#00ff00",
+        "variables": "#D1D1C2",
+        "functions": "#00e1ff",
+        "keywords": "#006eff",
+        "types": "#00ff73"
+    }
+}
