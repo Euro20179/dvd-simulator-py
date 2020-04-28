@@ -1,17 +1,18 @@
-BOTH MODES:
+FEATURELESS:
+Left click: add logo
+middle click: remove logo
+right click: add logo at mouse
+
+FEAUTRED:
+
 MOUSE:
 LEFT CLICK (+ LSHIFT): add ADD # of logos randomly on the screen (show info on new)
 LCTRL + LSHIFT + LEFT CLICK: Stop the logo that was clicked
 MIDDLE CLICK (+ LSHIFT): remove ADD # of newest logos on the screen (remove at mouse)
+Middle click + LALT (+ LSHIFT): moves all to the average position (moves to center of screen)
 RIGHT CLICK (on logo) [+ LSHIFT] {+ LCTRL}: add ADD # of logos at the cursors location (show info) [show info on new]
 {Shows info on all}
 
-KEYBOARD:
-UP + LSHIFT increase FPS limit by 1
-DOWN + LSHIFT decrease FPS limit by 1
-
-
-FEATURE MODE ONLY CONTROLS:
 ScrollUP (+ LSHIFT) (+ R/G/B) [+ LCTRL]: add 1 to the ADD counter (add 10 to the ADD/R/G/B/base counter) (R: change red)
 (G: change green) (B change blue) [changes the base]
 ScrollDown (+ LSHIFT) (+ R/G/B) [+ LCTRL]: remove 1 from the ADD counter (remove 10 from ADD/R/G/B/base counter) (same as above)
@@ -22,6 +23,8 @@ LSHFIT + LCTRL + left click: stop the dvd the mouse is on
 
 KEYBOARD:
 F5: remove all Logos.
+UP + LSHIFT increase FPS limit by 1
+DOWN + LSHIFT decrease FPS limit by 1
 
 LSHIFT + ESC: exit
 PAUSEBREAK/ESC: main menu
