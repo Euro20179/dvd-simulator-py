@@ -12,7 +12,7 @@ from tkinter import messagebox
 from statistics import mean
 
 from DVD_Screen import Menu
-from classes import DVDS, Options
+from classes import DVDS, Options, VisualOptions
 
 #goes from this mode to featureless
 def swap(winWidth, winHeight, SH, SW):
@@ -49,12 +49,12 @@ def mainKeyChks(*args):
     if keys[pygame.K_F3]:
         if Options.On:
             for op in options.values():
-                if op.name != "CycleColors" and op.name != "ShowAVGPos":
+                if type(op) is not VisualOptions:
                     op.setOn(False)
             Options.setClsOn(False)
         else:
             for op in options.values():
-                if op.name != "CycleColors" and op.name != "ShowAVGPos":
+                if type(op) is not VisualOptions:
                     op.setOn(True)
             Options.setClsOn(True)
     
@@ -310,10 +310,10 @@ def main():
                "ShowRGB": Options(True, pygame.K_6, "ShowRGB", 0, 100),
                "ShowRGBBase": Options(True, pygame.K_7, "ShowRGBBase", 0, 120),
                "ShowSum": Options(True, pygame.K_4, "ShowSum", 0, 60),
-               "CycleColors": Options(False, pygame.K_F6, "CycleColors", 0, None),
-               "opsOnTop": Options(True, pygame.K_UP, "opsOnTop", 0, None),
+               "CycleColors": VisualOptions(False, pygame.K_F6, "CycleColors"),
+               "opsOnTop": VisualOptions(True, pygame.K_UP, "opsOnTop"),
                "ShowFps": Options(True, pygame.K_1, "ShowFps", 0, 0),
-               "ShowAVGPos": Options(False, pygame.K_p, "ShowAVGPos", 0, None),
+               "ShowAVGPos": VisualOptions(False, pygame.K_p, "ShowAVGPos"),
                "ShowAVG": Options(True, pygame.K_8, "ShowAVG", 0, 140)}
 
     FPSCap = 120
@@ -371,10 +371,10 @@ def main():
                 if DVD.Move: DVD.move()
 
             win.fill((R, G, B))
-            
             #options rendering
+            if not options["opsOnTop"].on:
+                renderDVDS(fonts, DVDSList, inverseRGBColor, win)
             for op in options.values():
-                if op.name == "opsOnTop" and not op.on: renderDVDS(fonts, DVDSList, inverseRGBColor, win)
                 if op.on:
                     if op.name == "ShowLeader": blitOps(fonts, "mainFont", f'MOST HITS (5): {leaders}', inverseRGBColor, op.xRend, op.yRend)
                     if op.name == "ShowAdd": blitOps(fonts, "mainFont", f'ADD (2): {ADD}', inverseRGBColor, op.xRend, op.yRend)
@@ -388,7 +388,8 @@ def main():
                         if avgPosDVD.dispInfo: 
                             win.blit(fonts["DVDInfoFont"].render(f'X, Y: ({round(AVGX, 2), round(AVGY, 2)})', False, inverseRGBColor), (AVGX + SW, AVGY))
                     if op.name == "ShowAVG": blitOps(fonts, "DVDInfoFont", f'AVG HITS (8): {AVGHits}', inverseRGBColor, op.xRend, op.yRend)
-                    if op.name == "opsOnTop": renderDVDS(fonts, DVDSList, inverseRGBColor, win)
+            if options["opsOnTop"].on:
+                renderDVDS(fonts, DVDSList, inverseRGBColor, win)
             
             pygame.display.update()
             

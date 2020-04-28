@@ -108,14 +108,19 @@ class Options:
             cls.On = b
         else:
             cls.On = False if cls.On else True
-
+            
     def setOn(self, b=None):
         if b:
             self.on = b
         else:
             self.on = False if self.on else True
 
-    def switch(self, keys, b=None):
-        if keys[self.key]: self.setOn(b)
+    def switch(self, keys):
+        if keys[self.key]: self.setOn()
+
+class VisualOptions(Options):
+    def __init__(self, on, key, name):
+        super().__init__(on, key, name, None, None)
+
 
 

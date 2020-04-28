@@ -2,6 +2,7 @@ Features:
 X and Y speed on each logo
 clicking on Most hits in the top left will freeze all dvds with the most hits
 and bring your mouse to one of them
+rendering dvds/options first actually works now
 
 Improvements:
 better controls
