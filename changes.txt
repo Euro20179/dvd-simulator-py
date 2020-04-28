@@ -11,7 +11,7 @@ bug fixes
 Technical changes:
 moved everything from globalfuncs.py to Main.py
 removed the vars function finally
-improved the DVDS class
+improved the DVDS and Options classes
 
 Removed:
 disney + pixar random movies

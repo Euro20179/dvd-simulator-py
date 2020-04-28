@@ -94,6 +94,7 @@ class DVDS:
 
 
 class Options:
+    On = True
     def __init__(self, on, key, name, xRend, yRend):
         self.on = on
         self.key = key
@@ -101,12 +102,20 @@ class Options:
         self.xRend = xRend
         self.yRend = yRend
 
+    @classmethod
+    def setClsOn(cls, b=None):
+        if b:
+            cls.On = b
+        else:
+            cls.On = False if cls.On else True
+
     def setOn(self, b=None):
         if b:
             self.on = b
         else:
             self.on = False if self.on else True
 
-    def switch(self, keys):
-        if keys[self.key]: self.on = False if self.on else True
+    def switch(self, keys, b=None):
+        if keys[self.key]: self.setOn(b)
+
 
