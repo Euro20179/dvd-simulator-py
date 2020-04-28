@@ -13,6 +13,7 @@ Technical changes:
 moved everything from globalfuncs.py to Main.py
 removed the vars function finally
 improved the DVDS and Options classes
+the average position Logo is now more integrated with it's class
 
 Removed:
 disney + pixar random movies

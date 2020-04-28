@@ -3,6 +3,7 @@ import pygame
 from sys import path
 import random
 import os
+
 path.append(".\src")
 
 def _Main():

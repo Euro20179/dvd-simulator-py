@@ -153,6 +153,11 @@ def mouseChks(*args):
         if keys[pygame.K_LSHIFT]: #remove DVD at mouse
             for plc, DVD in enumerate(DVDSList): 
                 if mouseCollide(MPos, DVD): DVDSList.pop(plc)
+                
+        elif keys[pygame.K_LALT]:
+            for DVD in DVDSList:
+                DVD.setSX(avgPosDVD.SX)
+                DVD.setSY(avgPosDVD.SY)
 
         else:
             for _ in range(ADD): #remove DVDS
@@ -176,7 +181,7 @@ def mouseChks(*args):
                 break
 
         else:
-            if MPos[0] > AVGX and MPos[0] < AVGX + SW and MPos[1] > AVGY and MPos[1] < AVGY + SH: 
+            if MPos[0] > avgPosDVD.SX and MPos[0] < avgPosDVD.SX + SW and MPos[1] > avgPosDVD.SY and MPos[1] < avgPosDVD.SY + SH: 
                 avgPosDVD.setDispInfo() #avg DVD show info
             
             elif keys[pygame.K_LALT]:
@@ -352,7 +357,8 @@ def main():
                 Menu().mainMenu()
             elif (keys[pygame.K_ESCAPE] and keys[pygame.K_LSHIFT]) or (keys[pygame.K_LALT] and keys[pygame.K_F4]): pygame.quit(); Run = False; break
 
-            if len(DVDSList) > 1: AVGX, AVGY = mean([x.SX for x in DVDSList]), mean([y.SY for y in DVDSList]) #sets avgx, avgy
+            if len(DVDSList) > 1 and options["ShowAVGPos"].on: 
+                avgPosDVD.findAVGPos(DVDSList) #sets avgx, avgy
                         
             inverseRGBColor = (255 - R, 255 - G, 255 - B) #sets inverse color
 
@@ -382,9 +388,9 @@ def main():
                     if op.name == "ShowSum": blitOps(fonts, "mainFont", f'TOTAL HITS (4): {totalHits}', inverseRGBColor, op.xRend, op.yRend)
                     if op.name == "ShowFps": blitOps(fonts, "DVDInfoFont", f'FPS (1): {round(clock.get_fps(), 2)}', inverseRGBColor, op.xRend, op.yRend)
                     if op.name == "ShowAVGPos" and len(DVDSList) > 1:
-                        win.blit(avgPosDVD.currentLogo, (AVGX, AVGY))
+                        win.blit(avgPosDVD.currentLogo, (avgPosDVD.SX, avgPosDVD.SY))
                         if avgPosDVD.dispInfo: 
-                            win.blit(fonts["DVDInfoFont"].render(f'X, Y: ({round(AVGX, 2), round(AVGY, 2)})', False, inverseRGBColor), (AVGX + SW, AVGY))
+                            win.blit(fonts["DVDInfoFont"].render(f'X, Y: ({round(avgPosDVD.SX, 2), round(avgPosDVD.SY, 2)})', False, inverseRGBColor), (avgPosDVD.SX + SW, avgPosDVD.SY))
                     if op.name == "ShowAVG": blitOps(fonts, "DVDInfoFont", f'AVG HITS (8): {AVGHits}', inverseRGBColor, op.xRend, op.yRend)
             if options["opsOnTop"].on:
                 renderDVDS(fonts, DVDSList, inverseRGBColor, win)

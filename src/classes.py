@@ -1,5 +1,6 @@
 import random
 import pygame
+from statistics import mean
 
 class DVDS:
     def __init__(self, winWidth, winHeight, DVD_Logos, SH, SW, *args, SX=False, SY=False, dispInfo=[False] * 4):
@@ -56,11 +57,17 @@ class DVDS:
         else:
             self.currentLogo = logo
 
-    def setSX(self):
-        self.SX += self.SXGain
+    def setSX(self, pos=None):
+        if pos:
+            self.SX = pos
+        else:
+            self.SX += self.SXGain
 
-    def setSY(self):
-        self.SY += self.SYGain
+    def setSY(self, pos=None):
+        if pos:
+            self.SY = pos
+        else:
+            self.SY += self.SYGain
 
     def setSXGain(self):
         self.SXGain *= (-1 + random.uniform(-.1, .1))
@@ -92,6 +99,10 @@ class DVDS:
             self.wallHits += 1
             self.SY += self.SYGain / 2
 
+    def findAVGPos(self, DVDSList):
+        AVGX, AVGY = mean([x.SX for x in DVDSList]), mean([y.SY for y in DVDSList])
+        self.setSX(AVGX)
+        self.setSY(AVGY)
 
 class Options:
     On = True
