@@ -3,7 +3,7 @@ import pygame
 from statistics import mean
 
 class DVDS:
-    def __init__(self, winWidth, winHeight, DVD_Logos, SH, SW, *args, SX=False, SY=False, dispInfo=[False] * 4):
+    def __init__(self, winWidth, winHeight, DVD_Logos, SH, SW, SX=False, SY=False, dispInfo=[False] * 4):
         DVDS.winWidth = winWidth
         DVDS.winHeight = winHeight
         DVDS.DVD_Logos = DVD_Logos
@@ -13,16 +13,12 @@ class DVDS:
         self.SX, self.SY = SX, SY
         self.SH, self.SW = SH, SW
         self.wallHits = 0
-        self.SXGain = random.choice([(winWidth + winHeight) / 2 / 1000, -((winWidth + winHeight) / 2 / 1000)])
+        self.SXGain = random.choice([(winWidth + winHeight) / 2 / 1300, -((winWidth + winHeight) / 2 / 1300)])
         self.SYGain = random.choice([self.SXGain, -self.SXGain])
         self.currentLogo = random.choice(DVD_Logos)
         self.dispHits, self.dispXY, self.dispXSpeed, self.dispYSpeed = dispInfo
         self.dispInfo = dispInfo
         self.Move = True
-        if "inverseColor" in args:
-            self.inverseColor = True
-        else:
-            self.inverseColor = False
 
     def setDispInfo(self, b=None):
         if b:
@@ -99,10 +95,41 @@ class DVDS:
             self.wallHits += 1
             self.SY += self.SYGain / 2
             
+class InverseColorDVD(DVDS):
+    def __init__(self, winWidth, winHeight, DVD_Logos, SH, SW, SX=None, SY=None, dispInfo=[False]*4):
+        super().__init__(winWidth, winHeight, DVD_Logos, SH, SW, SX=None, SY=None, dispInfo=dispInfo)
 
+    def recolorInverseDVDS(self, *args):
+        DVDSList, inverseRGBColor, DVD_Logos = args
+        s = DVD_Logos[0].copy()
+        s.fill((0, 0, 0, 255), None, pygame.BLEND_RGBA_MULT)
+        s.fill(inverseRGBColor + (0,), None, pygame.BLEND_RGBA_MAX)
+        DVD_Logos.pop(-1)
+        DVD_Logos.insert(-1, s)
+        self.setLogo(DVD_Logos[-1])
+        
+        return DVDSList, DVD_Logos
+
+    def move(self): 
+        #moves the DVD around the screen
+        self.setSX()
+        self.setSY()
+
+        #wall collision detection
+        if self.SX <= 0 or self.SX + self.SW >= DVDS.winWidth:
+            self.setSXGain()
+            self.wallHits += 1
+            self.SX += self.SXGain / 2
+
+        if self.SY <= 0 or self.SY + self.SH >= DVDS.winHeight:
+            self.setSYGain()
+            self.wallHits += 1
+            self.SY += self.SYGain / 2
+
+        
 class AvgPosDVD(DVDS):
-    def __init__(self, winWidth, winHeight, DVD_Logos, SH, SW, *args, SX=None, SY=None, dispInfo=[True]*2):
-        super().__init__(winWidth, winHeight, DVD_Logos, SH, SW, *args, SX=SX, SY=SY, dispInfo=[None]*4)
+    def __init__(self, winWidth, winHeight, DVD_Logos, SH, SW, SX=None, SY=None, dispInfo=[True]*2):
+        super().__init__(winWidth, winHeight, DVD_Logos, SH, SW, SX=SX, SY=SY, dispInfo=[None]*4)
         self.dispInfo = dispInfo
         self.dispXY, self.dispXYDist = dispInfo
 

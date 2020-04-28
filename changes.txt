@@ -6,7 +6,8 @@ rendering dvds/options first actually works now
 LALT + Middle click moves Logos to the average posisition
 LSHIFT + LALT + Middle click moves them to the middle
 the average position DVD can be stopped by clicking it
-	both can be toggled on/off individually
+added distance from center on avgpos dvd
+info on avg pos dvd both can be toggled on/off individually
 
 Improvements:
 better controls

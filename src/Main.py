@@ -25,19 +25,6 @@ def mouseCollide(MPos, DVD):
     return True if MPos[0] > DVD.SX and MPos[0] < DVD.SX + DVD.SW and MPos[1] > DVD.SY and MPos[1] < DVD.SY + DVD.SH else False
 
 #recolors inverse BG color logos
-def recolorInverseDVDS(*args):
-    DVDSList, inverseRGBColor, DVD_Logos = args
-    s = DVD_Logos[0].copy()
-    s.fill((0, 0, 0, 255), None, pygame.BLEND_RGBA_MULT)
-    s.fill(inverseRGBColor + (0,), None, pygame.BLEND_RGBA_MAX)
-    DVD_Logos.pop(-1)
-    DVD_Logos.insert(-1, s)
-
-    for DVD in DVDSList:
-        if DVD.inverseColor:
-            DVD.setLogo(DVD_Logos[-1])
-
-    return DVDSList, DVD_Logos
 
 #main key checks
 def mainKeyChks(*args):
@@ -117,7 +104,7 @@ def mainKeyChks(*args):
 
 #clicks
 def mouseChks(*args):
-    options, ADD, DVDSList, SH, SW, R, G, B, baseColor, event, DVD_Logos = args
+    options, ADD, DVDSList, SH, SW, R, G, B, baseColor, event, DVD_Logos, inverseRGBColor = args
 
     ADD = round(ADD)
 
@@ -142,13 +129,15 @@ def mouseChks(*args):
         elif keys[pygame.K_LALT]:
             for _ in range(ADD):
                 if keys[pygame.K_LSHIFT]:
-                    DVDSList.append(DVDS(winWidth, winHeight, DVD_Logos, SH, SW, "inverseColor", dispInfo=[True] * 4))
+                    DVDSList.append(InverseColorDVD(winWidth, winHeight, DVD_Logos, SH, SW, dispInfo=[True] * 4))
+                    DVDSList[-1].recolorInverseDVDS(DVDSList, inverseRGBColor, DVD_Logos)
                 else:
-                    DVDSList.append(DVDS(winWidth, winHeight, DVD_Logos, SH, SW, "inverseColor"))
+                    DVDSList.append(InverseColorDVD(winWidth, winHeight, DVD_Logos, SH, SW))
+                    DVDSList[-1].recolorInverseDVDS(DVDSList, inverseRGBColor, DVD_Logos)
 
         elif keys[pygame.K_LCTRL]:
             for _ in range(ADD):
-                DVDSList.append(DVDS(winWidth, winHeight, DVD_Logos, SH, SW, "inverseColor"))
+                DVDSList.append(InverseColorDVD(winWidth, winHeight, DVD_Logos, SH, SW))
 
         else:
             for _ in range(ADD): #add DVDS randomly
@@ -208,9 +197,11 @@ def mouseChks(*args):
             elif keys[pygame.K_LALT]:
                 for _ in range(ADD):
                     if keys[pygame.K_LSHIFT]:
-                        DVDSList.append(DVDS(winWidth, winHeight, DVD_Logos, SH, SW, "inverseColor", SX=MPos[0], SY=MPos[1], dispInfo=[True] * 4))
+                        DVDSList.append(InverseColorDVD(winWidth, winHeight, DVD_Logos, SH, SW, SX=MPos[0], SY=MPos[1], dispInfo=[True] * 4))
+                        DVDSList[-1].recolorInverseDVDS(DVDSList, inverseRGBColor, DVD_Logos)
                     else:
-                        DVDSList.append(DVDS(winWidth, winHeight, DVD_Logos, SH, SW, "inverseColor", SX=MPos[0], SY=MPos[1]))
+                        DVDSList.append(InverseColorDVD(winWidth, winHeight, DVD_Logos, SH, SW, SX=MPos[0], SY=MPos[1]))
+                        DVDSList[-1].recolorInverseDVDS(DVDSList, inverseRGBColor, DVD_Logos)
 
             elif keys[pygame.K_LCTRL]: #all DVD show info
                 if DVD.dispInfo:
@@ -366,7 +357,7 @@ def main():
         for event in pygame.event.get(): #mouse clicks and button presses
             if event.type == pygame.QUIT: pygame.quit(); Run = False; break
             if event.type == pygame.KEYDOWN: DVDSList, options, sounds, Run = mainKeyChks(DVDSList, options, sounds, Run, win)  
-            if event.type == pygame.MOUSEBUTTONDOWN: ADD, DVDSList, R, G, B, baseColor = mouseChks(options, ADD, DVDSList, SH, SW, R, G, B, baseColor, event, DVD_Logos)    
+            if event.type == pygame.MOUSEBUTTONDOWN: ADD, DVDSList, R, G, B, baseColor = mouseChks(options, ADD, DVDSList, SH, SW, R, G, B, baseColor, event, DVD_Logos, inverseRGBColor)    
             if event.type == pygame.VIDEORESIZE:
                 pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
                 winWidth, winHeight = pygame.display.get_surface().get_size()
@@ -395,10 +386,11 @@ def main():
                 AVGHits = mean(hits) if len(hits) >= 2 else totalHits
 
             #rendering
-            DVDSList, DVD_Logos = recolorInverseDVDS(DVDSList, inverseRGBColor, DVD_Logos)
             for DVD in DVDSList: 
                 if DVD.Move: DVD.move()
-
+                if type(DVD) is InverseColorDVD:
+                    DVDSList, DVD_Logos = DVD.recolorInverseDVDS(DVDSList, inverseRGBColor, DVD_Logos)
+                    
             win.fill((R, G, B))
             #options rendering
             if not options["opsOnTop"].on:
