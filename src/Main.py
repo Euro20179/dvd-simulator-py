@@ -220,7 +220,7 @@ def mouseChks(*args):
                         DVD.setDispInfo(True)
 
             else: #add DVDS
-                for a in range(ADD): 
+                for _ in range(ADD): 
                     if keys[pygame.K_LSHIFT]:
                         DVDSList.append(DVDS(winWidth, winHeight, DVD_Logos, SH, SW, SX=MPos[0], SY=MPos[1], dispInfo=[True] * 4))
                     else:

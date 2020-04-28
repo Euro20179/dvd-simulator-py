@@ -97,7 +97,7 @@ class DVDS:
             
 class InverseColorDVD(DVDS):
     def __init__(self, winWidth, winHeight, DVD_Logos, SH, SW, SX=None, SY=None, dispInfo=[False]*4):
-        super().__init__(winWidth, winHeight, DVD_Logos, SH, SW, SX=None, SY=None, dispInfo=dispInfo)
+        super().__init__(winWidth, winHeight, DVD_Logos, SH, SW, SX=SX, SY=SY, dispInfo=dispInfo)
 
     def recolorInverseDVDS(self, *args):
         DVDSList, inverseRGBColor, DVD_Logos = args
