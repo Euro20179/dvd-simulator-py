@@ -60,6 +60,6 @@ def main(winWidth, winHeight, sh, sw):
                 
             win.fill((0, 0, 0))
             for DVD in DVDSList:
-                DVD.move(winWidth, winHeight, DVD_Logos)
+                DVD.move()
                 win.blit(DVD.currentLogo, (DVD.SX, DVD.SY))
             pygame.display.update()
