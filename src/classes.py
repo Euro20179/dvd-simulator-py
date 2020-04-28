@@ -100,9 +100,8 @@ class DVDS:
             self.SY += self.SYGain / 2
 
     def findAVGPos(self, DVDSList):
-        AVGX, AVGY = mean([x.SX for x in DVDSList]), mean([y.SY for y in DVDSList])
-        self.setSX(AVGX)
-        self.setSY(AVGY)
+        self.setSX(mean([x.SX for x in DVDSList]))
+        self.setSY(mean([y.SY for y in DVDSList]))
 
 class Options:
     On = True

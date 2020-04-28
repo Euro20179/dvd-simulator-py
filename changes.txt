@@ -5,6 +5,7 @@ and bring your mouse to one of them
 rendering dvds/options first actually works now
 LALT + Middle click moves Logos to the average posisition
 LSHIFT + LALT + Middle click moves them to the middle
+the average position DVD can be stopped by clicking it
 
 Improvements:
 better controls
