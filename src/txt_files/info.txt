@@ -9,4 +9,4 @@ ADD: tells you how many logos to add when left or right click,
 also removes that many when middle clicked
 TOTAL: total number of logos on the screen
 
-version: 1.7
+version: 1.8_B.6

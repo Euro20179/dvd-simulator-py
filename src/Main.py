@@ -213,7 +213,8 @@ def mouseChks(*args):
     elif event.button == 4: #Mouse wheel up
         plus = 10 if keys[pygame.K_LSHIFT] else 1
         if keys[pygame.K_LSHIFT] and keys[pygame.K_LCTRL]: #change DVD logo at mouse
-            for DVD in DVDSList: DVD.currentLogo = random.choice(DVD_Logos) if mouseCollide(MPos, DVD) else DVD.currentLogo
+            for DVD in DVDSList:
+                DVD.setLogo() if mouseCollide(MPos, DVD) else DVD.currentLogo
                     
         if keys[pygame.K_LCTRL] and baseColor <= 255 - plus: baseColor += plus
             

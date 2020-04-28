@@ -32,6 +32,8 @@ def defaultsMenu():
     os.system(".\DEFAULTS.txt")
 
 class Menu:
+    BGColor = "#eeeeee"
+    otherBColor = "#e324ea"
     with open("DEFAULTS.txt", "r") as RF: #gets the default width, height from the DEFAULTS.txt file
         text = (RF.read()).split(" ")
         winWidth, winHeight = text[1], text[2]
@@ -39,7 +41,7 @@ class Menu:
     def __init__(self):
         self.root = tk.Tk()
 
-        self.root.configure(background="#ffffff")
+        self.root.configure(background=Menu.BGColor)
 
         self.root.title(random.choice(["DVD Screen", "Main Menu", "Cool Title Here", "I'm Surprised You Read This", "New And Improved"]))
         self.root.iconbitmap(r".\src\ico_files\Main_Menu_ICO.ico")
@@ -86,16 +88,16 @@ class Menu:
 
     def mainMenu(self):
 
-        tk.Label(text="Window width", font=("MS Reference Sans Serif", 15), bg="#ffffff").grid(column=1, row=3)
+        tk.Label(text="Window width", font=("MS Reference Sans Serif", 15), bg=Menu.BGColor).grid(column=1, row=3)
         self.winHeightE.grid(column=1, row=2)
 
-        tk.Label(text="Window height", font=("MS Reference Sans Serif", 15), bg="#ffffff").grid(column=1, row=1)
+        tk.Label(text="Window height", font=("MS Reference Sans Serif", 15), bg=Menu.BGColor).grid(column=1, row=1)
         self.winWidthE.grid(column=1, row=4)
 
-        tk.Label(text="picture width\n(recommended 97)", font=("MS Reference Sans Serif", 10), bg="#ffffff").grid(column=2, row=1)
+        tk.Label(text="picture width\n(recommended 97)", font=("MS Reference Sans Serif", 10), bg=Menu.BGColor).grid(column=2, row=1)
         self.picWidthE.grid(column=2, row=2)
 
-        tk.Label(text="picture height\n(recommended 43)", font=("MS Reference Sans Serif", 10), bg="#ffffff").grid(column=2, row=3)
+        tk.Label(text="picture height\n(recommended 43)", font=("MS Reference Sans Serif", 10), bg=Menu.BGColor).grid(column=2, row=3)
         self.picHeightE.grid(column=2, row=4)
 
         #main version
@@ -104,9 +106,9 @@ class Menu:
         tk.Button(self.root, text="run featureless version", font=("arial", 15), command=lambda: self.done("featureless"), bg="#1cdb15").grid(column=1, row=6)
 
 		#other buttons
-        tk.Button(text="Controls", font=("MS Reference Sans Serif", 12), command=lambda: controlsMenu(), bg="#e324ea").grid(column=3, row=1)
-        tk.Button(text="Info", font=("MS Reference Sans Serif", 12), command=lambda: infoMenu(), bg="#e324ea").grid(column=3, row=2)
-        tk.Button(text="Open Defaults", font=("MS Reference Sans Serif", 12), command=lambda: defaultsMenu(), bg="#e324ea").grid(column=3, row=3)
+        tk.Button(text="Controls", font=("MS Reference Sans Serif", 12), command=lambda: controlsMenu(), bg=Menu.otherBColor).grid(column=3, row=1)
+        tk.Button(text="Info", font=("MS Reference Sans Serif", 12), command=lambda: infoMenu(), bg=Menu.otherBColor).grid(column=3, row=2)
+        tk.Button(text="Open Defaults", font=("MS Reference Sans Serif", 12), command=lambda: defaultsMenu(), bg=Menu.otherBColor).grid(column=3, row=3)
 
         #QUIT button
         tk.Button(text="QUIT", font=("MS Reference Sans Serif", 12), command=lambda: self.root.destroy(), bg="#d81111").grid(column=2, row=6)
