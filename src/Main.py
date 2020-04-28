@@ -155,7 +155,7 @@ def mouseChks(*args):
                 if mouseCollide(MPos, DVD): DVDSList.pop(plc)
 
         else:
-            for a in range(ADD): #remove DVDS
+            for _ in range(ADD): #remove DVDS
                 if len(DVDSList) >= 1: DVDSList.pop(-1)
 
     elif event.button == 3: #right click
@@ -286,7 +286,7 @@ def main():
 
     #DVDLogos setup
     DVD_Logos = [pygame.image.load(f'{"./DVD_Logos"}/{x}') for x in os.listdir("./DVD_Logos")]
-    DVDSList = []
+    DVDSList = [DVDS(winWidth, winHeight, DVD_Logos, SH, SW)]
 
     #RANDOM VARS
     ADD = 1
@@ -325,9 +325,6 @@ def main():
            "pixar": pygame.mixer.Sound(r".\src\Sounds\Pixar.wav"),
            "fox": pygame.mixer.Sound(r".\src\Sounds\Fox.wav"),
            "clap": pygame.mixer.Sound(r".\src\Sounds\Clap.wav")}
-
-    
-    DVDSList.append(DVDS(winWidth, winHeight, DVD_Logos, SH, SW))
 
     AVGX, AVGY = mean([x.SX for x in DVDSList]), mean([y.SY for y in DVDSList])
     avgPosDVD = DVDS(winWidth, winHeight, DVD_Logos, SH, SW, SX=AVGX, SY=AVGY)

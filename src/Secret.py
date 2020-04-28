@@ -9,15 +9,15 @@ from tkinter import messagebox
 from classes import DVDS
 from Main import mainInit
 
-def mouseChks(event, DVDSDict):
+def mouseChks(event, DVDSList):
     global gotten
     keys = pygame.key.get_pressed()
     MPos = pygame.mouse.get_pos()
     if event.button == 1:
-        for DVD in DVDSDict.values():
+        for DVD in DVDSList:
             if MPos[0] > DVD.SX and MPos[0] < DVD.SX + DVD.SW and MPos[1] > DVD.SY and MPos[1] < DVD.SY + DVD.SH:
-                if DVD.Move: gotten += 1; DVD.Move = False
-                else: gotten -= 1; DVD.Move = True
+                if DVD.Move: gotten += 1; DVD.setMove(False)
+                else: gotten -= 1; DVD.setMove(True)
 
 
 def main(count, sh, sw, winWidth, winHeight):
@@ -45,10 +45,9 @@ def main(count, sh, sw, winWidth, winHeight):
     logos = [str(f'{path}/{x}') for x in listdir(path)]
     DVD_Logos = [pygame.image.load(x) for x in logos]
 
-    DVDSDict = {}
+    DVDSList = [DVDS(winWidth, winHeight, DVD_Logos, sh, sw) for _ in range(count)]
+    
     mainFont = pygame.font.SysFont("AR DESTINE", 25)
-
-    for x in range(count): DVDSDict[x] = DVDS(winWidth, winHeight, DVD_Logos, sh, sw)
 
     win = pygame.display.set_mode((winWidth, winHeight), pygame.FULLSCREEN)
 
@@ -57,7 +56,7 @@ def main(count, sh, sw, winWidth, winHeight):
     clock = pygame.time.Clock()
 
     timeLim = 0
-    for x in range(0, len(DVDSDict)): #increases the time limit a bit for each DVD
+    for x in range(0, len(DVDSList)): #increases the time limit a bit for each DVD
         timeLim += random.gauss(3, .5)
 
     while (Run := True):
@@ -70,18 +69,18 @@ def main(count, sh, sw, winWidth, winHeight):
             mainInit(winWidth, winHeight, sh, sw)
         for event in pygame.event.get():
             if event.type == pygame.QUIT: pygame.display.quit(); pygame.quit(); Run = False; break
-            if event.type == pygame.MOUSEBUTTONDOWN: MClicks += 1; mouseChks(event, DVDSDict)
+            if event.type == pygame.MOUSEBUTTONDOWN: MClicks += 1; mouseChks(event, DVDSList)
 
-        for DVD in DVDSDict.values(): #checks if all are frozen
+        for DVD in DVDSList: #checks if all are frozen
             if DVD.Move: break   
         else: #if they are, do this
             end = time.time()
-            score = round(len(DVDSDict) / (end - start) * timeLim - (MClicks - len(DVDSDict)), 2)
+            score = round(len(DVDSList) / (end - start) * timeLim - (MClicks - len(DVDSList)), 2)
             pygame.mixer.Sound(".\src\Sounds\Clap.wav").play()
-            messagebox.showinfo("YOU WIN", f"FINAL SCORE: {score}\nClicks: {MClicks}\nDVDS: {len(DVDSDict)}\nAccuracy: {len(DVDSDict) / MClicks * 100}")
+            messagebox.showinfo("YOU WIN", f"FINAL SCORE: {score}\nClicks: {MClicks}\nDVDS: {len(DVDSList)}\nAccuracy: {len(DVDSList) / MClicks * 100}")
             pygame.display.quit()
             with open(r".\src\txt_files\High_Score!!.txt", "a") as File: #saves the stats from this game
-                File.write(f'\n{score} {MClicks} {len(DVDSDict)}')
+                File.write(f'\n{score} {MClicks} {len(DVDSList)}')
             mainInit(winWidth, winHeight, sh, sw)
 
         keys = pygame.key.get_pressed()
@@ -90,12 +89,12 @@ def main(count, sh, sw, winWidth, winHeight):
             mainInit(winWidth, winHeight, sh, sw)
 
         win.fill((0, 0, 0))
-        for DVD in DVDSDict.values(): 
-            if DVD.Move: DVD(winWidth, winHeight, DVD_Logos)               
+        for DVD in DVDSList: 
+            if DVD.Move: DVD.move()               
             win.blit(DVD.currentLogo, (DVD.SX, DVD.SY))
 
-        score = round(len(DVDSDict) / (time.time() - start) * timeLim - (MClicks - len(DVDSDict)), 2)
-        win.blit(mainFont.render(f'Gotten: {gotten}/{len(DVDSDict)}', False, (255, 255, 255)), (0, 0))
+        score = round(len(DVDSList) / (time.time() - start) * timeLim - (MClicks - len(DVDSList)), 2)
+        win.blit(mainFont.render(f'Gotten: {gotten}/{len(DVDSList)}', False, (255, 255, 255)), (0, 0))
         win.blit(mainFont.render(f'Time left: {timeLim}', False, (255, 255, 255)), (0, 40))
         win.blit(mainFont.render(f'Score: {score}', False, (255, 255, 255)), (0, 60))
         win.blit(mainFont.render(f'Mouse Clicks: {MClicks}', False, (255, 255, 255)), (0, 20))
