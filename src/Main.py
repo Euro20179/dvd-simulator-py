@@ -150,14 +150,20 @@ def mouseChks(*args):
                     DVDSList.append(DVDS(winWidth, winHeight, DVD_Logos, SH, SW))
 
     elif event.button == 2: #middle click
-        if keys[pygame.K_LSHIFT]: #remove DVD at mouse
+        if keys[pygame.K_LALT]:
+            if keys[pygame.K_LSHIFT]:
+                for DVD in DVDSList:
+                    DVD.setSX((winWidth / 2) - SW)
+                    DVD.setSY((winHeight / 2) - SH)
+            else:
+                for DVD in DVDSList:
+                    DVD.setSX(avgPosDVD.SX)
+                    DVD.setSY(avgPosDVD.SY)
+
+        elif keys[pygame.K_LSHIFT]: #remove DVD at mouse
             for plc, DVD in enumerate(DVDSList): 
                 if mouseCollide(MPos, DVD): DVDSList.pop(plc)
                 
-        elif keys[pygame.K_LALT]:
-            for DVD in DVDSList:
-                DVD.setSX(avgPosDVD.SX)
-                DVD.setSY(avgPosDVD.SY)
 
         else:
             for _ in range(ADD): #remove DVDS
