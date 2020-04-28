@@ -1,1 +1,1 @@
-Screen: 500 500 Images: 97 43
+Screen: 1920 1080 Images: 97 43
