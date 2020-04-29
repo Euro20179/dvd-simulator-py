@@ -8,11 +8,14 @@ LSHIFT + LALT + Middle click moves them to the middle
 the average position DVD can be stopped by clicking it
 added distance from center on avgpos dvd
 info on avg pos dvd both can be toggled on/off individually
+Open Screenshots and Open Logos buttons in main menu
+
 
 Improvements:
 better controls
 each info can be toggled on logos
 bug fixes
+slight main menu redesign
 
 Technical changes:
 moved everything from globalfuncs.py to Main.py

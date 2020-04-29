@@ -2,6 +2,7 @@ import tkinter as tk
 import pygame
 import random
 import os
+import playsound
 
 def _Main():
     from src.Main import mainInit
@@ -18,7 +19,7 @@ def controlsMenu():
         CTRLSRoot.mainloop()
 
 def infoMenu():
-    with open(r".\src\txt_files/info.txt", "r") as IF:
+    with open(r".\src\txt_files\info.txt", "r") as IF:
         IFRoot = tk.Tk()
 
         mainL = tk.Label(IFRoot, text=IF.read(), font=("Consolas", 13))
@@ -29,9 +30,16 @@ def infoMenu():
 def defaultsMenu():
     os.system(".\DEFAULTS.txt")
 
+def openLogosFolder():
+    os.startfile("DVD_Logos")
+
+def openScreenShotsFoler():
+    os.startfile("SCREENSHOTS")
+
 class Menu:
     BGColor = "#eeeeee"
     otherBColor = "#e324ea"
+    mainBs = "#1cdb15"
     with open("DEFAULTS.txt", "r") as RF: #gets the default width, height from the DEFAULTS.txt file
         text = (RF.read()).split(" ")
         winWidth, winHeight = text[1], text[2]
@@ -84,7 +92,8 @@ class Menu:
         return
 
 
-    def mainMenu(self):
+
+    def mainMenu(self):                    
 
         tk.Label(text="Window width", font=("MS Reference Sans Serif", 15), bg=Menu.BGColor).grid(column=1, row=3)
         self.winHeightE.grid(column=1, row=2)
@@ -99,17 +108,19 @@ class Menu:
         self.picHeightE.grid(column=2, row=4)
 
         #main version
-        tk.Button(self.root, command=lambda: self.done("main"), text="run main version", font=("arial", 15), bg="#1cdb15").grid(column=3, row=6)
+        tk.Button(self.root, command=lambda: self.done("main"), text="run main version", font=("arial", 15), bg=Menu.mainBs).grid(column=3, row=6)
         #featureless version
-        tk.Button(self.root, text="run featureless version", font=("arial", 15), command=lambda: self.done("featureless"), bg="#1cdb15").grid(column=1, row=6)
+        tk.Button(self.root, text="run featureless version", font=("arial", 15), command=lambda: self.done("featureless"), bg=Menu.mainBs).grid(column=1, row=6)
 
 		#other buttons
         tk.Button(text="Controls", font=("MS Reference Sans Serif", 12), command=lambda: controlsMenu(), bg=Menu.otherBColor).grid(column=3, row=1)
-        tk.Button(text="Info", font=("MS Reference Sans Serif", 12), command=lambda: infoMenu(), bg=Menu.otherBColor).grid(column=3, row=2)
+        tk.Button(text="Info", font=("MS Reference Sans Serif", 12), command=lambda: infoMenu(), bg=Menu.otherBColor, width=13).grid(column=4, row=6)
         tk.Button(text="Open Defaults", font=("MS Reference Sans Serif", 12), command=lambda: defaultsMenu(), bg=Menu.otherBColor).grid(column=3, row=3)
+        tk.Button(text="Open Logos foler", font=("MS Reference Sans Serif", 12), command=lambda: openLogosFolder(), bg=Menu.otherBColor).grid(column=4, row=3)
+        tk.Button(text="Open Screenshots folder", font=("MS Reference Sans Serif", 12), command=lambda: openScreenShotsFoler(), bg=Menu.otherBColor).grid(column=4, row=1)
 
         #QUIT button
-        tk.Button(text="QUIT", font=("MS Reference Sans Serif", 12), command=lambda: self.root.destroy(), bg="#d81111").grid(column=2, row=6)
+        tk.Button(text="   QUIT   ", font=("MS Reference Sans Serif", 12), command=lambda: self.root.destroy(), bg="#d81111").grid(column=2, row=6)
 
         self.root.update_idletasks()
         w, h = self.root.winfo_screenwidth(), self.root.winfo_screenheight()

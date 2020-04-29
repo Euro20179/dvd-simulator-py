@@ -295,9 +295,9 @@ def renderDVDS(*args): #see function name
         if DVD.dispXY:
             blitOps(fonts, "DVDInfoFont", f'X, Y: {round(DVD.SX, 2), round(DVD.SY, 2)} (0)', inverseRGBColor, DVD.SX + DVD.SW, DVD.SY)
         if DVD.dispXSpeed:
-            blitOps(fonts, "DVDInfoFont", f'X Speed: {DVD.SXGain} (-)', inverseRGBColor, DVD.SX + DVD.SW, DVD.SY + 15)
+            blitOps(fonts, "DVDInfoFont", f'X Speed: {round(DVD.SXGain, 5)} (-)', inverseRGBColor, DVD.SX + DVD.SW, DVD.SY + 15)
         if DVD.dispYSpeed:
-            blitOps(fonts, "DVDInfoFont", f'Y Speed: {DVD.SYGain} (=)', inverseRGBColor, DVD.SX + DVD.SW, DVD.SY + 30)
+            blitOps(fonts, "DVDInfoFont", f'Y Speed: {round(DVD.SYGain, 5)} (=)', inverseRGBColor, DVD.SX + DVD.SW, DVD.SY + 30)
 
 
 def main():

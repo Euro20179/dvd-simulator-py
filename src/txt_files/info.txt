@@ -2,11 +2,13 @@ IT IS HIGHLY RECOMMENDED YOU DONT CHANGE THE IMAGE SIZE
 UNLESS YOU MAKE IMAGES WITH A DIFFERENT IMAGE SIZE THAN 97x43PX
 put any 97x43px image in the DVD_Logos folder for it to be used
 
-in the DEFAULTS.txt file you can change the default window width, window height
+in the DEFAULTS.txt file you can change the default:
+window width, window height
+picture width, picture height
 
 In the top right are ADD, and TOTAL
 ADD: tells you how many logos to add when left or right click, 
 also removes that many when middle clicked
 TOTAL: total number of logos on the screen
 
-version: 1.8_B.7.1.1
+version: 1.8_B.10
