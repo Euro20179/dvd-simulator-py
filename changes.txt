@@ -9,7 +9,7 @@ the average position DVD can be stopped by clicking it
 added distance from center on avgpos dvd
 info on avg pos dvd both can be toggled on/off individually
 Open Screenshots and Open Logos buttons in main menu
-Json for controling the colors in the main menu
+Json for controling the colors/fonts in the main menu
 
 
 Improvements:

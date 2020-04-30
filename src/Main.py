@@ -7,6 +7,7 @@ import wikipedia
 import webbrowser
 import bs4 as bs
 import requests
+import playsound
 import pandas as pd
 from tkinter import messagebox
 from statistics import mean
@@ -23,8 +24,6 @@ def swap(winWidth, winHeight, SH, SW):
 #checks if mouse is clicking on dvd
 def mouseCollide(MPos, DVD):
     return True if MPos[0] > DVD.SX and MPos[0] < DVD.SX + DVD.SW and MPos[1] > DVD.SY and MPos[1] < DVD.SY + DVD.SH else False
-
-#recolors inverse BG color logos
 
 #main key checks
 def mainKeyChks(*args):
@@ -67,6 +66,12 @@ def mainKeyChks(*args):
     if keys[pygame.K_d] and keys[pygame.K_i] and keys[pygame.K_s]: sounds["disney"].play()
     if keys[pygame.K_p] and keys[pygame.K_i] and keys[pygame.K_x]: sounds["pixar"].play()
     if keys[pygame.K_f] and keys[pygame.K_o] and keys[pygame.K_x]: sounds["fox"].play()
+    if keys[pygame.K_e] and keys[pygame.K_r] and keys[pygame.K_o]:
+        pygame.quit()
+        playsound.playsound(r".\src\Sounds\error.wav")
+        print("[ERROR]: Invalid Syntax")
+        Menu().mainMenu()
+
     if keys[pygame.K_s] and keys[pygame.K_e] and keys[pygame.K_c] and keys[pygame.K_r] and keys[pygame.K_t] or keys[pygame.K_F10]:
         pygame.display.quit()
         from src.Secret import main as m
@@ -347,7 +352,8 @@ def main():
            "disney": pygame.mixer.Sound(r".\src\Sounds\Disney.wav"),
            "pixar": pygame.mixer.Sound(r".\src\Sounds\Pixar.wav"),
            "fox": pygame.mixer.Sound(r".\src\Sounds\Fox.wav"),
-           "clap": pygame.mixer.Sound(r".\src\Sounds\Clap.wav")}
+           "clap": pygame.mixer.Sound(r".\src\Sounds\Clap.wav"),
+           "error": pygame.mixer.Sound(r".\src\Sounds\error.wav")}
 
     avgPosDVD = AvgPosDVD(winWidth, winHeight, DVD_Logos, SH, SW, SX=mean([x.SX for x in DVDSList]), SY=mean([y.SY for y in DVDSList]))
     clock = pygame.time.Clock()
