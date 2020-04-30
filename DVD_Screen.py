@@ -10,6 +10,7 @@ def _Main():
     print("Loading... 50%")
     mainInit(Menu.winWidth, Menu.winHeight, Menu.picHeight, Menu.picWidth)
 
+
 def controlsMenu():
     with open(r".\src\txt_files\controls.txt", "r") as CF:
         CTRLSRoot = tk.Tk()
@@ -29,7 +30,7 @@ def infoMenu():
         IFRoot.mainloop()
 
 def defaultsMenu():
-    os.system(r".\DEFAULTS.txt")
+    os.system(r".\DEFAULTS.json")
 
 def openLogosFolder():
     os.startfile("DVD_Logos")
@@ -46,10 +47,10 @@ class Menu:
     quitButton = data["quitButton"]
     with open("DEFAULTS.json", "r") as RF: #gets the default width, height from the DEFAULTS.txt file
         data = json.load(RF)
-        winWidth = data["screen"]["width"]
-        winHeight = data["screen"]["height"]
-        picWidth = data["images"]["width"]
-        picHeight = data["images"]["height"]
+    winWidth = data["screen"]["width"]
+    winHeight = data["screen"]["height"]
+    picWidth = data["images"]["width"]
+    picHeight = data["images"]["height"]
     def __init__(self):
         self.root = tk.Tk()
 

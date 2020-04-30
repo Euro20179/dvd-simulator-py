@@ -1,4 +1,4 @@
-import time
+import datetime
 import random
 import pygame
 import tkinter as tk
@@ -83,7 +83,7 @@ def mainKeyChks(*args):
         flags = win.get_flags()
         pygame.display.set_mode((winWidth, winHeight),flags^pygame.FULLSCREEN)
 
-    if keys[pygame.K_F2]: pygame.image.save(win, f'SCREENSHOTS\{time.time()}.jpeg')
+    if keys[pygame.K_F2]: pygame.image.save(win, 'SCREENSHOTS\\{:%Y-%m-%d %H-%M-%S}.jpeg'.format(datetime.datetime.now()))
 
     #logo options
     if keys[pygame.K_9]:
@@ -99,6 +99,7 @@ def mainKeyChks(*args):
         for DVD in DVDSList:
             DVD.setDispYSpeed()    
 
+    #average pos dvd options
     if keys[pygame.K_z]:
         avgPosDVD.setDispXY()
     if keys[pygame.K_x]:
@@ -284,9 +285,16 @@ def cycleColors(*args): #cycles the background color
     R, G, B, baseColor = args
 
     if R != baseColor and G != baseColor and B != baseColor:
-        R = baseColor
-        G = 0
-        B = 0
+        highest = max((R, G, B))
+        if R == highest:
+            R = baseColor
+            B=G=0
+        elif B == highest:
+            B = baseColor
+            R=G=0
+        elif G == highest:
+            G = baseColor
+            R=B=0
 
     if R == baseColor and G >= 0 and B == 0 and G < baseColor: G += 1    
     if R <= baseColor and G == baseColor and B == 0 and R > 0: R -= 1      

@@ -18,13 +18,17 @@ better controls
 each info can be toggled on logos
 bug fixes
 slight main menu redesign
+turning on cycle colors no longer always starts on red
+    instead it starts on the color closest to the base color
+the timestamp for a screenshot is now YMD HMS instead of unix time    
 defaults.txt is now a json instead
 
+
 Technical changes:
-moved everything from globalfuncs.py to Main.py
 removed the vars function finally
 improved the DVDS and Options classes
 the average position Logo is now more integrated with it's class
+    also has it's own child class
 
 Removed:
 disney + pixar random movies
