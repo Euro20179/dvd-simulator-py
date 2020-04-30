@@ -65,11 +65,17 @@ class DVDS:
         else:
             self.SY += self.SYGain
 
-    def setSXGain(self):
-        self.SXGain *= (-1 + random.uniform(-.1, .1))
+    def setSXGain(self, gain=None):
+        if gain:
+            self.SXGain = gain
+        else:
+            self.SXGain *= (-1 + random.uniform(-.1, .1))
 
-    def setSYGain(self):
-        self.SYGain *= (-1 + random.uniform(-.1, .1))
+    def setSYGain(self, gain=None):
+        if gain:
+            self.SYGain = gain
+        else:
+            self.SYGain *= (-1 + random.uniform(-.1, .1))
 
     def setMove(self, b=None):
         if b:

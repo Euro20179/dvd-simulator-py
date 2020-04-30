@@ -69,7 +69,6 @@ def mainKeyChks(*args):
     if keys[pygame.K_e] and keys[pygame.K_r] and keys[pygame.K_o]:
         pygame.quit()
         playsound.playsound(r".\src\Sounds\error.wav")
-        print("[ERROR]: Invalid Syntax")
         Menu().mainMenu()
 
     if keys[pygame.K_s] and keys[pygame.K_e] and keys[pygame.K_c] and keys[pygame.K_r] and keys[pygame.K_t] or keys[pygame.K_F10]:
@@ -234,33 +233,50 @@ def mouseChks(*args):
             
     elif event.button == 4: #Mouse wheel up
         plus = 10 if keys[pygame.K_LSHIFT] else 1
-        if keys[pygame.K_LSHIFT] and keys[pygame.K_LCTRL]: #change DVD logo at mouse
-            for DVD in DVDSList:
-                DVD.setLogo() if mouseCollide(MPos, DVD) else DVD.currentLogo
-                    
-        if keys[pygame.K_LCTRL] and baseColor <= 255 - plus: baseColor += plus
-            
-        elif keys[pygame.K_r] and R <= 255 - plus: R += plus       
-        elif keys[pygame.K_g] and G <= 255 - plus: G += plus
-        elif keys[pygame.K_b] and B <= 255 - plus: B += plus
-           
+      
+        for DVD in DVDSList:
+            if mouseCollide(MPos, DVD):
+                if keys[pygame.K_LCTRL]:
+                    sx = DVD.SX
+                    sy = DVD.SY
+                    DVDSList.remove(DVD)
+                    DVDSList.append(InverseColorDVD(winWidth, winHeight, DVD_Logos, SH, SW, SX=sx, SY=sy))
+                else:
+                    DVD.setLogo()
+                    break
         else:
-            ADD += plus
+            if keys[pygame.K_LCTRL] and baseColor <= 255 - plus: baseColor += plus
+                
+            elif keys[pygame.K_r] and R <= 255 - plus: R += plus       
+            elif keys[pygame.K_g] and G <= 255 - plus: G += plus
+            elif keys[pygame.K_b] and B <= 255 - plus: B += plus
+            
+            else:
+                ADD += plus
 
     elif event.button == 5: #mouse wheel down
         plus = 10 if keys[pygame.K_LSHIFT] else 1
-        if keys[pygame.K_LSHIFT] and keys[pygame.K_LCTRL]: #change DVD logo at mouse
-            for DVD in DVDSList: 
-                DVD.setLogo() if mouseCollide(MPos, DVD) else DVD.currentLogo
 
+        for DVD in DVDSList:
+            if mouseCollide(MPos, DVD):
+                if keys[pygame.K_LCTRL]:
+                    sx = DVD.SX
+                    sy = DVD.SY
+                    DVDSList.remove(DVD)
+                    DVDSList.append(InverseColorDVD(winWidth, winHeight, DVD_Logos, SH, SW, SX=sx, SY=sy))
+                else:
+                    DVD.setLogo()
+                    break
+
+        else:
         #rgb background stuff
-        if keys[pygame.K_LCTRL] and baseColor >= plus: baseColor -= plus
+            if keys[pygame.K_LCTRL] and baseColor >= plus: baseColor -= plus
 
-        elif R >= plus and keys[pygame.K_r]: R -= plus
-        elif G >= plus and keys[pygame.K_g]: G -= plus          
-        elif B >= plus and keys[pygame.K_b]: B -= plus
+            elif R >= plus and keys[pygame.K_r]: R -= plus
+            elif G >= plus and keys[pygame.K_g]: G -= plus          
+            elif B >= plus and keys[pygame.K_b]: B -= plus
 
-        elif ADD >= plus: ADD -= plus
+            elif ADD >= plus: ADD -= plus
 
     return ADD, DVDSList, R, G, B, baseColor
 

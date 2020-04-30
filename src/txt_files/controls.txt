@@ -18,7 +18,7 @@ ScrollUP (+ LSHIFT) (+ R/G/B) [+ LCTRL]: add 1 to the ADD counter (add 10 to the
 ScrollDown (+ LSHIFT) (+ R/G/B) [+ LCTRL]: remove 1 from the ADD counter (remove 10 from ADD/R/G/B/base counter) (same as above)
 [same as above]
 
-LSHIFT + LCTRL + mousewheel up/down: change the dvd the mouse is on
+mousewheel up/down (+ LCTRL): change the dvd the mouse is on (changes to inverse color DVD)
 LSHFIT + LCTRL + left click: stop the dvd the mouse is on
 
 KEYBOARD:

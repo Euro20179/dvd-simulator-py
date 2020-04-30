@@ -10,6 +10,7 @@ added distance from center on avgpos dvd
 info on avg pos dvd both can be toggled on/off individually
 Open Screenshots and Open Logos buttons in main menu
 Json for controling the colors/fonts in the main menu
+ctrl + scrolling changes dvd to inverse color dvd
 
 
 Improvements:
