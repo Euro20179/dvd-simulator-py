@@ -41,9 +41,9 @@ class Menu:
     with open(r"src\buttonColors.json") as colorsJson:
         data = json.load(colorsJson)
     BGColor = data["backgroundColor"]
-    otherBColor = data["otherButtonColor"]
-    mainBs = data["mainButtonColor"]
-    quitColor = data["quitButtonColor"]
+    otherButtons = data["otherButtons"]
+    mainBs = data["mainButtons"]
+    quitButton = data["quitButton"]
     with open("DEFAULTS.json", "r") as RF: #gets the default width, height from the DEFAULTS.txt file
         data = json.load(RF)
         winWidth = data["screen"]["width"]
@@ -114,19 +114,19 @@ class Menu:
         self.picHeightE.grid(column=2, row=4)
 
         #main version
-        tk.Button(self.root, command=lambda: self.done("main"), text="run main version", font=("arial", 15), bg=Menu.mainBs).grid(column=3, row=6)
+        tk.Button(self.root, command=lambda: self.done("main"), text="run main version", font=(Menu.mainBs["font"], 15), bg=Menu.mainBs["color"]).grid(column=3, row=6)
         #featureless version
-        tk.Button(self.root, text="run featureless version", font=("arial", 15), command=lambda: self.done("featureless"), bg=Menu.mainBs).grid(column=1, row=6)
+        tk.Button(self.root, text="run featureless version", font=(Menu.mainBs["font"], 15), command=lambda: self.done("featureless"), bg=Menu.mainBs["color"]).grid(column=1, row=6)
 
 		#other buttons
-        tk.Button(text="Controls", font=("MS Reference Sans Serif", 12), command=lambda: controlsMenu(), bg=Menu.otherBColor).grid(column=3, row=1)
-        tk.Button(text="Info", font=("MS Reference Sans Serif", 12), command=lambda: infoMenu(), bg=Menu.otherBColor, width=13).grid(column=4, row=6)
-        tk.Button(text="Open Defaults", font=("MS Reference Sans Serif", 12), command=lambda: defaultsMenu(), bg=Menu.otherBColor).grid(column=3, row=3)
-        tk.Button(text="Open Logos foler", font=("MS Reference Sans Serif", 12), command=lambda: openLogosFolder(), bg=Menu.otherBColor).grid(column=4, row=3)
-        tk.Button(text="Open Screenshots folder", font=("MS Reference Sans Serif", 12), command=lambda: openScreenShotsFoler(), bg=Menu.otherBColor).grid(column=4, row=1)
+        tk.Button(text="Controls", font=(Menu.otherButtons["font"], 12), command=lambda: controlsMenu(), bg=Menu.otherButtons["color"]).grid(column=3, row=1)
+        tk.Button(text="Info", font=(Menu.otherButtons["font"], 12), command=lambda: infoMenu(), bg=Menu.otherButtons["color"], width=13).grid(column=4, row=6)
+        tk.Button(text="Open Defaults", font=(Menu.otherButtons["font"], 12), command=lambda: defaultsMenu(), bg=Menu.otherButtons["color"]).grid(column=3, row=3)
+        tk.Button(text="Open Logos foler", font=(Menu.otherButtons["font"], 12), command=lambda: openLogosFolder(), bg=Menu.otherButtons["color"]).grid(column=4, row=3)
+        tk.Button(text="Open Screenshots folder", font=(Menu.otherButtons["font"], 12), command=lambda: openScreenShotsFoler(), bg=Menu.otherButtons["color"]).grid(column=4, row=1)
 
         #QUIT button
-        tk.Button(text="   QUIT   ", font=("MS Reference Sans Serif", 12), command=lambda: self.root.destroy(), bg=Menu.quitColor).grid(column=2, row=6)
+        tk.Button(text="   QUIT   ", font=(Menu.quitButton["font"], 12), command=lambda: self.root.destroy(), bg=Menu.quitButton["color"]).grid(column=2, row=6)
 
         self.root.update_idletasks()
         w, h = self.root.winfo_screenwidth(), self.root.winfo_screenheight()

@@ -1,6 +1,15 @@
 {
     "backgroundColor": "#eeeeee",
-    "otherButtonColor": "#e324ea",
-    "mainButtonColor": "#1cdb15",
-    "quitButtonColor": "#d81111"
+    "otherButtons": {
+        "color": "#e324ea",
+        "font": "MS Reference Sans Serif"
+    },
+    "mainButtons": {
+        "color": "#1cdb15",
+        "font": "arial"
+    },
+    "quitButton": {
+        "color": "#d81111",
+        "font": "MS Reference Sans Serif"
+    }
 }
