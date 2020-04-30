@@ -46,13 +46,10 @@ def main(winWidth, winHeight, sh, sw):
                     DVDSList.append(DVDS(winWidth, winHeight, DVD_Logos, sh, sw, SX=MPos[0], SY=MPos[1]))
         else:
             keys = pygame.key.get_pressed()
-            if keys[pygame.K_ESCAPE]:
-                pygame.display.quit()
-                Menu().mainMenu()
-            if keys[pygame.K_PAUSE]:
+            if keys[pygame.K_ESCAPE] or keys[pygame.K_PAUSE]:
                 pygame.quit()
                 Menu().mainMenu()
-            elif (keys[pygame.K_ESCAPE] and keys[pygame.K_LSHIFT]) or (keys[pygame.K_LALT] and keys[pygame.K_F4]): pygame.display.quit(); pygame.quit(); Run = False; break
+            elif (keys[pygame.K_ESCAPE] and keys[pygame.K_LSHIFT]) or (keys[pygame.K_LALT] and keys[pygame.K_F4]): pygame.display.quit(); pygame.quit(); break
             if keys[pygame.K_F12]: swap(winWidth, winHeight, sh, sw) 
             
             if keys[pygame.K_LSHIFT] and keys[pygame.K_UP]: FPSCap += 1 if not keys[pygame.K_LCTRL] else 10

@@ -2,6 +2,7 @@ import tkinter as tk
 import pygame
 import random
 import os
+import json
 import playsound
 
 def _Main():
@@ -28,7 +29,7 @@ def infoMenu():
         IFRoot.mainloop()
 
 def defaultsMenu():
-    os.system(".\DEFAULTS.txt")
+    os.system(r".\DEFAULTS.txt")
 
 def openLogosFolder():
     os.startfile("DVD_Logos")
@@ -37,13 +38,18 @@ def openScreenShotsFoler():
     os.startfile("SCREENSHOTS")
 
 class Menu:
-    BGColor = "#eeeeee"
-    otherBColor = "#e324ea"
-    mainBs = "#1cdb15"
-    with open("DEFAULTS.txt", "r") as RF: #gets the default width, height from the DEFAULTS.txt file
-        text = (RF.read()).split(" ")
-        winWidth, winHeight = text[1], text[2]
-        picWidth, picHeight = text[4], text[5]
+    with open(r"src\buttonColors.json") as colorsJson:
+        data = json.load(colorsJson)
+    BGColor = data["backgroundColor"]
+    otherBColor = data["otherButtonColor"]
+    mainBs = data["mainButtonColor"]
+    quitColor = data["quitButtonColor"]
+    with open("DEFAULTS.json", "r") as RF: #gets the default width, height from the DEFAULTS.txt file
+        data = json.load(RF)
+        winWidth = data["screen"]["width"]
+        winHeight = data["screen"]["height"]
+        picWidth = data["images"]["width"]
+        picHeight = data["images"]["height"]
     def __init__(self):
         self.root = tk.Tk()
 
@@ -120,7 +126,7 @@ class Menu:
         tk.Button(text="Open Screenshots folder", font=("MS Reference Sans Serif", 12), command=lambda: openScreenShotsFoler(), bg=Menu.otherBColor).grid(column=4, row=1)
 
         #QUIT button
-        tk.Button(text="   QUIT   ", font=("MS Reference Sans Serif", 12), command=lambda: self.root.destroy(), bg="#d81111").grid(column=2, row=6)
+        tk.Button(text="   QUIT   ", font=("MS Reference Sans Serif", 12), command=lambda: self.root.destroy(), bg=Menu.quitColor).grid(column=2, row=6)
 
         self.root.update_idletasks()
         w, h = self.root.winfo_screenwidth(), self.root.winfo_screenheight()

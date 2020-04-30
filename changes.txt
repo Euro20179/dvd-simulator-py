@@ -9,6 +9,7 @@ the average position DVD can be stopped by clicking it
 added distance from center on avgpos dvd
 info on avg pos dvd both can be toggled on/off individually
 Open Screenshots and Open Logos buttons in main menu
+Json for controling the colors in the main menu
 
 
 Improvements:
@@ -16,6 +17,7 @@ better controls
 each info can be toggled on logos
 bug fixes
 slight main menu redesign
+defaults.txt is now a json instead
 
 Technical changes:
 moved everything from globalfuncs.py to Main.py

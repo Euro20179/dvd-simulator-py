@@ -365,10 +365,7 @@ def main():
             keys = pygame.key.get_pressed()
             if keys[pygame.K_UP] and keys[pygame.K_LSHIFT]: FPSCap += 1
             if keys[pygame.K_DOWN] and keys[pygame.K_LSHIFT]: FPSCap -= 1
-            if keys[pygame.K_ESCAPE]:
-                pygame.quit()
-                Menu().mainMenu()
-            if keys[pygame.K_PAUSE]:    
+            if keys[pygame.K_ESCAPE] or keys[pygame.K_PAUSE]:
                 pygame.quit()
                 Menu().mainMenu()
             elif (keys[pygame.K_ESCAPE] and keys[pygame.K_LSHIFT]) or (keys[pygame.K_LALT] and keys[pygame.K_F4]): pygame.quit(); Run = False; break
