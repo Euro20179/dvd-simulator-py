@@ -96,9 +96,7 @@ class Menu:
 
     def xButton(self):
         self.root.destroy() 
-        return
-
-
+        return   
 
     def mainMenu(self):                    
 

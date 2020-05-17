@@ -6,12 +6,12 @@ right click: add logo at mouse
 FEAUTRED:
 
 MOUSE:
-LEFT CLICK (+ LSHIFT): add ADD # of logos randomly on the screen (show info on new)
+LEFT CLICK (+ LSHIFT) [+ LALT]: add ADD # of logos randomly on the screen (show info on new) [inverse color dvd]
 LCTRL + LSHIFT + LEFT CLICK: Stop the logo that was clicked
 MIDDLE CLICK (+ LSHIFT): remove ADD # of newest logos on the screen (remove at mouse)
 Middle click + LALT (+ LSHIFT): moves all to the average position (moves to center of screen)
-RIGHT CLICK (on logo) [+ LSHIFT] {+ LCTRL}: add ADD # of logos at the cursors location (show info) [show info on new]
-{Shows info on all}
+RIGHT CLICK (on logo) [+ LSHIFT] {+ LCTRL} {[+ LALT]}: add ADD # of logos at the cursors location (show info) [show info on new]
+{Shows info on all} {[inverse color dvd]}
 
 ScrollUP (+ LSHIFT) (+ R/G/B) [+ LCTRL]: add 1 to the ADD counter (add 10 to the ADD/R/G/B/base counter) (R: change red)
 (G: change green) (B change blue) [changes the base]

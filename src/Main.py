@@ -3,12 +3,7 @@ import random
 import pygame
 import tkinter as tk
 import os
-import wikipedia
-import webbrowser
-import bs4 as bs
-import requests
 import playsound
-import pandas as pd
 from tkinter import messagebox
 from statistics import mean
 
@@ -23,7 +18,7 @@ def swap(winWidth, winHeight, SH, SW):
 
 #checks if mouse is clicking on dvd
 def mouseCollide(MPos, DVD):
-    return True if MPos[0] > DVD.SX and MPos[0] < DVD.SX + DVD.SW and MPos[1] > DVD.SY and MPos[1] < DVD.SY + DVD.SH else False
+    return DVD.rect.collidepoint(MPos)
 
 #main key checks
 def mainKeyChks(*args):
@@ -132,24 +127,14 @@ def mouseChks(*args):
                     DVD.setMove(False)
 
         elif keys[pygame.K_LALT]:
-            for _ in range(ADD):
-                if keys[pygame.K_LSHIFT]:
-                    DVDSList.append(InverseColorDVD(winWidth, winHeight, DVD_Logos, SH, SW, dispInfo=[True] * 4))
-                    DVDSList[-1].recolorInverseDVDS(DVDSList, inverseRGBColor, DVD_Logos)
-                else:
-                    DVDSList.append(InverseColorDVD(winWidth, winHeight, DVD_Logos, SH, SW))
-                    DVDSList[-1].recolorInverseDVDS(DVDSList, inverseRGBColor, DVD_Logos)
+            DVDSList += [InverseColorDVD(winWidth, winHeight, DVD_Logos, SH, SW, dispXY=True, dispYSpeed=True, dispXSpeed=True, dispHits=True) for _ in range(ADD)] if keys[pygame.K_LSHIFT] else [InverseColorDVD(winWidth, winHeight, DVD_Logos, SH, SW) for _ in range(ADD)] #appends Inverse DVDS with stats off else if LSHIFT pressed appends with stats on
+            DVDSList[-1].recolorInverseDVDS(DVDSList, inverseRGBColor, DVD_Logos)
 
         elif keys[pygame.K_LCTRL]:
-            for _ in range(ADD):
-                DVDSList.append(InverseColorDVD(winWidth, winHeight, DVD_Logos, SH, SW))
-
+            DVDSList += [InverseColorDVD(winWidth, winHeight, DVD_Logos, SH, SW) for _ in range(ADD)]
+            DVDSList[-1].recolorInverseDVDS(DVDSList, inverseRGBColor, DVD_Logos)
         else:
-            for _ in range(ADD): #add DVDS randomly
-                if keys[pygame.K_LSHIFT]: 
-                    DVDSList.append(DVDS(winWidth, winHeight, DVD_Logos, SH, SW, dispInfo=[True] * 4))
-                else:
-                    DVDSList.append(DVDS(winWidth, winHeight, DVD_Logos, SH, SW))
+            DVDSList += [DVDS(winWidth, winHeight, DVD_Logos, SH, SW, dispXY=True, dispYSpeed=True, dispXSpeed=True, dispHits=True) for _ in range(ADD)] if keys[pygame.K_LSHIFT] else [DVDS(winWidth, winHeight, DVD_Logos, SH, SW) for _ in range(ADD)] #same but with dvds
 
     elif event.button == 2: #middle click
         if keys[pygame.K_LALT]:
@@ -163,29 +148,20 @@ def mouseChks(*args):
                     DVD.setSY(avgPosDVD.SY)
 
         elif keys[pygame.K_LSHIFT]: #remove DVD at mouse
-            for plc, DVD in enumerate(DVDSList): 
-                if mouseCollide(MPos, DVD): DVDSList.pop(plc)
-                
+            DVDSList = [t for t in filter(lambda DVD: not mouseCollide(MPos, DVD), DVDSList)]
 
         else:
             for _ in range(ADD): #remove DVDS
-                if len(DVDSList) >= 1: DVDSList.pop(-1)
+                if DVDSList: DVDSList.pop(-1)
 
     elif event.button == 3: #right click
         for DVD in DVDSList: #DVD show info
             if mouseCollide(MPos, DVD):
-                if DVD.dispInfo:
-                    DVD.setDispHits(False)
-                    DVD.setDispXY(False)
-                    DVD.setDispXSpeed(False)
-                    DVD.setDispYSpeed(False)
-                    DVD.setDispInfo(False)
-                else:
-                    DVD.setDispHits(True)
-                    DVD.setDispXY(True)
-                    DVD.setDispXSpeed(True)
-                    DVD.setDispYSpeed(True)
-                    DVD.setDispInfo(True)
+                DVD.setDispHits(False if DVD.dispInfo else True)
+                DVD.setDispXY(False if DVD.dispInfo else True)
+                DVD.setDispXSpeed(False if DVD.dispInfo else True)
+                DVD.setDispYSpeed(False if DVD.dispInfo else True)
+                DVD.setDispInfo(False if DVD.dispInfo else True)
                 break
 
         else:
@@ -202,36 +178,23 @@ def mouseChks(*args):
             elif keys[pygame.K_LALT]:
                 for _ in range(ADD):
                     if keys[pygame.K_LSHIFT]:
-                        DVDSList.append(InverseColorDVD(winWidth, winHeight, DVD_Logos, SH, SW, SX=MPos[0], SY=MPos[1], dispInfo=[True] * 4))
+                        DVDSList.append(InverseColorDVD(winWidth, winHeight, DVD_Logos, SH, SW, SX=MPos[0], SY=MPos[1], dispXY=True, dispYSpeed=True, dispXSpeed=True, dispHits=True))
                         DVDSList[-1].recolorInverseDVDS(DVDSList, inverseRGBColor, DVD_Logos)
                     else:
                         DVDSList.append(InverseColorDVD(winWidth, winHeight, DVD_Logos, SH, SW, SX=MPos[0], SY=MPos[1]))
                         DVDSList[-1].recolorInverseDVDS(DVDSList, inverseRGBColor, DVD_Logos)
 
             elif keys[pygame.K_LCTRL]: #all DVD show info
-                if DVD.dispInfo:
-                    for DVD in DVDSList:
-                        DVD.setDispHits(False)
-                        DVD.setDispXY(False)
-                        DVD.setDispXSpeed(False)
-                        DVD.setDispYSpeed(False)
-                        DVD.setDispInfo(False)
-                else:
-                    for DVD in DVDSList:
-                        DVD.setDispHits(True)
-                        DVD.setDispXY(True)
-                        DVD.setDispXSpeed(True)
-                        DVD.setDispYSpeed(True)
-                        DVD.setDispInfo(True)
+                for DVD in DVDSList:
+                    DVD.setDispHits(False if DVD.dispInfo else True)
+                    DVD.setDispXY(False if DVD.dispInfo else True)
+                    DVD.setDispXSpeed(False if DVD.dispInfo else True)
+                    DVD.setDispYSpeed(False if DVD.dispInfo else True)
+                    DVD.setDispInfo(False if DVD.dispInfo else True)
 
             else: #add DVDS
-                for _ in range(ADD): 
-                    if keys[pygame.K_LSHIFT]:
-                        DVDSList.append(DVDS(winWidth, winHeight, DVD_Logos, SH, SW, SX=MPos[0], SY=MPos[1], dispInfo=[True] * 4))
-                    else:
-                        DVDSList.append(DVDS(winWidth, winHeight, DVD_Logos, SH, SW, SX=MPos[0], SY=MPos[1]))
-                    
-            
+                DVDSList += [DVDS(winWidth, winHeight, DVD_Logos, SH, SW, dispXY=True, dispYSpeed=True, dispXSpeed=True, dispHits=True, SX=MPos[0], SY=MPos[1]) for _ in range(ADD)] if keys[pygame.K_LSHIFT] else [DVDS(winWidth, winHeight, DVD_Logos, SH, SW, SX=MPos[0], SY=MPos[1]) for _ in range(ADD)] #add dvds
+                         
     elif event.button == 4: #Mouse wheel up
         plus = 10 if keys[pygame.K_LSHIFT] else 1
       

@@ -3,7 +3,7 @@ import pygame
 from statistics import mean
 
 class DVDS:
-    def __init__(self, winWidth, winHeight, DVD_Logos, SH, SW, SX=False, SY=False, dispInfo=[False] * 4):
+    def __init__(self, winWidth, winHeight, DVD_Logos, SH, SW, SX=False, SY=False, dispInfo=False, *args, **kwargs):
         DVDS.winWidth = winWidth
         DVDS.winHeight = winHeight
         DVDS.DVD_Logos = DVD_Logos
@@ -16,9 +16,25 @@ class DVDS:
         self.SXGain = random.choice([(winWidth + winHeight) / 2 / 1300, -((winWidth + winHeight) / 2 / 1300)])
         self.SYGain = random.choice([self.SXGain, -self.SXGain])
         self.currentLogo = random.choice(DVD_Logos)
-        self.dispHits, self.dispXY, self.dispXSpeed, self.dispYSpeed = dispInfo
-        self.dispInfo = dispInfo
+        self.dispHits = kwargs.get("dispHits")
+        self.dispXY = kwargs.get("dispXY")
+        self.dispYSpeed = kwargs.get("dispYSpeed")
+        self.dispXSpeed  = kwargs.get("dispXSpeed")
         self.Move = True
+
+    @property
+    def rect(self):
+        return pygame.Rect(self.SX, self.SY, self.SW, self.SH)
+
+    @property
+    def dispInfo(self):
+        if self.dispHits or self.dispXY or self.dispYSpeed or self.dispXSpeed:
+            return True
+        return False
+
+    @dispInfo.setter
+    def dispInfo(self, val):
+        self.__dispInfo = val
 
     def setDispInfo(self, b=None):
         if b:
@@ -102,8 +118,8 @@ class DVDS:
             self.SY += self.SYGain / 2
             
 class InverseColorDVD(DVDS):
-    def __init__(self, winWidth, winHeight, DVD_Logos, SH, SW, SX=None, SY=None, dispInfo=[False]*4):
-        super().__init__(winWidth, winHeight, DVD_Logos, SH, SW, SX=SX, SY=SY, dispInfo=dispInfo)
+    def __init__(self, winWidth, winHeight, DVD_Logos, SH, SW, SX=None, SY=None, dispInfo=False, *args, **kwargs):
+        super().__init__(winWidth, winHeight, DVD_Logos, SH, SW, SX=SX, SY=SY, dispInfo=dispInfo, *args, **kwargs)
 
     def recolorInverseDVDS(self, *args):
         DVDSList, inverseRGBColor, DVD_Logos = args
@@ -115,22 +131,6 @@ class InverseColorDVD(DVDS):
         self.setLogo(DVD_Logos[-1])
         
         return DVDSList, DVD_Logos
-
-    def move(self): 
-        #moves the DVD around the screen
-        self.setSX()
-        self.setSY()
-
-        #wall collision detection
-        if self.SX <= 0 or self.SX + self.SW >= DVDS.winWidth:
-            self.setSXGain()
-            self.wallHits += 1
-            self.SX += self.SXGain / 2
-
-        if self.SY <= 0 or self.SY + self.SH >= DVDS.winHeight:
-            self.setSYGain()
-            self.wallHits += 1
-            self.SY += self.SYGain / 2
 
         
 class AvgPosDVD(DVDS):
@@ -157,26 +157,19 @@ class Options:
         self.name = name
         self.xRend = xRend
         self.yRend = yRend
-
-    @classmethod
-    def setClsOn(cls, b=None):
-        if b:
-            cls.On = b
-        else:
-            cls.On = False if cls.On else True
-            
+        
     def setOn(self, b=None):
-        if b:
-            self.on = b
-        else:
-            self.on = False if self.on else True
+        if b: self.on = b
+        else: self.on = False if self.on else True
 
     def switch(self, keys):
         if keys[self.key]: self.setOn()
 
+    @classmethod
+    def setClsOn(cls, b=None):
+        if b: cls.On = b
+        else: cls.On = False if cls.On else True
+
 class VisualOptions(Options):
     def __init__(self, on, key, name):
         super().__init__(on, key, name, None, None)
-
-
-
