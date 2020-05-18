@@ -28,29 +28,17 @@ def mainKeyChks(*args):
 
     #toggles all options
     if keys[pygame.K_F3]:
-        if Options.On:
-            for op in options.values():
-                if type(op) is not VisualOptions:
-                    op.setOn(False)
-            Options.setClsOn(False)
-        else:
-            for op in options.values():
-                if type(op) is not VisualOptions:
-                    op.setOn(True)
-            Options.setClsOn(True)
+        for op in options.values():
+            if type(op) is not VisualOptions:
+                op.setOn(Options.On^True)
+        Options.setClsOn(Options.On^True)
     
     #options
-    for op in options.values(): 
-        op.switch(keys)
+    for op in options.values(): op.switch(keys)
         
     #stops all logos
-    if keys[pygame.K_SPACE]:
-        if DVDSList[0].Move:        
-           for DVD in DVDSList:
-               DVD.setMove(False)
-        else:
-            for DVD in DVDSList:
-                DVD.setMove(True)
+    if keys[pygame.K_SPACE]:    
+        for DVD in DVDSList: DVD.setMove(DVDSList[0].Move^True)
 
     #clears all logos
     if keys[pygame.K_F5]: DVDSList.clear()
@@ -81,18 +69,11 @@ def mainKeyChks(*args):
     if keys[pygame.K_F2]: pygame.image.save(win, 'SCREENSHOTS\\{:%Y-%m-%d %H-%M-%S}.jpeg'.format(datetime.datetime.now()))
 
     #logo options
-    if keys[pygame.K_9]:
-        for DVD in DVDSList:
-            DVD.setDispHits()
-    if keys[pygame.K_0]:
-        for DVD in DVDSList:
-            DVD.setDispXY()
-    if keys[pygame.K_MINUS]:
-        for DVD in DVDSList:
-            DVD.setDispXSpeed()
-    if keys[pygame.K_EQUALS]:
-        for DVD in DVDSList:
-            DVD.setDispYSpeed()    
+    for DVD in DVDSList:
+        if keys[pygame.K_9]: DVD.setDispHits()
+        if keys[pygame.K_0]: DVD.setDispXY()
+        if keys[pygame.K_MINUS]: DVD.setDispXSpeed()
+        if keys[pygame.K_EQUALS]: DVD.setDispYSpeed()   
 
     #average pos dvd options
     if keys[pygame.K_z]:
@@ -157,11 +138,11 @@ def mouseChks(*args):
     elif event.button == 3: #right click
         for DVD in DVDSList: #DVD show info
             if mouseCollide(MPos, DVD):
-                DVD.setDispHits(False if DVD.dispInfo else True)
-                DVD.setDispXY(False if DVD.dispInfo else True)
-                DVD.setDispXSpeed(False if DVD.dispInfo else True)
-                DVD.setDispYSpeed(False if DVD.dispInfo else True)
-                DVD.setDispInfo(False if DVD.dispInfo else True)
+                DVD.setDispHits(DVD.dispInfo^True)
+                DVD.setDispXY(DVD.dispInfo^True)
+                DVD.setDispXSpeed(DVD.dispInfo^True)
+                DVD.setDispYSpeed(DVD.dispInfo^True)
+                DVD.setDispInfo(DVD.dispInfo^True)
                 break
 
         else:
@@ -186,11 +167,11 @@ def mouseChks(*args):
 
             elif keys[pygame.K_LCTRL]: #all DVD show info
                 for DVD in DVDSList:
-                    DVD.setDispHits(False if DVD.dispInfo else True)
-                    DVD.setDispXY(False if DVD.dispInfo else True)
-                    DVD.setDispXSpeed(False if DVD.dispInfo else True)
-                    DVD.setDispYSpeed(False if DVD.dispInfo else True)
-                    DVD.setDispInfo(False if DVD.dispInfo else True)
+                    DVD.setDispHits(DVD.dispInfo^True)
+                    DVD.setDispXY(DVD.dispInfo^True)
+                    DVD.setDispXSpeed(DVD.dispInfo^True)
+                    DVD.setDispYSpeed(DVD.dispInfo^True)
+                    DVD.setDispInfo(DVD.dispInfo^True)
 
             else: #add DVDS
                 DVDSList += [DVDS(winWidth, winHeight, DVD_Logos, SH, SW, dispXY=True, dispYSpeed=True, dispXSpeed=True, dispHits=True, SX=MPos[0], SY=MPos[1]) for _ in range(ADD)] if keys[pygame.K_LSHIFT] else [DVDS(winWidth, winHeight, DVD_Logos, SH, SW, SX=MPos[0], SY=MPos[1]) for _ in range(ADD)] #add dvds
@@ -200,14 +181,12 @@ def mouseChks(*args):
       
         for DVD in DVDSList:
             if mouseCollide(MPos, DVD):
+                DVD.setLogo()
                 if keys[pygame.K_LCTRL]:
                     sx = DVD.SX
                     sy = DVD.SY
                     DVDSList.remove(DVD)
                     DVDSList.append(InverseColorDVD(winWidth, winHeight, DVD_Logos, SH, SW, SX=sx, SY=sy))
-                else:
-                    DVD.setLogo()
-                    break
         else:
             if keys[pygame.K_LCTRL] and baseColor <= 255 - plus: baseColor += plus
                 
@@ -292,8 +271,11 @@ def renderDVDS(*args): #see function name
             blitOps(fonts, "DVDInfoFont", f'Y Speed: {round(DVD.SYGain, 5)} (=)', inverseRGBColor, DVD.SX + DVD.SW, DVD.SY + 30)
 
 
-def main():
-    global avgPosDVD, winWidth, winHeight, win
+def main(winwidth, winheight, sh, sw):
+    global avgPosDVD, winWidth, winHeight, win, SH, SW
+    SH, SW = int(sh), int(sw)
+    winWidth, winHeight = winwidth, winheight
+    pygame.init(); pygame.mixer.init(); pygame.font.init()
 
     pygame.display.set_caption("DVD")
     pygame.display.set_icon(random.choice([pygame.image.load(f'{"./src/ico_files"}/{x}') for x in os.listdir("./src/ico_files")if "Menu" not in x and "FLess" not in x]))
@@ -343,12 +325,13 @@ def main():
            "error": pygame.mixer.Sound(r".\src\Sounds\error.wav")}
 
     avgPosDVD = AvgPosDVD(winWidth, winHeight, DVD_Logos, SH, SW, SX=mean([x.SX for x in DVDSList]), SY=mean([y.SY for y in DVDSList]))
+    
     clock = pygame.time.Clock()
 
     while (Run := True):
         clock.tick(FPSCap)
         for event in pygame.event.get(): #mouse clicks and button presses
-            if event.type == pygame.QUIT: pygame.quit(); Run = False; break
+            if event.type == pygame.QUIT: pygame.quit(); Run = False; return
             if event.type == pygame.KEYDOWN: DVDSList, options, sounds, Run = mainKeyChks(DVDSList, options, sounds, Run, win)  
             if event.type == pygame.MOUSEBUTTONDOWN: ADD, DVDSList, R, G, B, baseColor = mouseChks(options, ADD, DVDSList, SH, SW, R, G, B, baseColor, event, DVD_Logos, inverseRGBColor)    
             if event.type == pygame.VIDEORESIZE:
@@ -359,8 +342,10 @@ def main():
             if keys[pygame.K_UP] and keys[pygame.K_LSHIFT]: FPSCap += 1
             if keys[pygame.K_DOWN] and keys[pygame.K_LSHIFT]: FPSCap -= 1
             if keys[pygame.K_ESCAPE] or keys[pygame.K_PAUSE]:
+                pygame.display.quit()
                 pygame.quit()
                 Menu().mainMenu()
+                return
             elif (keys[pygame.K_ESCAPE] and keys[pygame.K_LSHIFT]) or (keys[pygame.K_LALT] and keys[pygame.K_F4]): pygame.quit(); Run = False; break
 
             if len(DVDSList) > 1 and options["ShowAVGPos"].on and avgPosDVD.Move: 
@@ -400,11 +385,3 @@ def main():
                 renderDVDS(fonts, DVDSList, inverseRGBColor, win, options)
             
             pygame.display.update()
-            
-def mainInit(winwidth, winheight, sh, sw):
-    global SH, SW, winWidth, winHeight
-
-    SH, SW = int(sh), int(sw)
-    winWidth, winHeight = winwidth, winheight
-    pygame.init(); pygame.mixer.init(); pygame.font.init()
-    main()

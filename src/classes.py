@@ -16,10 +16,10 @@ class DVDS:
         self.SXGain = random.choice([(winWidth + winHeight) / 2 / 1300, -((winWidth + winHeight) / 2 / 1300)])
         self.SYGain = random.choice([self.SXGain, -self.SXGain])
         self.currentLogo = random.choice(DVD_Logos)
-        self.dispHits = kwargs.get("dispHits")
-        self.dispXY = kwargs.get("dispXY")
-        self.dispYSpeed = kwargs.get("dispYSpeed")
-        self.dispXSpeed  = kwargs.get("dispXSpeed")
+        self.dispHits = True if kwargs.get("dispHits") else False
+        self.dispXY = True if kwargs.get("dispXY") else False
+        self.dispYSpeed = True if kwargs.get("dispYSpeed") else False
+        self.dispXSpeed  = True if kwargs.get("dispXSpeed") else False
         self.Move = True
 
     @property
@@ -37,37 +37,22 @@ class DVDS:
         self.__dispInfo = val
 
     def setDispInfo(self, b=None):
-        if b:
-            self.dispInfo = b
-        else:
-            self.dispInfo = False if self.dispInfo else True
+        self.dispInfo = b if b else self.dispInfo^True
 
     def setDispHits(self, b=None):
-        if b:
-            self.dispHits = b
-        else:
-            self.dispHits = False if self.dispHits else True
+        self.dispHits = b if b else self.dispHits^True
+
     def setDispXY(self, b=None):
-        if b:
-            self.dispXY = b
-        else:
-            self.dispXY = False if self.dispXY else True
+        self.dispXY = b if b else self.dispXY^True
+
     def setDispXSpeed(self, b=None):
-        if b:
-            self.dispXSpeed = b
-        else:
-            self.dispXSpeed = False if self.dispXSpeed else True
+        self.dispXSpeed = b if b else self.dispXSpeed^True
+
     def setDispYSpeed(self, b=None):
-        if b:
-            self.dispYSpeed = b
-        else:
-            self.dispYSpeed = False if self.dispYSpeed else True
+        self.dispYSpeed = b if b else self.dispYSpeed^True
 
     def setLogo(self, logo=None):
-        if not logo:
-            self.currentLogo = random.choice(DVDS.DVD_Logos)
-        else:
-            self.currentLogo = logo
+        self.currentLogo = logo if logo else random.choice(DVDS.DVD_Logos)
 
     def setSX(self, pos=None):
         if pos:
@@ -94,10 +79,7 @@ class DVDS:
             self.SYGain *= (-1 + random.uniform(-.1, .1))
 
     def setMove(self, b=None):
-        if b:
-            self.Move = b
-        else:
-            self.Move = False if self.Move else True
+        self.Move = b if b else self.Move^True
     
     def move(self): 
         #moves the DVD around the screen
@@ -140,10 +122,7 @@ class AvgPosDVD(DVDS):
         self.dispXY, self.dispXYDist = dispInfo
 
     def setDispXYDist(self, b=None):
-        if b:
-            self.dispXYDist = b
-        else:
-            self.dispXYDist = False if self.dispXYDist else True
+        self.dispXYDist = b if b else self.dispXYDist^True
 
     def findAVGPos(self, DVDSList):
         self.setSX(mean([x.SX for x in DVDSList]))
@@ -159,16 +138,14 @@ class Options:
         self.yRend = yRend
         
     def setOn(self, b=None):
-        if b: self.on = b
-        else: self.on = False if self.on else True
+        self.on = b if b else self.on^True
 
     def switch(self, keys):
         if keys[self.key]: self.setOn()
 
     @classmethod
     def setClsOn(cls, b=None):
-        if b: cls.On = b
-        else: cls.On = False if cls.On else True
+        cls.On = b if b else cls.On^True
 
 class VisualOptions(Options):
     def __init__(self, on, key, name):

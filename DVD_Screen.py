@@ -4,11 +4,12 @@ import random
 import os
 import json
 import playsound
+import importlib
 
 def _Main():
-    from src.Main import mainInit
+    from src.Main import main
     print("Loading... 50%")
-    mainInit(Menu.winWidth, Menu.winHeight, Menu.picHeight, Menu.picWidth)
+    main(Menu.winWidth, Menu.winHeight, Menu.picHeight, Menu.picWidth)
 
 
 def controlsMenu():
@@ -27,37 +28,28 @@ def infoMenu():
         mainL = tk.Label(IFRoot, text=IF.read(), font=("Consolas", 13))
         mainL.pack()
 
-        IFRoot.mainloop()
+        IFRoot.mainloop() 
 
-def defaultsMenu():
-    os.system(r".\DEFAULTS.json")
-
-def openLogosFolder():
-    os.startfile("DVD_Logos")
-
-def openScreenShotsFoler():
-    os.startfile("SCREENSHOTS")
-
-class Menu:
+class Menu(tk.Tk):
     with open(r"src\buttonColors.json") as colorsJson:
         data = json.load(colorsJson)
-    BGColor = data["backgroundColor"]
-    otherButtons = data["otherButtons"]
-    mainBs = data["mainButtons"]
-    quitButton = data["quitButton"]
-    with open("DEFAULTS.json", "r") as RF: #gets the default width, height from the DEFAULTS.txt file
+        BGColor = data["backgroundColor"]
+        otherButtons = data["otherButtons"]
+        mainBs = data["mainButtons"]
+        quitButton = data["quitButton"]
+    with open("DEFAULTS.json", "r") as RF: #gets the default width, height from the DEFAULTS.json file
         data = json.load(RF)
-    winWidth = data["screen"]["width"]
-    winHeight = data["screen"]["height"]
-    picWidth = data["images"]["width"]
-    picHeight = data["images"]["height"]
-    def __init__(self):
-        self.root = tk.Tk()
+        winWidth = data["screen"]["width"]
+        winHeight = data["screen"]["height"]
+        picWidth = data["images"]["width"]
+        picHeight = data["images"]["height"]
+    def __init__(self, *args, **kwargs):
+        tk.Tk.__init__(self, *args, **kwargs)
 
-        self.root.configure(background=Menu.BGColor)
+        self.configure(background=Menu.BGColor)
 
-        self.root.title(random.choice(["DVD Screen", "Main Menu", "Cool Title Here", "I'm Surprised You Read This", "New And Improved"]))
-        self.root.iconbitmap(r".\src\ico_files\Main_Menu_ICO.ico")
+        self.title(random.choice(["DVD Screen", "Main Menu", "Cool Title Here", "I'm Surprised You Read This", "New And Improved"]))
+        self.iconbitmap(r".\src\ico_files\Main_Menu_ICO.ico")
         
         self.winHeightE = tk.Entry()
         self.winHeightE.insert(0, Menu.winHeight)
@@ -71,7 +63,7 @@ class Menu:
         self.picWidthE = tk.Entry()
         self.picWidthE.insert(0, Menu.picWidth)
 
-        self.root.bind("<F10>", lambda x: self.done("secret"))
+        self.bind("<F10>", lambda x: self.done("secret"))
 
     def done(self, version): #runs the picked version6
 
@@ -79,7 +71,7 @@ class Menu:
 
         Menu.picWidth, Menu.picHeight = int(self.picWidthE.get()), int(self.picHeightE.get())
 
-        self.root.destroy()
+        self.destroy()
 
         print("Loading...")
         if version == "main":
@@ -92,11 +84,7 @@ class Menu:
 
         elif version == "secret":
             import src.Secret as Secret
-            Secret.main(random.randint(15, 25), Menu.picHeight, Menu.picWidth, Menu.winWidth, Menu.winHeight)
-
-    def xButton(self):
-        self.root.destroy() 
-        return   
+            Secret.main(random.randint(15, 25), Menu.picHeight, Menu.picWidth, Menu.winWidth, Menu.winHeight) 
 
     def mainMenu(self):                    
 
@@ -113,27 +101,24 @@ class Menu:
         self.picHeightE.grid(column=2, row=4)
 
         #main version
-        tk.Button(self.root, command=lambda: self.done("main"), text="run main version", font=(Menu.mainBs["font"], 15), bg=Menu.mainBs["color"]).grid(column=3, row=6)
+        tk.Button(self, command=lambda: self.done("main"), text="run main version", font=(Menu.mainBs["font"], 15), bg=Menu.mainBs["color"]).grid(column=3, row=6)
         #featureless version
-        tk.Button(self.root, text="run featureless version", font=(Menu.mainBs["font"], 15), command=lambda: self.done("featureless"), bg=Menu.mainBs["color"]).grid(column=1, row=6)
+        tk.Button(self, text="run featureless version", font=(Menu.mainBs["font"], 15), command=lambda: self.done("featureless"), bg=Menu.mainBs["color"]).grid(column=1, row=6)
 
 		#other buttons
         tk.Button(text="Controls", font=(Menu.otherButtons["font"], 12), command=lambda: controlsMenu(), bg=Menu.otherButtons["color"]).grid(column=3, row=1)
         tk.Button(text="Info", font=(Menu.otherButtons["font"], 12), command=lambda: infoMenu(), bg=Menu.otherButtons["color"], width=13).grid(column=4, row=6)
-        tk.Button(text="Open Defaults", font=(Menu.otherButtons["font"], 12), command=lambda: defaultsMenu(), bg=Menu.otherButtons["color"]).grid(column=3, row=3)
-        tk.Button(text="Open Logos foler", font=(Menu.otherButtons["font"], 12), command=lambda: openLogosFolder(), bg=Menu.otherButtons["color"]).grid(column=4, row=3)
-        tk.Button(text="Open Screenshots folder", font=(Menu.otherButtons["font"], 12), command=lambda: openScreenShotsFoler(), bg=Menu.otherButtons["color"]).grid(column=4, row=1)
+        tk.Button(text="Open Defaults", font=(Menu.otherButtons["font"], 12), command=lambda: os.system(r".\DEFAULTS.json"), bg=Menu.otherButtons["color"]).grid(column=3, row=3)
+        tk.Button(text="Open Logos foler", font=(Menu.otherButtons["font"], 12), command=lambda: os.startfile("DVD_Logos"), bg=Menu.otherButtons["color"]).grid(column=4, row=3)
+        tk.Button(text="Open Screenshots folder", font=(Menu.otherButtons["font"], 12), command=lambda: os.startfile("SCREENSHOTS"), bg=Menu.otherButtons["color"]).grid(column=4, row=1)
 
         #QUIT button
-        tk.Button(text="   QUIT   ", font=(Menu.quitButton["font"], 12), command=lambda: self.root.destroy(), bg=Menu.quitButton["color"]).grid(column=2, row=6)
-
-        self.root.update_idletasks()
-        w, h = self.root.winfo_screenwidth(), self.root.winfo_screenheight()
-        size = tuple(int(_) for _ in self.root.geometry().split("+")[0].split("x"))
+        tk.Button(text="   QUIT   ", font=(Menu.quitButton["font"], 12), command=lambda: self.destroy(), bg=Menu.quitButton["color"]).grid(column=2, row=6)
+        self.update_idletasks()
+        w, h = self.winfo_screenwidth(), self.winfo_screenheight()
+        size = tuple(int(_) for _ in self.geometry().split("+")[0].split("x"))
         x, y = w / 2 - size[0] / 2, h / 2 - size[1] / 2
-        self.root.geometry("%dx%d+%d+%d" %(size + (x, y)))
-        self.root.protocol("WM_DELETE_WINDOW", self.xButton)
-        self.root.mainloop()
-
+        self.geometry("%dx%d+%d+%d" %(size + (x, y)))
+        self.mainloop()
 
 if __name__ == '__main__': Menu().mainMenu()
