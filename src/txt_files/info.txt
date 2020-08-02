@@ -11,4 +11,7 @@ ADD: tells you how many logos to add when left or right click,
 also removes that many when middle clicked
 TOTAL: total number of logos on the screen
 
-version: 1.8_B.15
+Featureless.py is not necessarily meant to be readable, it's more of a challenge for me to get it in the least amount of lines of code as possible
+    don't ask why, I just want to
+
+version: 1.8_B.15.1

@@ -1,7 +1,7 @@
 Features:
 X and Y speed on each logo
 clicking on Most hits in the top left will freeze all dvds with the most hits
-and bring your mouse to one of them
+    brings your mouse to one of them
 rendering dvds/options first actually works now
 LALT + Middle click moves Logos to the average posisition
 LSHIFT + LALT + Middle click moves them to the middle

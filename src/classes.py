@@ -82,6 +82,8 @@ class DVDS:
         self.Move = b if b else self.Move^True
     
     def move(self): 
+        if not self.Move:
+            return
         #moves the DVD around the screen
         self.setSX()
         self.setSY()
@@ -98,7 +100,6 @@ class DVDS:
             self.setLogo()
             self.wallHits += 1
             self.SY += self.SYGain / 2
-            
 class InverseColorDVD(DVDS):
     def __init__(self, winWidth, winHeight, DVD_Logos, SH, SW, SX=None, SY=None, dispInfo=False, *args, **kwargs):
         super().__init__(winWidth, winHeight, DVD_Logos, SH, SW, SX=SX, SY=SY, dispInfo=dispInfo, *args, **kwargs)

@@ -256,15 +256,15 @@ def renderDVDS(*args): #see function name
     if options["ShowAVGPos"].on and len(DVDSList) > 1:
         win.blit(avgPosDVD.currentLogo, (avgPosDVD.SX, avgPosDVD.SY))
         if avgPosDVD.dispXY: 
-            blitOps(fonts, "DVDInfoFont", f'X, Y: {round(avgPosDVD.SX, 2), round(avgPosDVD.SY, 2)} (z)', inverseRGBColor, avgPosDVD.SX + SW, avgPosDVD.SY)
+            blitOps(fonts, "DVDInfoFont", f'X, Y: {(round(avgPosDVD.SX, 2), round(avgPosDVD.SY, 2))} (z)', inverseRGBColor, avgPosDVD.SX + SW, avgPosDVD.SY)
         if avgPosDVD.dispXYDist:
-            blitOps(fonts, "DVDInfoFont", f'X-mid, Y-mid: {round(avgPosDVD.SX - (winWidth / 2)), round(avgPosDVD.SY - (winHeight / 2))} (x)', inverseRGBColor, avgPosDVD.SX + SW, avgPosDVD.SY + 15)
+            blitOps(fonts, "DVDInfoFont", f'X-mid, Y-mid: {(round(avgPosDVD.SX - (winWidth / 2)), round(avgPosDVD.SY - (winHeight / 2)))} (x)', inverseRGBColor, avgPosDVD.SX + SW, avgPosDVD.SY + 15)
     for DVD in DVDSList:
         win.blit(DVD.currentLogo, (DVD.SX, DVD.SY))
         if DVD.dispHits:
             blitOps(fonts, "DVDInfoFont", f'wall hits: {DVD.wallHits} (9)', inverseRGBColor, DVD.SX + DVD.SW, DVD.SY - 15)
         if DVD.dispXY:
-            blitOps(fonts, "DVDInfoFont", f'X, Y: {round(DVD.SX, 2), round(DVD.SY, 2)} (0)', inverseRGBColor, DVD.SX + DVD.SW, DVD.SY)
+            blitOps(fonts, "DVDInfoFont", f'X, Y: {(round(DVD.SX, 2), round(DVD.SY, 2))} (0)', inverseRGBColor, DVD.SX + DVD.SW, DVD.SY)
         if DVD.dispXSpeed:
             blitOps(fonts, "DVDInfoFont", f'X Speed: {round(DVD.SXGain, 5)} (-)', inverseRGBColor, DVD.SX + DVD.SW, DVD.SY + 15)
         if DVD.dispYSpeed:
@@ -362,7 +362,7 @@ def main(winwidth, winheight, sh, sw):
 
             #rendering
             for DVD in DVDSList: 
-                if DVD.Move: DVD.move()
+                DVD.move()
                 if type(DVD) is InverseColorDVD:
                     DVDSList, DVD_Logos = DVD.recolorInverseDVDS(DVDSList, inverseRGBColor, DVD_Logos)
                     
@@ -375,7 +375,7 @@ def main(winwidth, winheight, sh, sw):
                     if op.name == "ShowLeader": blitOps(fonts, "mainFont", f'MOST HITS (5): {leaders}', inverseRGBColor, op.xRend, op.yRend)
                     if op.name == "ShowAdd": blitOps(fonts, "mainFont", f'ADD (2): {ADD}', inverseRGBColor, op.xRend, op.yRend)
                     if op.name == "ShowTotal": blitOps(fonts, "mainFont", f'DVDS (3): {len(DVDSList)}', inverseRGBColor, op.xRend, op.yRend)
-                    if op.name == "ShowRGB": blitOps(fonts, "DVDInfoFont", f'RGB (6): {R, G, B}', inverseRGBColor, op.xRend, op.yRend)
+                    if op.name == "ShowRGB": blitOps(fonts, "DVDInfoFont", f'RGB (6): {(R, G, B)}', inverseRGBColor, op.xRend, op.yRend)
                     if op.name == "ShowRGBBase": blitOps(fonts, "DVDInfoFont", f'RGB Base(7): {baseColor}', inverseRGBColor, op.xRend, op.yRend)
                     if op.name == "ShowSum": blitOps(fonts, "mainFont", f'TOTAL HITS (4): {totalHits}', inverseRGBColor, op.xRend, op.yRend)
                     if op.name == "ShowFps": blitOps(fonts, "DVDInfoFont", f'FPS (1): {round(clock.get_fps(), 2)}', inverseRGBColor, op.xRend, op.yRend)
