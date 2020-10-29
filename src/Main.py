@@ -4,6 +4,8 @@ import pygame
 import tkinter as tk
 import os
 import playsound
+import csv
+import datetime
 from tkinter import messagebox
 from statistics import mean
 
@@ -19,6 +21,14 @@ def swap(winWidth, winHeight, SH, SW):
 #checks if mouse is clicking on dvd
 def mouseCollide(MPos, DVD):
     return DVD.rect.collidepoint(MPos)
+
+def genCSV(DVDSList):
+    now = datetime.datetime.now()
+    with open(f'data-{now.month}{now.day}{now.year} at {now.hour}{now.minute}{now.second}.csv', "w") as f:
+        writer = csv.writer(f)
+        writer.writerow(["x", "y", "hits", "type", "moving"])
+        data = [[DVD.SX, DVD.SY, DVD.wallHits, "normal" if type(DVD) != InverseColorDVD else "inverseColor", DVD.Move] for DVD in DVDSList]
+        writer.writerows(data)
 
 #main key checks
 def mainKeyChks(*args):
@@ -42,6 +52,9 @@ def mainKeyChks(*args):
 
     #clears all logos
     if keys[pygame.K_F5]: DVDSList.clear()
+
+    #generates csv fil
+    if keys[pygame.K_F1]: genCSV(DVDSList)
 
     #;)
     if keys[pygame.K_w] and keys[pygame.K_i] and keys[pygame.K_n]: sounds["windows"].play()
@@ -325,7 +338,7 @@ def main(winwidth, winheight, sh, sw):
            "error": pygame.mixer.Sound(r".\src\Sounds\error.wav")}
 
     avgPosDVD = AvgPosDVD(winWidth, winHeight, DVD_Logos, SH, SW, SX=mean([x.SX for x in DVDSList]), SY=mean([y.SY for y in DVDSList]))
-    
+
     clock = pygame.time.Clock()
 
     while (Run := True):

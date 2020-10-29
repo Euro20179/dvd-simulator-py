@@ -21,4 +21,6 @@ def main(winWidth, winHeight, sh, sw):
         if keys[pygame.K_F12]: pygame.display.quit(); m(winWidth, winHeight, sh, sw)       
         if keys[pygame.K_LSHIFT]: FPSCap = FPSCap.__add__(1 if not keys[pygame.K_LCTRL] else 10) if keys[pygame.K_UP] else FPSCap.__sub__(1 if not keys[pygame.K_LCTRL] else 10) if keys[pygame.K_DOWN] else FPSCap           
         for DVD in DVDSList: DVD.move()
-        win.fill((0, 0, 0)); win.blits([(DVD.currentLogo, (DVD.SX, DVD.SY)) for DVD in DVDSList]); pygame.display.update()
+        win.fill((0, 0, 0))
+        win.blits([(DVD.currentLogo, (DVD.SX, DVD.SY)) for DVD in DVDSList])
+        pygame.display.update()
