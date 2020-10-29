@@ -28,9 +28,7 @@ class DVDS:
 
     @property
     def dispInfo(self):
-        if self.dispHits or self.dispXY or self.dispYSpeed or self.dispXSpeed:
-            return True
-        return False
+        return self.dispHits or self.dispXY or self.dispYSpeed or self.dispXSpeed
 
     @dispInfo.setter
     def dispInfo(self, val):
