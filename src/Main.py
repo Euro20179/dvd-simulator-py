@@ -64,7 +64,7 @@ def mainKeyChks(*args):
     if keys[pygame.K_f] and keys[pygame.K_o] and keys[pygame.K_x]: sounds["fox"].play()
     if keys[pygame.K_e] and keys[pygame.K_r] and keys[pygame.K_o]:
         pygame.quit()
-        playsound.playsound(r".\src\Sounds\error.wav")
+        playsound.playsound(r"./src/Sounds/error.wav")
         Menu().mainMenu()
 
     if keys[pygame.K_s] and keys[pygame.K_e] and keys[pygame.K_c] and keys[pygame.K_r] and keys[pygame.K_t] or keys[pygame.K_F10]:
@@ -329,13 +329,13 @@ def main(winwidth, winheight, sh, sw):
     FPSCap = 120
 
     #sounds
-    sounds = {"windows": pygame.mixer.Sound(r".\src\Sounds\WINXP_Startup.wav"), 
-           "THX": pygame.mixer.Sound(r".\src\Sounds\THX_Sound.wav"), 
-           "disney": pygame.mixer.Sound(r".\src\Sounds\Disney.wav"),
-           "pixar": pygame.mixer.Sound(r".\src\Sounds\Pixar.wav"),
-           "fox": pygame.mixer.Sound(r".\src\Sounds\Fox.wav"),
-           "clap": pygame.mixer.Sound(r".\src\Sounds\Clap.wav"),
-           "error": pygame.mixer.Sound(r".\src\Sounds\error.wav")}
+    sounds = {"windows": pygame.mixer.Sound(r"./src/Sounds/WINXP_Startup.wav"), 
+           "THX": pygame.mixer.Sound(r"./src/Sounds/THX_Sound.wav"), 
+           "disney": pygame.mixer.Sound(r"./src/Sounds/Disney.wav"),
+           "pixar": pygame.mixer.Sound(r"./src/Sounds/Pixar.wav"),
+           "fox": pygame.mixer.Sound(r"./src/Sounds/Fox.wav"),
+           "clap": pygame.mixer.Sound(r"./src/Sounds/Clap.wav"),
+           "error": pygame.mixer.Sound(r"./src/Sounds/error.wav")}
 
     avgPosDVD = AvgPosDVD(winWidth, winHeight, DVD_Logos, SH, SW, SX=mean([x.SX for x in DVDSList]), SY=mean([y.SY for y in DVDSList]))
 

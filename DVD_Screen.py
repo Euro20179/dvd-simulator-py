@@ -13,7 +13,7 @@ def _Main():
 
 
 def controlsMenu():
-    with open(r".\src\txt_files\controls.txt", "r") as CF:
+    with open(r"./src/txt_files/controls.txt", "r") as CF:
         CTRLSRoot = tk.Tk()
 
         mainL = tk.Label(CTRLSRoot, text=CF.read(), font=("Consolas", 13))
@@ -22,7 +22,7 @@ def controlsMenu():
         CTRLSRoot.mainloop()
 
 def infoMenu():
-    with open(r".\src\txt_files\info.txt", "r") as IF:
+    with open(r"./src/txt_files/info.txt", "r") as IF:
         IFRoot = tk.Tk()
 
         mainL = tk.Label(IFRoot, text=IF.read(), font=("Consolas", 13))
@@ -31,7 +31,7 @@ def infoMenu():
         IFRoot.mainloop() 
 
 class Menu(tk.Tk):
-    with open(r"src\buttonColors.json") as colorsJson:
+    with open(r"src/buttonColors.json") as colorsJson:
         data = json.load(colorsJson)
         BGColor = data["backgroundColor"]
         otherButtons = data["otherButtons"]
@@ -49,7 +49,6 @@ class Menu(tk.Tk):
         self.configure(background=Menu.BGColor)
 
         self.title(random.choice(["DVD Screen", "Main Menu", "Cool Title Here", "I'm Surprised You Read This", "New And Improved"]))
-        self.iconbitmap(r".\src\ico_files\Main_Menu_ICO.ico")
         
         self.winHeightE = tk.Entry()
         self.winHeightE.insert(0, Menu.winHeight)
